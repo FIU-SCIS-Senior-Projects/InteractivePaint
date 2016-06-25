@@ -1,12 +1,11 @@
 #pragma once
 #include "cinder/app/App.h"
-#include "IDrawable.h"
 
 using namespace cinder;
 
 namespace touchpoints { namespace drawing
 {
-	struct TouchShape : public IDrawable
+	struct TouchShape
 	{
 	public:
 		float size() const;
@@ -15,6 +14,7 @@ namespace touchpoints { namespace drawing
 		float getSize() const;
 		inline void DecrementFramesDrawn() { framesDrawn--; }
 		inline bool ShouldDraw() { return framesDrawn > 0; }
+		virtual void draw() = 0;
 	protected:
 		bool mFilledShapes;
 		ColorA mColor;

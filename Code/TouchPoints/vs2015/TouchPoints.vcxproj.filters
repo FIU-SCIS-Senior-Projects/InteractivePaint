@@ -164,12 +164,6 @@
     <ClInclude Include="..\src\TouchPointsApp.h">
       <Filter>app</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\IDrawable.h">
-      <Filter>drawing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\IDrawableDeleter.h">
-      <Filter>drawing</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Line.h">
       <Filter>math\geometry</Filter>
     </ClInclude>

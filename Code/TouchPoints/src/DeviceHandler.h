@@ -1,6 +1,5 @@
 #pragma once
 #include "Enums.h"
-#include  "IDeviceHandler.h"
 
 namespace touchpoints { namespace devices
 {

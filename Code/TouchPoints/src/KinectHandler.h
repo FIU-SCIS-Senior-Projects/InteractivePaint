@@ -1,7 +1,6 @@
 #pragma once
-#include "C:\Users\Alex\Documents\Visual Studio 2015\Projects\TestKin\stdafx.h"
-#include "C:\Users\Alex\Documents\Visual Studio 2015\Projects\TestKin\resource.h"
-#include "C:\Users\Alex\Documents\Visual Studio 2015\Projects\TestKin\BodyBasics.h"
+#include "Kinect.h"
+#include "stdafx.h"
 #include "Illustrator.h"
 #include "GuidHash.h"
 
