@@ -5,7 +5,7 @@ namespace touchpoints { namespace app
 {
 	void TouchPointsApp::prepareSettings(TouchPointsApp::Settings* settings)
 	{
-		settings->setFullScreen(true);
+		//settings->setFullScreen(true);
 
 		settings->setTitle("InteractivePaint");
 		//setFullScreen(1);
@@ -16,12 +16,65 @@ namespace touchpoints { namespace app
 		// On mobile, if you disable multitouch then touch events will arrive via mouseDown(), mouseDrag(), etc.
 	}
 
+
+	//sets up frame buffers and framerate and symmetry
+//	void TouchPointsApp::myResize(int windowWidth, int windowHeight)
+//	{
+//		gl::Fbo::Format format;
+//		firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		secondFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		thirdFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		activeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//
+//		iconFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		saveImageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		//Set up UI
+//		uiFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		//Set up image feedback fbo
+//		imageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		//Set up fbo for proxy menu
+//		radialFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		//Set up fbo for proxy menu
+//		proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		//Background FBO Testing
+//		backgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//		//Set up fingerlocation FBo
+//		fingerLocationFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//
+//		setFrameRate(FRAME_RATE);
+//		
+//		mySymmetry = drawing::SymmetryLine(windowWidth / 2, true);
+//
+//		//Sets up layers
+//		layerList.emplace_back(firstFbo);
+//		layerList.emplace_back(secondFbo);
+//		layerList.emplace_back(thirdFbo);
+//
+//		//Set up Brush
+//		ColorA newColor = ColorA(0.0f, 0.0f, 0.0f, 1.0f);
+//		float tempFloat = 1.0f;
+//		int tempInt = 1;
+//		Shape::Shape myShape = Shape::Shape::Line;
+//		brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
+//		illustrator = drawing::Illustrator(&brush, &layerList);
+//		deviceHandler = devices::DeviceHandler();
+//		getHomeDirectory();
+//		imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
+//
+//		//RealSense Setup
+//		realSenseHandler = devices::RealSenseHandler(&illustrator);
+//	}
+
 	void TouchPointsApp::setup()
 	{
 		CI_LOG_I("MT: " << System::hasMultiTouch() << " Max points: " << System::getMaxMultiTouchPoints());
 		glEnable(GL_LINE_SMOOTH);
+		
+		//myResize(windowWidth, windowHeight);
 
-		//Sets window size and initializes framebuffers (layers).
+		//resize();
+
+		//		Sets window size and initializes framebuffers (layers).
 		setWindowSize(windowWidth, windowHeight);
 		gl::Fbo::Format format;
 		firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
@@ -81,8 +134,9 @@ namespace touchpoints { namespace app
 		setDefaultMode(resultMode);
 
 		TX_CONNECTIONSTATE eyeXConnectedState = deviceHandler.GetEyeXConnected() ? TX_CONNECTIONSTATE_CONNECTED : TX_CONNECTIONSTATE_DISCONNECTED;
-		eyeXHandler = devices::EyeXHandler(0.0f, 0.0f, windowWidth, windowHeight, eyeXConnectedState);
+		eyeXHandler = devices::EyeXHandler(0.0f, 0.0f, eyeXConnectedState);
 		eyeXHandler.InitEyeX();
+
 	}
 
 	void TouchPointsApp::drawRadial()
@@ -278,29 +332,29 @@ namespace touchpoints { namespace app
 		{
 			if (deviceHandler.eyeXStatus())
 			{
-				if (eyeXHandler.GetGazePositionX() <= eyeXHandler.GetResolutionX() / 2
-					&& eyeXHandler.GetGazePositionY() <= eyeXHandler.GetResolutionY() / 2)
+				if (eyeXHandler.GetGazePositionX() <= windowWidth / 2
+					&& eyeXHandler.GetGazePositionY() <= windowHeight / 2)
 				{
 					brush.changeShape(Shape::Shape::Line);
 					gui.setModeChangeFlag();
 					imageHandler.loadIcon(SHAPE_LINE);
 				}
-				else if (eyeXHandler.GetGazePositionX() >= eyeXHandler.GetResolutionX() / 2
-					&& eyeXHandler.GetGazePositionY() <= eyeXHandler.GetResolutionY() / 2)
+				else if (eyeXHandler.GetGazePositionX() >= windowWidth / 2
+					&& eyeXHandler.GetGazePositionY() <= windowHeight / 2)
 				{
 					brush.changeShape(Shape::Shape::Circle);
 					gui.setModeChangeFlag();
 					imageHandler.loadIcon(SHAPE_Circle);
 				}
-				else if (eyeXHandler.GetGazePositionX() <= eyeXHandler.GetResolutionX() / 2
-					&& eyeXHandler.GetGazePositionY() >= eyeXHandler.GetResolutionY() / 2)
+				else if (eyeXHandler.GetGazePositionX() <= windowWidth / 2
+					&& eyeXHandler.GetGazePositionY() >= windowHeight / 2)
 				{
 					brush.changeShape(Shape::Shape::Rectangle);
 					gui.setModeChangeFlag();
 					imageHandler.loadIcon(SHAPE_Rectangle);
 				}
-				else if (eyeXHandler.GetGazePositionX() >= eyeXHandler.GetResolutionX() / 2
-					&& eyeXHandler.GetGazePositionY() >= eyeXHandler.GetResolutionY() / 2)
+				else if (eyeXHandler.GetGazePositionX() >= windowWidth / 2
+					&& eyeXHandler.GetGazePositionY() >= windowHeight / 2)
 				{
 					brush.changeShape(Shape::Shape::Triangle);
 					gui.setModeChangeFlag();
@@ -653,18 +707,7 @@ namespace touchpoints { namespace app
 		Color myBG = gui.getBackgroundColor();
 		glClearColor(myBG.r, myBG.g, myBG.b, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		/* Small script that checks FPS
-		gl::color(1.0, 1.0, 1.0);
-		gl::drawSolidCircle(vec2(960, 540), (float)fps * 2);
-	
-		gl::color(1.0, 0.0, 0.0);
-		gl::drawStrokedCircle(vec2(960, 540), 15.0f * 2);
-		gl::drawStrokedCircle(vec2(960, 540), 30.0f * 2);
-		gl::drawStrokedCircle(vec2(960, 540), 45.0f * 2);
-		gl::drawStrokedCircle(vec2(960, 540), 60.0f * 2);
-		*/
-
+		
 		//Currently leapDraw before drawing layers to prevent flickering. 
 		//However, this makes it impossible to see green 'hands' on top of images.
 		if (deviceHandler.leapStatus())
@@ -702,25 +745,26 @@ namespace touchpoints { namespace app
 			gl::draw(frames->getColorTexture());
 			x++;
 		}
-
+		
 		if (imageHandler.getStartUpFlag())
 		{
 			imageHandler.loadStartIcon(START_LOGO);
 		}
-		/*Draws icons that provides feedback */
+		
+		//Draws icons that provides feedback
 		imageHandler.displayIcon();
 		imageHandler.displayStartIcon();
-
+		
 		//Draws all the UI elements (Currently only updated the uiFbo which stores data for the mode box), drawing is done below.
 		gui.drawUi();
-
+		
 		//Draws radial menu
 		if (radialActive)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(radialFbo->getColorTexture());
 		}
-
+		
 		//Draws proximity menu
 		if (proxActive)
 		{
@@ -728,8 +772,8 @@ namespace touchpoints { namespace app
 		}
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
-
-		/*Draws the frame buffer for UI*/
+		
+		//Draws the frame buffer for UI
 		if (deviceHandler.eyeXStatus())
 		{
 			gl::color(0.0f, 0.0f, 0.0f, 0.4f);
@@ -775,5 +819,284 @@ namespace touchpoints { namespace app
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(fingerLocationFbo->getColorTexture());
 		}
+	/**/
+}
+
+//	void TouchPointsApp::myResize()
+//	{
+//		
+////From TouchPointsApp.cpp
+//	windowWidth = getWindowSize().x;
+//	windowHeight = getWindowSize().y;
+//	radialCenter = vec2(windowWidth * .5, windowHeight * .5);
+//
+//	//		Sets window size and initializes framebuffers (layers).
+//	//setWindowSize(windowWidth, windowHeight);
+//	gl::Fbo::Format format;
+//	firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	secondFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	thirdFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	activeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//
+//	iconFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	saveImageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	//Set up UI
+//	uiFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	//Set up image feedback fbo
+//	imageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	//Set up fbo for proxy menu
+//	radialFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	//Set up fbo for proxy menu
+//	proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	//Background FBO Testing
+//	backgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//	//Set up fingerlocation FBo
+//	fingerLocationFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//
+//	setFrameRate(FRAME_RATE);
+//
+//	//create setter for mySymmetry
+//	// doesn't work
+//	//				mySymmetry.setSymmetryWindowWidth(windowWidth / 2, mySymmetry.getSymmetryOn());
+//	mySymmetry.setSymmetryWindowWidth(windowWidth / 2, true);
+//	//		mySymmetry = drawing::SymmetryLine(windowWidth / 2, true);
+//
+//	//Sets up layers
+//	layerList.emplace_back(firstFbo);
+//	layerList.emplace_back(secondFbo);
+//	layerList.emplace_back(thirdFbo);
+//
+//	//Set up Brush
+//	//		ColorA newColor = ColorA(0.0f, 0.0f, 0.0f, 1.0f);
+//	//		float tempFloat = 1.0f;
+//	//		int tempInt = 1;
+//	//Shape::Shape myShape = Shape::Shape::Line;
+//
+//	//create a setter for brush
+//	// i think it works
+//	//brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
+//	brush.setSymmetry(&mySymmetry);
+//
+//	//create a setter for illustrator
+//	illustrator = drawing::Illustrator(&brush, &layerList);
+//	//deviceHandler = devices::DeviceHandler();
+//	getHomeDirectory();
+//
+//	//create a setter for ImageHandler
+//	imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
+//
+//	//RealSense Setup
+//	//create a setter for RealSenseHandler
+//	realSenseHandler = devices::RealSenseHandler(&illustrator);
+//
+//	//Set up UI
+//
+//	//		deviceHandler.deviceConnection();
+//	//		lastDeviceCheck = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+//
+//
+//
+//	//create a setter for windowWidth, windowHeight, &brush, &illustrator, uiFbo, &layerList
+//	gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
+//
+//
+//
+//	//create a setter for leapMotionHandler
+//	leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight);
+//	leapMotionHandler.InitLeapMotion();
+//
+//
+//
+//	//		deviceHandler.deviceConnection();
+//	//		Mode::DefaultModes resultMode = deviceHandler.getDefaultMode();
+//	//		setDefaultMode(resultMode);
+//
+//	//		TX_CONNECTIONSTATE eyeXConnectedState = deviceHandler.GetEyeXConnected() ? TX_CONNECTIONSTATE_CONNECTED : TX_CONNECTIONSTATE_DISCONNECTED;
+//	//		eyeXHandler = devices::EyeXHandler(0.0f, 0.0f, eyeXConnectedState);
+//	//		eyeXHandler.InitEyeX();
+//	}
+
+
+	void TouchPointsApp::resize()
+	{
+		if (resizeCount > 0)
+		{
+			//From TouchPointsApp.cpp
+			windowWidth = getWindowSize().x;
+			windowHeight = getWindowSize().y;
+			radialCenter = vec2(windowWidth * .5, windowHeight * .5);
+
+			shared_ptr<gl::Fbo> firstFboTemp = firstFbo;
+			shared_ptr<gl::Fbo> secondFboTemp = secondFbo;
+			shared_ptr<gl::Fbo> thirdFboTemp = thirdFbo;
+
+//
+//			//Fbo for UserInterface
+//			shared_ptr<gl::Fbo> uiFbo;
+//			shared_ptr<gl::Fbo> imageFbo;
+//			shared_ptr<gl::Fbo> radialFbo;
+//			//Proxy Menu Fbo
+//			shared_ptr<gl::Fbo> proxFbo;
+//			shared_ptr<gl::Fbo> fingerLocationFbo;
+
+			//		Sets window size and initializes framebuffers (layers).
+			//setWindowSize(windowWidth, windowHeight);
+
+			//add bind, clear, and unbind for all fbos created here to test if it clears buffers
+			gl::Fbo::Format format;
+			firstFbo.reset();
+			secondFbo.reset();
+			thirdFbo.reset();
+			activeFbo.reset();
+//			firstFbo->mWidth = windowWidth;
+//			firstResizeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//			secondResizeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//			thirdResizeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+//			firstFbo.swap(windowWidth, );
+			firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			firstFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			firstFbo->unbindFramebuffer();
+
+			secondFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			secondFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			secondFbo->unbindFramebuffer();
+
+			thirdFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			thirdFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			thirdFbo->unbindFramebuffer();
+
+			activeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			activeFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			activeFbo->unbindFramebuffer();
+
+			layerList[0];
+//			firstFbo->mHeight = windowHeight;
+
+			iconFbo.reset();
+			saveImageFbo.reset();
+			iconFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			iconFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			iconFbo->unbindFramebuffer();
+
+			saveImageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			saveImageFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			saveImageFbo->unbindFramebuffer();
+
+
+			//Set up UI
+			uiFbo.reset();
+			uiFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			uiFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			uiFbo->unbindFramebuffer();
+
+			//Set up image feedback fbo
+			imageFbo.reset();
+			imageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			imageFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			imageFbo->unbindFramebuffer();
+
+			//Set up fbo for proxy menu
+			radialFbo.reset();
+			radialFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			radialFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			radialFbo->unbindFramebuffer();
+
+			//Set up fbo for proxy menu
+			proxFbo.reset();
+			proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			proxFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			proxFbo->unbindFramebuffer();
+
+
+			//Background FBO Testing
+			backgroundFbo.reset();
+			backgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			backgroundFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			backgroundFbo->unbindFramebuffer();
+
+			//Set up fingerlocation FBo
+			fingerLocationFbo.reset();
+			fingerLocationFbo = gl::Fbo::create(windowWidth, windowHeight, format);
+			fingerLocationFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			fingerLocationFbo->unbindFramebuffer();
+
+			setFrameRate(FRAME_RATE);
+
+			//create setter for mySymmetry
+			// doesn't work
+			//				mySymmetry.setSymmetryWindowWidth(windowWidth / 2, mySymmetry.getSymmetryOn());
+			//		mySymmetry = drawing::SymmetryLine(windowWidth / 2, true);
+
+			mySymmetry.setSymmetryWindowWidth(windowWidth / 2, true);
+
+			//Sets up layers
+			layerList.clear();
+
+
+
+			layerList.emplace_back(firstFbo);
+			layerList.emplace_back(secondFbo);
+			layerList.emplace_back(thirdFbo);
+//			layerList.emplace_back(firstResizeFbo);
+//			layerList.emplace_back(secondResizeFbo);
+//			layerList.emplace_back(thirdResizeFbo);
+
+
+			//create a setter for brush
+			// i think it works
+			//brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
+			brush.setSymmetry(&mySymmetry);
+
+			//create a setter for illustrator
+			//		illustrator = drawing::Illustrator(&brush, &layerList);
+			illustrator.setIllustratorResize(&brush, &layerList);
+			//deviceHandler = devices::DeviceHandler();
+			getHomeDirectory();
+
+			//create a setter for ImageHandler
+			//		imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
+			imageHandler.setImageHandlerResize(&layerList);
+
+			//RealSense Setup
+			//create a setter for RealSenseHandler
+			//		realSenseHandler = devices::RealSenseHandler(&illustrator);
+			realSenseHandler.setRealSenseResize(&illustrator);
+
+
+			//create a setter for windowWidth, windowHeight, &brush, &illustrator, uiFbo, &layerList
+			//		gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
+			gui.setUIResize(windowWidth, windowHeight, &brush, &illustrator, uiFbo, &layerList);
+
+
+			//create a setter for leapMotionHandler
+			//		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight);
+			leapMotionHandler.setLeapMotionResize(windowWidth, windowHeight);
+		}
+		resizeCount++;
+
 	}
 }}

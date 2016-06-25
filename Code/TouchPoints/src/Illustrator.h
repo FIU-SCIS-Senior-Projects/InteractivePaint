@@ -27,6 +27,9 @@ namespace touchpoints {
 			void clearTimeMachine();
 			void drawActiveShapes();
 
+			//setters for resize() in TouchPointsApp
+			void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
+
 		private:
 			vector<shared_ptr<gl::Fbo>>* mLayerList;
 			Brush* mBrush;

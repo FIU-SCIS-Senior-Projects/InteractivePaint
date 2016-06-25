@@ -3,6 +3,7 @@
 #include "Illustrator.h"
 #include "DeviceHandler.h"
 #include "TouchKeyboard.h"
+#include "BRMenuHandler.h"
 
 namespace touchpoints { namespace ui
 {
@@ -34,6 +35,13 @@ namespace touchpoints { namespace ui
 		void drawBrushButtonsFbo();
 		void drawShapesButtonsFbo();
 
+		//setter for resize() in TouchPointsApp
+		void setUIResize(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, drawing::Illustrator* mIllustrator, std::shared_ptr<gl::Fbo> fbo, std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList);
+		//setter and getter for mode button
+		void setModeButtons(bool sModeButtons);
+		bool getModeButtons();
+
+
 		void slideButtons(cinder::app::TouchEvent::Touch touch);
 		float getLayerAlpha(int layerNumber);
 		void incrementBackground();
@@ -46,6 +54,8 @@ namespace touchpoints { namespace ui
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;
 		TouchKeyboard keyboard;
+//		brm::BRMenuHandler brMenu;
+		
 
 		//Frame Buffers for the UI. Mostly Fbo's that held button draw calls.
 		std::shared_ptr<gl::Fbo> uiFbo;
@@ -56,7 +66,7 @@ namespace touchpoints { namespace ui
 		std::shared_ptr<gl::Fbo> colorButtonsFbo;
 		std::shared_ptr<gl::Fbo> settingsButtonsFbo;
 		//Stores the 'Checkerboard pattern for background'
-		std::shared_ptr<gl::Fbo> transparentBackgroundFbo;
+		std::shared_ptr<gl::Fbo> transparentBackgroundFbo; //can remove after finishing BRMenuHandler
 
 		int windowWidth;
 		int windowHeight;

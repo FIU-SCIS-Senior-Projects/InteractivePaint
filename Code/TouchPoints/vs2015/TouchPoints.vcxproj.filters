@@ -84,6 +84,9 @@
     <ClCompile Include="..\src\App.cpp">
       <Filter>app</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BRMenuHandler.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -122,9 +125,6 @@
     <ClInclude Include="..\src\TouchRectangle.h">
       <Filter>drawing\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TouchShape.h">
-      <Filter>drawing\shapes</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\TouchTriangle.h">
       <Filter>drawing\shapes</Filter>
     </ClInclude>
@@ -145,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="..\src\IDeviceHandler.h">
       <Filter>devices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BRMenuHandler.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TouchShape.h">
+      <Filter>drawing\shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

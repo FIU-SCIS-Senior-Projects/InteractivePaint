@@ -13,10 +13,8 @@ namespace touchpoints { namespace devices
 	TX_CONTEXTHANDLE EyeXHandler::hContext = nullptr;
 
 	EyeXHandler::EyeXHandler() {};
-	EyeXHandler::EyeXHandler(float gazePositionX, float gazePositionY, int resolutionX, int resolutionY, 
-		TX_CONNECTIONSTATE isEyeXConnected)
-		: gazePositionX(gazePositionX), gazePositionY(gazePositionY), resolutionX(resolutionX),
-		  resolutionY(resolutionY), isEyeXConnected(isEyeXConnected), hGazeTrackingStateChangedTicket(TX_INVALID_TICKET),
+	EyeXHandler::EyeXHandler(float gazePositionX, float gazePositionY, TX_CONNECTIONSTATE isEyeXConnected)
+		: gazePositionX(gazePositionX), gazePositionY(gazePositionY), isEyeXConnected(isEyeXConnected), hGazeTrackingStateChangedTicket(TX_INVALID_TICKET),
 		hConnectionStateChangedTicket(TX_INVALID_TICKET), hEventHandlerTicket(TX_INVALID_TICKET) {};
 
 	bool EyeXHandler::InitEyeX()

@@ -6,6 +6,7 @@ namespace touchpoints { namespace drawing
 
 	SymmetryLine::SymmetryLine(float x, bool ySymmetric)
 	{
+		//Note: else never being called but could be used for vertical symmetry
 		if (ySymmetric)
 		{
 			point1 = vec2(x, 0);
@@ -27,6 +28,21 @@ namespace touchpoints { namespace drawing
 	bool SymmetryLine::getSymmetryOn()
 	{
 		return symmetryOn;
+	}
+
+	void SymmetryLine::setSymmetryWindowWidth(float x, bool ySymmetric)
+	{
+		if (ySymmetric)
+		{
+			point1 = vec2(x, 0);
+			point2 = vec2(x, 1);
+		}
+		else
+		{
+			point1 = vec2(0, x);
+			point2 = vec2(1, x);
+		}
+//		symmetryOn = false;
 	}
 
 	TouchPoint SymmetryLine::symmetricLine(TouchPoint line)

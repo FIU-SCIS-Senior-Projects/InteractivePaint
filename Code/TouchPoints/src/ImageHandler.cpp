@@ -22,6 +22,11 @@ namespace touchpoints { namespace drawing
 		iconStartFlag = false;
 	}
 
+	void ImageHandler::setImageHandlerResize(std::vector<std::shared_ptr<cinder::gl::Fbo>>* fboLayerList)
+	{
+		mLayerList = fboLayerList;
+	}
+
 	bool ImageHandler::getIconFlag()
 	{
 		return iconFlag;
@@ -62,6 +67,7 @@ namespace touchpoints { namespace drawing
 	void ImageHandler::displayStartIcon()
 	{
 		if (iconStartFlag == false) return;
+		
 		gl::color(1.0, 1.0, 1.0, startFadeTime);
 		gl::draw(imageTexture, Rectf(app::getWindowSize().x / 2 - 500, app::getWindowSize().y / 2 - 255, app::getWindowSize().x / 2 + 455, app::getWindowSize().y / 2 + 300)); //ms is fade time in milliseconds.
 		std::chrono::milliseconds ms{5000};

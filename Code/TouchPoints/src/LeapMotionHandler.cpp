@@ -9,6 +9,12 @@ namespace touchpoints { namespace devices
 	LeapMotionHandler::LeapMotionHandler(int windowWidth, int windowHeight)
 		: windowWidth(windowWidth), windowHeight(windowHeight) {};
 
+	void LeapMotionHandler::setLeapMotionResize(int setWindowWidth, int setWindowHeight)
+	{
+		windowWidth = setWindowWidth;
+		windowHeight = setWindowHeight;
+	}
+
 	void LeapMotionHandler::InitLeapMotion()
 	{
 		enableGest(leapController);

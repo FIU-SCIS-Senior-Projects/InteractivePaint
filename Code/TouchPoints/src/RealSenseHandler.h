@@ -28,6 +28,9 @@ namespace touchpoints { namespace devices
 		void streamData();
 		void streamCursorData();
 
+		//setter for resize() in TouchPointsApp
+		void RealSenseHandler::setRealSenseResize(drawing::Illustrator* illustrator);
+
 		pxcBool kissDetection(PXCFaceData::ExpressionsData* expressionData);
 		pxcBool eyebrowDetection(PXCFaceData::ExpressionsData* expressionData);
 		pxcBool cheekDetection(PXCFaceData::ExpressionsData* expressionData);

@@ -45,6 +45,12 @@ namespace touchpoints { namespace app
 		void keyDown(KeyEvent event) override;
 		void drawRadial();
 		void setDefaultMode(Mode::DefaultModes mode);
+		void resize() override;
+//		void myResize();
+		//doesnt run resize when app is first built
+		int resizeCount = 0;
+
+
 
 		int windowWidth = getWindowSize().x;
 		int windowHeight = getWindowSize().y;
@@ -91,7 +97,8 @@ namespace touchpoints { namespace app
 
 		//Keeps time for the last time we checked for connected or disconnected devices
 		std::chrono::milliseconds lastDeviceCheck;
-
+		
+		//may need to re call radial center draw to update radial center
 		vec2 radialCenter = vec2(windowWidth * .5, windowHeight * .5);
 
 		//Symmetry lines

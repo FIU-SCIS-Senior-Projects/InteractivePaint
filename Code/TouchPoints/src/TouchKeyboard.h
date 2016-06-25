@@ -37,6 +37,9 @@ namespace touchpoints { namespace ui
 		void cycleFont();
 		void writeText(cinder::vec2 startPos, cinder::vec2 endPos, std::string text);
 		bool onKeyboardButtons(cinder::vec2 touch);
+
+		//setter for the resize in UI which is called by TouchPointsApp
+		void setTouchKeyboardResize(int windowWidth, int windowHeight);
 	private:
 		std::string printString;
 		std::string font;

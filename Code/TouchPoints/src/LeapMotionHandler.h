@@ -17,6 +17,8 @@ namespace touchpoints { namespace devices
 		LeapMotionHandler();
 		LeapMotionHandler(int windowWidth, int windowHeight);
 
+		void setLeapMotionResize(int windowWidth, int windowHeight);
+
 		void InitLeapMotion();
 		void enableGest(Leap::Controller controller);
 		void leapSave(ui::UserInterface& gui, drawing::ImageHandler& imageHandler);

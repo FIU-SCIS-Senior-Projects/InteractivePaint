@@ -39,6 +39,9 @@ namespace touchpoints { namespace drawing
 		void Brush::decrementColor();
 		std::vector<Color> getColorList();
 
+		//setters for resize in TouchPointsApp
+		void Brush::setSymmetry(SymmetryLine* mySymmetry);
+		
 	private:
 		ColorA mColor;
 		int mLineSize;

@@ -21,6 +21,34 @@ namespace touchpoints { namespace ui
 		font = fontList.front();
 	}
 
+	//setter for the resize in UI which is called by TouchPointsApp
+	void TouchKeyboard::setTouchKeyboardResize(int windowWidth, int windowHeight)
+	{
+		anchor = cinder::vec2(windowWidth * .2, windowHeight * .6);
+		cinder::gl::Fbo::Format format;
+		keyboardFbo.reset();
+		movingKeyboardFbo.reset();
+		textFbo.reset();
+		keyboardFbo = cinder::gl::Fbo::create(windowWidth, windowHeight, format);
+		keyboardFbo->bindFramebuffer();
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		keyboardFbo->unbindFramebuffer();
+
+		movingKeyboardFbo = cinder::gl::Fbo::create(windowWidth, windowHeight, format);
+		movingKeyboardFbo->bindFramebuffer();
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		movingKeyboardFbo->unbindFramebuffer();
+
+		textFbo = cinder::gl::Fbo::create(windowWidth, windowHeight, format);
+		textFbo->bindFramebuffer();
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		textFbo->unbindFramebuffer();
+
+	}
+
 	void TouchKeyboard::cycleFont()
 	{
 		fontList.emplace_back(fontList.front());
