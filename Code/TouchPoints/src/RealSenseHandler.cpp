@@ -30,6 +30,11 @@ namespace touchpoints { namespace devices
 		//Real sense constructor not complete until realSenseSetup called
 	}
 
+	void RealSenseHandler::setRealSenseResize(drawing::Illustrator* illustrator)
+	{
+		myIllustrator = illustrator;
+	}
+
 	void RealSenseHandler::realSenseSetup()
 	{
 		pxcStatus sts;

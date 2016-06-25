@@ -17,6 +17,9 @@ namespace touchpoints { namespace drawing
 		void toggleSymmetry();
 		bool getSymmetryOn();
 
+		//setter for resize in TouchPointsApp
+		void SymmetryLine::setSymmetryWindowWidth(float x, bool ySymmetric);
+
 	private:
 		vec2 point1;
 		vec2 point2;

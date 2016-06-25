@@ -21,6 +21,9 @@ namespace touchpoints { namespace drawing
 		bool getStartUpFlag();
 		void displayStartIcon();
 		void loadStartIcon(std::string icon);
+
+		//Setter for resize() in TouchPointsApp
+		void ImageHandler::setImageHandlerResize(std::vector<std::shared_ptr<cinder::gl::Fbo>>* fboLayerList);
 	private:
 		std::vector<std::shared_ptr<cinder::gl::Fbo>>* mLayerList;
 		std::vector<float>* layerAlpha;

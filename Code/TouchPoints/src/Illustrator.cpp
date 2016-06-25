@@ -23,6 +23,22 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
+	// setter for the resize in TouchPointsApp
+	void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList)
+	{
+		mLayerList = layerList;
+		mBrush = brush;
+		numberOfActiveDrawings = 0;
+
+		//Create Map for all Fbo's in Program 
+		for (auto layers : *mLayerList)
+		{
+			std::list<std::shared_ptr<gl::Fbo>> storedFbo;
+//			myTimeMachine may need to be reset or be swaped with the previous pair
+			myTimeMachine.insert(make_pair(layers, storedFbo));
+		}
+	}
+
 	int Illustrator::getNumberOfActiveDrawings()
 	{
 		return numberOfActiveDrawings;

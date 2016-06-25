@@ -204,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\App.cpp" />
+    <ClCompile Include="..\src\BRMenuHandler.cpp" />
     <ClCompile Include="..\src\Brush.cpp" />
     <ClCompile Include="..\src\DeviceHandler.cpp" />
     <ClCompile Include="..\src\DrawEvent.cpp" />
@@ -228,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\AllShapes.h" />
+    <ClInclude Include="..\src\BRMenuHandler.h" />
     <ClInclude Include="..\src\Brush.h" />
     <ClInclude Include="..\src\DeviceHandler.h" />
     <ClInclude Include="..\src\DrawEvent.h" />

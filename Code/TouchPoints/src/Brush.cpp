@@ -103,6 +103,12 @@ namespace touchpoints { namespace drawing
 		return mMySymmetry;
 	}
 
+	//Setter for resize in TouchpointsApp
+	void Brush::setSymmetry(SymmetryLine* mySymmetry)
+	{
+		mMySymmetry = mySymmetry;
+	}
+
 	bool Brush::getRandColor()
 	{
 		return mRandColor;

@@ -44,11 +44,62 @@ namespace touchpoints { namespace ui
 			(*layerAlpha).emplace_back(1.0f);
 		}
 		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
+//		brm::BRMenuHandler(windowWidth, windowHeight, modeChangeFlag, uiFbo, mBrush, illustrator, deviceHandler, backgroundColor, backgroundList);
 	}
 
+	void UserInterface::setUIResize(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, drawing::Illustrator* mIllustrator, std::shared_ptr<gl::Fbo> fbo, std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList)
+	{
+		windowWidth = mWindowWidth;
+		windowHeight = mWindowHeight;
+		mBrush = brush;
+		illustrator = mIllustrator;
+		modeChangeFlag = true;
+		uiFbo.reset();
+		uiFbo = fbo;
+		modeButtonsFbo.reset();
+		brushButtonsFbo.reset();
+		deviceButtonsFbo.reset();
+		shapeButtonsFbo.reset();
+		colorButtonsFbo.reset();
+		settingsButtonsFbo.reset();
+		//Stores the 'Checkerboard pattern for background'
+		transparentBackgroundFbo.reset();
+
+//		layerList->clear();
+		layerList = fboLayerList;
+		for (auto layers : *layerList)
+		{
+			(*layerAlpha).emplace_back(1.0f);
+		}
+//		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
+		keyboard.setTouchKeyboardResize(mWindowWidth, mWindowHeight);
+		uiSetup();
+		drawUi();
+		
+
+
+		//Note: need to create a width/height setter for BRMenuHandler
+	}
+
+	void UserInterface::setModeButtons(bool sModeButtons)
+	{
+		modeButtons = sModeButtons;
+	}
+
+	bool UserInterface::getModeButtons()
+	{
+		return modeButtons;
+	}
+
+	//draws the shapes dropdown menu on the top left of application
 	void UserInterface::drawShapesButtonsFbo()
 	{
 		shapeButtonsFbo->bindFramebuffer();
+
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		//draws menu outline for shapes in top left menu
 		for (int i = 0; i < 5; i++)
 		{
 			gl::color(1.0f, 1.0f, 1.0f);
@@ -57,15 +108,17 @@ namespace touchpoints { namespace ui
 			gl::drawStrokedRect(Rectf(50, 50 * (i) + 50, 100, 50 * i + 100), uiOutlineSize);
 		}
 
+		//draws the eraser icon in top left menu
 		gl::TextureRef texture = gl::Texture::create(loadImage(loadAsset("Eraser.png")));
-
 		gl::color(1.0, 1.0, 1.0, 1.0);
 		gl::draw(texture, Rectf(55, 255, 95, 295));
 
+		//draws line, circle, square, and triangle icon in the top left menu
 		gl::color(mBrush->getColor());
 		gl::lineWidth(2);
 		gl::drawLine(vec2(55, 95), vec2(95, 55));
 
+		//if getfilledshapes is selected, then the shapes icons menu will become filled.
 		if (mBrush->getFilledShapes()) gl::drawSolidCircle(vec2(75, 125), 15);
 		else gl::drawStrokedCircle(vec2(75, 125), 15);
 
@@ -83,6 +136,7 @@ namespace touchpoints { namespace ui
 		shapeButtonsFbo->unbindFramebuffer();
 	}
 
+	//draws the menu for device modes on the bottom right
 	void UserInterface::drawDeviceButtonsFbo()
 	{
 		deviceButtonsFbo->bindFramebuffer();
@@ -90,11 +144,14 @@ namespace touchpoints { namespace ui
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		//draws the background of the different device modes in the bottom right
 		gl::lineWidth(5);
 		gl::color(0.0f, 0.0f, 0.0f, 1.0f);
 		gl::drawSolidRect(Rectf(windowWidth * .9, windowHeight * .56, windowWidth, windowHeight * .8));
 		gl::color(1.0f, 1.0f, 1.0f, 1.0f);
 
+		//draws the names of the different device modes in the bottom right
+		//draws multitouch menu
 		TextLayout layout1;
 		layout1.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout1.setFont(Font("Arial", 50));
@@ -105,6 +162,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .77, windowWidth, windowHeight * .8));
 
+		//draws eyex menu
 		TextLayout layout2;
 		layout2.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout2.setFont(Font("Arial", 50));
@@ -115,6 +173,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .74, windowWidth, windowHeight * .77));
 
+		//draws Leap Gesture
 		TextLayout layout3;
 		layout3.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout3.setFont(Font("Arial", 50));
@@ -125,6 +184,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .71, windowWidth, windowHeight * .74));
 
+		//draws Leap Draw
 		TextLayout layout4;
 		layout4.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout4.setFont(Font("Arial", 50));
@@ -135,6 +195,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .68, windowWidth, windowHeight * .71));
 
+		//draws Leap Motion
 		TextLayout layout5;
 		layout5.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout5.setFont(Font("Arial", 50));
@@ -145,6 +206,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .65, windowWidth, windowHeight * .68));
 
+		//draws Real Sense Expressions
 		TextLayout layout6;
 		layout6.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout6.setFont(Font("Arial", 50));
@@ -155,6 +217,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .62, windowWidth, windowHeight * .65));
 
+		//draws Real Sense Draw
 		TextLayout layout7;
 		layout7.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout7.setFont(Font("Arial", 50));
@@ -165,6 +228,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .59, windowWidth, windowHeight * .62));
 
+		//draws Real Sense
 		TextLayout layout8;
 		layout8.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
 		layout8.setFont(Font("Arial", 50));
@@ -177,40 +241,49 @@ namespace touchpoints { namespace ui
 
 		gl::color(0.0f, 0.0f, 0.0f);
 
+		//draws the black/green squares for the Real Sense status, does not set the toggle touchpoints
 		if (deviceHandler->realSenseStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .56, windowWidth * .89, windowHeight * .59));
 
+		//draws the black/green squares for the Real Sense Draw, does not set the toggle touchpoints
 		if (deviceHandler->realSenseDraw()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .59, windowWidth * .89, windowHeight * .62));
 
+		//draws the black/green squares for the Real Sense Expressions, does not set the toggle touchpoints
 		if (deviceHandler->realSenseExpressions()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .62, windowWidth * .89, windowHeight * .65));
 
+		//draws the black/green squares for the Leap status, does not set the toggle touchpoints
 		if (deviceHandler->leapStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .65, windowWidth * .89, windowHeight * .68));
 
+		//draws the black/green squares for the Leap Draw, does not set the toggle touchpoints
 		if (deviceHandler->leapDraw()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .68, windowWidth * .89, windowHeight * .71));
 
+		//draws the black/green squares for the Leap Gesture, does not set the toggle touchpoints
 		if (deviceHandler->leapGesture()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .71, windowWidth * .89, windowHeight * .74));
 
+		//draws the black/green squares for the eyeX status, does not set the toggle touchpoints
 		if (deviceHandler->eyeXStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .74, windowWidth * .89, windowHeight * .77));
 
+		//draws the black/green squares for the Multitouch status, does not set the toggle touchpoints
 		if (deviceHandler->multiTouchStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .77, windowWidth * .89, windowHeight * .8));
 
 		gl::color(0.75, 0.75, .75, 1.0);
 
+		// draws horizontal grey lines in the bottom right device menu which separates the black/green square indicators
 		gl::drawStrokedRect(Rectf(windowWidth * .87, windowHeight * .56, windowWidth * .89, windowHeight * .59));
 		gl::drawStrokedRect(Rectf(windowWidth * .87, windowHeight * .59, windowWidth * .89, windowHeight * .62));
 		gl::drawStrokedRect(Rectf(windowWidth * .87, windowHeight * .62, windowWidth * .89, windowHeight * .65));
@@ -220,17 +293,19 @@ namespace touchpoints { namespace ui
 		gl::drawStrokedRect(Rectf(windowWidth * .87, windowHeight * .74, windowWidth * .89, windowHeight * .77));
 		gl::drawStrokedRect(Rectf(windowWidth * .87, windowHeight * .77, windowWidth * .89, windowHeight * .8));
 
+		//Not sure, draws something in the device menu
 		gl::drawStrokedRect(Rectf(windowWidth * .87, windowHeight * .56, windowWidth * .89, windowHeight * .8), uiOutlineSize);
 
 		deviceButtonsFbo->unbindFramebuffer();
 	}
 
+	//draws device button for top left menu,aka. size + -, Alpha(Transparency) + -, filled shapes
 	void UserInterface::drawBrushButtonsFbo()
 	{
+		brushButtonsFbo->bindFramebuffer();
+
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		brushButtonsFbo->bindFramebuffer();
 
 		/*LineSize Button*/
 		gl::color(0.0, 0.0, 0.0, 1.0);
@@ -357,6 +432,7 @@ namespace touchpoints { namespace ui
 		return FPS;
 	}
 
+	//used for moving the keyboard
 	void UserInterface::endButtonPress(TouchEvent::Touch touch)
 	{
 		if (keyboard.getMovingKeyboard())
@@ -374,9 +450,14 @@ namespace touchpoints { namespace ui
 		//Draws Settings menu FBO
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
+//		settingsButtonsFbo.reset();
 		settingsButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		settingsButtonsFbo->bindFramebuffer();
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+
 		gl::lineWidth(3);
 
 		//Frames Per Second Button
@@ -416,14 +497,19 @@ namespace touchpoints { namespace ui
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
 		//Draws Device Buttons FBO
+//		deviceButtonsFbo.reset();
 		deviceButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		drawDeviceButtonsFbo();
 
 		//Draws Mode Buttons FBO.
+//		modeButtonsFbo.reset();
 		modeButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		modeButtonsFbo->bindFramebuffer();
+
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		gl::color(0.3, 0.2, 0.5, 1.0);
 		gl::drawSolidRect(Rectf(0, 0, 350, 50));
@@ -509,15 +595,19 @@ namespace touchpoints { namespace ui
 		modeButtonsFbo->unbindFramebuffer();
 
 		//Sets Up Brush Buttons
-
+//		brushButtonsFbo.reset();
 		brushButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		drawBrushButtonsFbo();
 
 		//Sets up the draw calls for color buttons and writes them to an FBO.
+//		colorButtonsFbo.reset();
 		colorButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		colorButtonsFbo->bindFramebuffer();
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		int i = 0;
 		for (auto myColor : mBrush->getColorList())
 		{
@@ -532,14 +622,19 @@ namespace touchpoints { namespace ui
 		//Draws Shapes Buttons FBO.
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
+//		shapeButtonsFbo.reset();
 		shapeButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		drawShapesButtonsFbo();
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 		//Loads the asset for transparent Background and writes it to the FBO.
+//		transparentBackgroundFbo.reset();
 		transparentBackgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		transparentBackgroundFbo->bindFramebuffer();
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		cinder::gl::TextureRef tempText = gl::Texture::create(loadImage(loadAsset("TransparentBackground.png")));
 		gl::draw(tempText, Rectf(0, 0, windowWidth, windowHeight));
 		transparentBackgroundFbo->unbindFramebuffer();
@@ -786,6 +881,9 @@ namespace touchpoints { namespace ui
 						keyboard.endText();
 						//Writes the keyboard text to the current Fbo.
 						layerList->back()->bindFramebuffer();
+						glClearColor(1.0, 1.0, 1.0, 0.0);
+						glClear(GL_COLOR_BUFFER_BIT);
+
 						gl::color(1.0, 1.0, 1.0, 1.0);
 						gl::draw(keyboard.getTextFbo()->getColorTexture());
 						layerList->back()->unbindFramebuffer();
@@ -805,6 +903,9 @@ namespace touchpoints { namespace ui
 				//Finish cleaning up the keyboard.
 				keyboard.endText();
 				layerList->back()->bindFramebuffer();
+				glClearColor(1.0, 1.0, 1.0, 0.0);
+				glClear(GL_COLOR_BUFFER_BIT);
+
 				gl::color(1.0, 1.0, 1.0, 1.0);
 				gl::draw(keyboard.getTextFbo()->getColorTexture());
 				layerList->back()->unbindFramebuffer();
@@ -1104,6 +1205,7 @@ namespace touchpoints { namespace ui
 		return false;
 	}
 
+	//Mode Shapes are called to be drawn in the botton right menu
 	void UserInterface::modeRectangle()
 	{
 		if (mBrush->getRandColor())
@@ -1207,8 +1309,12 @@ namespace touchpoints { namespace ui
 		}
 	}
 
+	//draws the top left and bottom right menus
 	void UserInterface::drawUi()
 	{
+
+//		brm::BRMenuHandler::drawUiBRM();
+
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
 		modeChangeFlag = true;
@@ -1218,6 +1324,8 @@ namespace touchpoints { namespace ui
 		{
 			modeChangeFlag = false;
 			uiFbo->bindFramebuffer();
+			glClearColor(1.0, 1.0, 1.0, 0.0);
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			gl::lineWidth(5);
 			//Clears the framebuffer to redraw
@@ -1279,6 +1387,7 @@ namespace touchpoints { namespace ui
 				}
 
 			//auto maxTouches = System::getMaxMultiTouchPoints();
+			//draws the color indicators in the bottom right menu which indicate which devices are active
 			if (deviceHandler->multiTouchStatus())
 			{
 				gl::color(0.0, 0.0, 1.0);
@@ -1307,29 +1416,33 @@ namespace touchpoints { namespace ui
 			//Currently shuts down nothing because it needs to be developed in parralel to inInteractiveUi
 		}
 
+		//draws the settings menu, aka frames per sec and cycle background
 		if (settingsButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(settingsButtonsFbo->getColorTexture());
 		}
 
+		//draws the top left menu of different modes
 		if (modeButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(modeButtonsFbo->getColorTexture());
 		}
-
+		//draws the drop down menu of brush size, alpha and solid shapes
 		if (brushButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(brushButtonsFbo->getColorTexture());
 		}
 
+		//draws the color selection drop down menu
 		if (colorButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(colorButtonsFbo->getColorTexture());
 		}
+		//draws the drop down menu of shapes
 		if (shapeButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
