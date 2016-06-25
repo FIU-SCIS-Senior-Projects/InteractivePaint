@@ -3,4 +3,4 @@
 #include "TouchPoint.h"
 #include "TouchCircle.h"
 #include "TouchRectangle.h"
-#include "TouchTriangle.h"
+#include "TouchVerticalIsoscelesTriangle.h"

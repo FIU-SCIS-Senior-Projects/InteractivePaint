@@ -28,7 +28,8 @@ namespace touchpoints { namespace drawing
 		void changeFilledShapes(bool filledShapes);
 		void incrementShape();
 		void changeRandColor(bool randColor);
-		void changeEraserMode(bool eraserMode);
+		void activateEraser();
+		void deactivateEraser();
 		void changeAlphaColor(float alphaColor);
 		void increaseAlpha();
 		void decreaseAlpha();

@@ -76,6 +76,9 @@ namespace touchpoints { namespace app
 		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight);
 		leapMotionHandler.InitLeapMotion();
 
+		/*Kinect*/
+		kinectHandler = devices::KinectHandler();
+
 		deviceHandler.deviceConnection();
 		Mode::DefaultModes resultMode = deviceHandler.getDefaultMode();
 		setDefaultMode(resultMode);
@@ -208,7 +211,14 @@ namespace touchpoints { namespace app
 		}
 		else if (event.getChar() == 'e') //Eraser mode
 		{
-			brush.changeEraserMode(!(brush.IsEraserActive()));
+			if (brush.IsEraserActive())
+			{
+				brush.deactivateEraser();
+			}
+			else
+			{
+				brush.activateEraser();
+			}
 
 			gui.setModeChangeFlag();
 		}
@@ -560,6 +570,8 @@ namespace touchpoints { namespace app
 			realSenseHandler.realSenseSetup();
 			setupComplete = true;
 		}
+		/*Kinect*/
+		kinectHandler.Update(illustrator);
 
 		//Increment the frame counter
 		frames++;
@@ -571,7 +583,7 @@ namespace touchpoints { namespace app
 		std::chrono::milliseconds checkTime{2000};
 		if (currentTime - lastDeviceCheck >= checkTime)
 		{
-			//Updates FPS - Ensure frames is being divided by how many seconds it takes to get into this loop.
+			//Updates FPS - Ensure framesDrawn is being divided by how many seconds it takes to get into this loop.
 			fps = frames / 2;
 			frames = 0;
 
@@ -721,12 +733,6 @@ namespace touchpoints { namespace app
 			gl::draw(radialFbo->getColorTexture());
 		}
 
-		//Draws proximity menu
-		if (proxActive)
-		{
-			gl::draw(proxFbo->getColorTexture());
-		}
-
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
 		/*Draws the frame buffer for UI*/
@@ -775,5 +781,9 @@ namespace touchpoints { namespace app
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(fingerLocationFbo->getColorTexture());
 		}
+
+		illustrator.processDrawEventQueue();
+		illustrator.drawActive();
+		illustrator.drawTemporary();
 	}
 }}

@@ -2,22 +2,22 @@
 
 namespace touchpoints { namespace drawing
 {
-	float TouchShape::size()
+	float TouchShape::size() const
 	{
 		return mSize;
 	}
 
-	ColorA TouchShape::getColor()
+	ColorA TouchShape::getColor() const
 	{
 		return mColor;
 	}
 
-	bool TouchShape::getFilledShape()
+	bool TouchShape::getFilledShape() const
 	{
 		return mFilledShapes;
 	}
 
-	float TouchShape::getSize()
+	float TouchShape::getSize() const
 	{
 		return mSize;
 	}

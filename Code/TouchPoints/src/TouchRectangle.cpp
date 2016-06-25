@@ -6,7 +6,7 @@ using namespace cinder;
 
 namespace touchpoints { namespace drawing
 {
-	TouchRectangle::TouchRectangle() {}
+	TouchRectangle::TouchRectangle() : TouchRectangle(0, 0, 0, 0, ColorA(0, 0, 0, 0), 0.0f, false) {}
 
 	TouchRectangle::TouchRectangle(int x1, int y1, int x2, int y2, ColorA color, float size, bool filledShapes)
 	{
@@ -17,32 +17,19 @@ namespace touchpoints { namespace drawing
 		mColor = color;
 		mSize = size;
 		mFilledShapes = filledShapes;
+		this->framesDrawn = 1;
 	}
 
-	void TouchRectangle::changePoint(int x, int y)
+	TouchRectangle::TouchRectangle(int x1, int y1, int x2, int y2, ColorA color, float size, bool filledShapes, int framesDrawn)
 	{
-		mLowerRightX = x;
-		mLowerRightY = y;
-	}
-
-	int TouchRectangle::upperLeftX()
-	{
-		return mUpperLeftX;
-	}
-
-	int TouchRectangle::upperLeftY()
-	{
-		return mUpperLeftY;
-	}
-
-	int TouchRectangle::lowerRightX()
-	{
-		return mLowerRightX;
-	}
-
-	int TouchRectangle::lowerRightY()
-	{
-		return mLowerRightY;
+		mUpperLeftX = x1;
+		mUpperLeftY = y1;
+		mLowerRightX = x2;
+		mLowerRightY = y2;
+		mColor = color;
+		mSize = size;
+		mFilledShapes = filledShapes;
+		this->framesDrawn = framesDrawn;
 	}
 
 	void TouchRectangle::draw()
@@ -52,7 +39,10 @@ namespace touchpoints { namespace drawing
 		{
 			gl::drawSolidRect(Rectf(mUpperLeftX, mUpperLeftY, mLowerRightX, mLowerRightY));
 		}
-		else gl::drawStrokedRect(Rectf(mUpperLeftX, mUpperLeftY, mLowerRightX, mLowerRightY), mSize);
+		else
+		{
+			gl::drawStrokedRect(Rectf(mUpperLeftX, mUpperLeftY, mLowerRightX, mLowerRightY), mSize);
+		}
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 	}

@@ -175,7 +175,7 @@ namespace touchpoints { namespace ui
 		gl::color(Color::white());
 		gl::draw(mTexture, Rectf(windowWidth * .9, windowHeight * .56, windowWidth, windowHeight * .59));
 
-		gl::color(0.0, 0.0, 0.0);
+		gl::color(0.0f, 0.0f, 0.0f);
 
 		if (deviceHandler->realSenseStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
@@ -990,7 +990,7 @@ namespace touchpoints { namespace ui
 			if (x > 50 && x < 100 && y < 100)
 			{
 				mBrush->changeShape(Shape::Shape::Line);
-				mBrush->changeEraserMode(false);
+				mBrush->deactivateEraser();
 				shapeButtons = false;
 				modeChangeFlag = true;
 				return true;
@@ -998,7 +998,7 @@ namespace touchpoints { namespace ui
 			if (x > 50 && x < 100 && y < 150)
 			{
 				mBrush->changeShape(Shape::Shape::Circle);
-				mBrush->changeEraserMode(false);
+				mBrush->deactivateEraser();
 				shapeButtons = false;
 				modeChangeFlag = true;
 				return true;
@@ -1006,14 +1006,14 @@ namespace touchpoints { namespace ui
 			if (x > 50 && x < 100 && y < 200)
 			{
 				mBrush->changeShape(Shape::Shape::Rectangle);
-				mBrush->changeEraserMode(false);
+				mBrush->deactivateEraser();
 				shapeButtons = false;
 				modeChangeFlag = true;
 				return true;
 			}
 			if (x > 50 && x < 100 && y < 250)
 			{
-				mBrush->changeEraserMode(false);
+				mBrush->deactivateEraser();
 				mBrush->changeShape(Shape::Shape::Triangle);
 				shapeButtons = false;
 				modeChangeFlag = true;
@@ -1021,8 +1021,15 @@ namespace touchpoints { namespace ui
 			}
 			if (x > 50 && x < 100 && y < 300)
 			{
-				if (mBrush->IsEraserActive()) mBrush->changeEraserMode(false);
-				else mBrush->changeEraserMode(true);
+				if (mBrush->IsEraserActive())
+				{
+					mBrush->deactivateEraser();
+				}
+				else
+				{
+					mBrush->activateEraser();
+				}
+
 				shapeButtons = false;
 				modeChangeFlag = true;
 				return true;
@@ -1203,6 +1210,8 @@ namespace touchpoints { namespace ui
 	void UserInterface::drawUi()
 	{
 		gl::color(1.0, 1.0, 1.0, 1.0);
+
+		modeChangeFlag = true;
 
 		//Draws to the UI FBO. Currently only houses 'modebox' in the fbo.
 		if (modeChangeFlag)

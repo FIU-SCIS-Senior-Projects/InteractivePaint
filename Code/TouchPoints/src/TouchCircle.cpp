@@ -15,6 +15,17 @@ namespace touchpoints { namespace drawing
 		mColor = color;
 		mSize = size;
 		mFilledShapes = filledShapes;
+		this->framesDrawn = 1;
+	}
+
+	TouchCircle::TouchCircle(vec2 center, float radius, ColorA color, float size, bool filledShapes, int framesDrawn)
+	{
+		mRadius = radius;
+		mCenter = center;
+		mColor = color;
+		mSize = size;
+		mFilledShapes = filledShapes;
+		this->framesDrawn = framesDrawn;
 	}
 
 	void TouchCircle::changeRadius(float& radius)

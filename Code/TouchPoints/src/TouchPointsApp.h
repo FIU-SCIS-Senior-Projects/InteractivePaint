@@ -1,6 +1,5 @@
 #pragma once
 #include "cinder/app/App.h"
-#include "cinder/System.h"
 #include "cinder/Log.h"
 #include "cinder/gl/Fbo.h"
 #include "cinder/gl/Texture.h"
@@ -9,7 +8,6 @@
 #include <vector>
 #include <map>
 #include <list>
-#include <queue>
 #include "SymmetryLine.h"
 #include "Illustrator.h"
 #include "Enums.h"
@@ -21,10 +19,9 @@
 #include "DeviceHandler.h"
 #include "EyeXHandler.h"
 #include "LeapMotionHandler.h"
+/*Kinect*/
+#include "KinectHandler.h"
 
-using namespace ci;
-using namespace std;
-using namespace cinder;
 using namespace cinder::app;
 
 namespace touchpoints { namespace app 
@@ -88,6 +85,8 @@ namespace touchpoints { namespace app
 		devices::RealSenseHandler realSenseHandler;
 		devices::EyeXHandler eyeXHandler;
 		devices::LeapMotionHandler leapMotionHandler;
+		/*Kinect*/
+		devices::KinectHandler kinectHandler;
 
 		//Keeps time for the last time we checked for connected or disconnected devices
 		std::chrono::milliseconds lastDeviceCheck;
@@ -124,8 +123,8 @@ namespace touchpoints { namespace app
 		list<drawing::TouchCircle> myCircles;
 		map<uint32_t, drawing::TouchRectangle> myActiveRectangles;
 		list<drawing::TouchRectangle> myRectangles;
-		map<uint32_t, drawing::TouchTriangle> myActiveTriangles;
-		list<drawing::TouchTriangle> myTriangles;
+		map<uint32_t, drawing::TouchVerticalIsoscelesTriangle> myActiveTriangles;
+		list<drawing::TouchVerticalIsoscelesTriangle> myTriangles;
 
 		//Fbo's for Layering.
 		//We may want to set a vector of framebuffers?

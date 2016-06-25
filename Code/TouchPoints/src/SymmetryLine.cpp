@@ -81,15 +81,15 @@ namespace touchpoints { namespace drawing
 		return symmetricRectangle;
 	}
 
-	TouchTriangle SymmetryLine::symmetricTriangle(TouchTriangle triangle)
+	TouchVerticalIsoscelesTriangle SymmetryLine::symmetricTriangle(TouchVerticalIsoscelesTriangle triangle)
 	{
-		vec2 symPoint1 = symmetricPoint(triangle.getPoint1());
-		vec2 symPoint2 = symmetricPoint(triangle.getPoint2());
-		vec2 symPoint3 = symmetricPoint(triangle.getPoint3());
-		vec2 symBaseCenter = symmetricPoint(triangle.getBaseCenter());
+		vec2 symPoint1 = symmetricPoint(triangle.GetBaseVertexLeft());
+		vec2 symPoint2 = symmetricPoint(triangle.GetBaseVertexRight());
+		vec2 symPoint3 = symmetricPoint(triangle.GetOppositeBaseVertex());
+		vec2 symBaseCenter = symmetricPoint(triangle.GetBaseCenter());
 		bool symBool = triangle.getFilledShape();
 
-		TouchTriangle symmetricTriangle(symPoint1, symPoint2, symPoint3, symBaseCenter, triangle.getColor(), triangle.getSize(), symBool);
+		TouchVerticalIsoscelesTriangle symmetricTriangle(symPoint1, symPoint2, symPoint3, symBaseCenter, triangle.getColor(), triangle.getSize(), symBool);
 		return symmetricTriangle;
 	}
 }}

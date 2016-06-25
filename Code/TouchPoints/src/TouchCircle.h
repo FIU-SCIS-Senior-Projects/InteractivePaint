@@ -7,6 +7,7 @@ namespace touchpoints { namespace drawing
 	{
 		TouchCircle();
 		TouchCircle(vec2 center, float radius, ColorA color, float size, bool filledShapes);
+		TouchCircle(vec2 center, float radius, ColorA color, float size, bool filledShapes, int framesDrawn);
 		void changeRadius(float& radius);
 		float getRadius();
 		void changePosition(vec2 newCenter);

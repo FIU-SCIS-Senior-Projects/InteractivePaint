@@ -27,9 +27,8 @@ namespace touchpoints { namespace devices
 	}
 
 	void LeapMotionHandler::gestRecognition(bool isDrawing, bool& processing, bool& proxActive,
-	                                        int& currShape, bool& imageFlag, drawing::Brush& brush,
-	                                        ui::UserInterface& gui, drawing::ImageHandler& imageHandler,
-	                                        gl::Fbo* proxFbo)
+		int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
+		drawing::ImageHandler& imageHandler, gl::Fbo* proxFbo)
 	{
 		if (!isDrawing)
 		{
@@ -68,7 +67,6 @@ namespace touchpoints { namespace devices
 										processing = true;
 										leapSave(gui, imageHandler);
 									}
-
 									if (position.x > 0 && position.y < 150)
 									{
 										proxActive = false;
@@ -124,78 +122,132 @@ namespace touchpoints { namespace devices
 		else imageHandler.saveCanvas(vec2(windowWidth, windowHeight), ColorA(gui.getBackgroundColor(), 1.0));
 	}
 
-	void LeapMotionHandler::leapDraw(bool& lockCurrentFrame, bool& proxActive, drawing::Illustrator& illustrator)
+	void LeapMotionHandler::leapDraw(bool& lockCurrentFrame, bool proxActive, drawing::Illustrator& illustrator)
 	{
+		proxActive = false;
+		if (proxActive)
+		{
+			return;
+		}
+
 		//Get all pointables from current leap frame
 		Leap::PointableList pointables = this->currentFrame.pointables();
 		//Gets a virtual rectangular prism which is within the field of view of Leap
 		Leap::InteractionBox iBox = this->currentFrame.interactionBox();
 
+		auto fingerLocationCircles = vector<drawing::TouchCircle>();
+		auto drawEventsToSendToIllustrator = vector<drawing::DrawEvent>();
+
 		//Traverse all pointables
-		for (auto& points : pointables)
+		for (auto& point : pointables)
 		{
 			//Normalize points from iBox
-			Leap::Vector normalizedPosition = iBox.normalizePoint(points.stabilizedTipPosition());
+			Leap::Vector normalizedPosition = iBox.normalizePoint(point.stabilizedTipPosition());
 			//Get x and y coordinate value form normalized value within given window
 			float leapXCoordinate = normalizedPosition.x * windowWidth;
 			float leapYCoordinate = windowHeight - normalizedPosition.y * windowHeight;
 
-			if (points.touchDistance() > 0 && points.touchZone() != Leap::Pointable::Zone::ZONE_NONE)
-			{
-				gl::color(0, 1, 0, 1 - points.touchDistance());
-				gl::drawSolidCircle(vec2(leapXCoordinate, leapYCoordinate), 40);
-				gl::color(1.0, 0.9, 0.5, 1 - points.touchDistance());
-				gl::drawStrokedCircle(vec2(leapXCoordinate, leapYCoordinate), 40.0f, 10.0f);
-				/*LEAP DRAW ALL SHAPES CODE. NOT READY FOR IMPLEMENTATION*/
-				if (pointsMap.find(points.id()) != pointsMap.end())
-				{
-					pointsMap.erase(points.id());
+			float touchDistance = point.touchDistance();
 
-					activePointsMap.erase(points.id());
-					illustrator.endTouchShapes(points.id());
+			auto currentPoint = vec2(leapXCoordinate, leapYCoordinate);
+			auto pointId = point.id();
+			auto guid = getGuid(pointId);
+			int eventMaxLifeSpan = 1;
+
+			if (touchDistance > 0 && point.touchZone() != Leap::Pointable::Zone::ZONE_NONE)
+			{
+				auto color = distanceToColor(touchDistance);
+				fingerLocationCircles.push_back(drawing::TouchCircle(currentPoint, 40.0f, color, 50.0f, true, 1));
+
+				auto finalizableDrawEventIterator = finalizeableDrawEvents.find(guid);
+				bool finilizableDrawEventWasFound = finalizableDrawEventIterator != finalizeableDrawEvents.end();
+				if (finilizableDrawEventWasFound)
+				{
+					auto finalizableEvent = finalizableDrawEventIterator->second;
+					//finalize that sumbitch send it to the illustrator
+					finalizableEvent.SetEndPoint(currentPoint);
+					drawEventsToSendToIllustrator.push_back(finalizableEvent);
+					//delete it from finalizeableDrawEvents
+					finalizeableDrawEvents.erase(finalizableDrawEventIterator);
+					//remove guid associated with this event
+					pointIdToGuidMap.erase(pointId);
 				}
 			}
-			else if (points.touchDistance() <= 0 && !proxActive)
+			if(touchDistance < 0)
 			{
 				lockCurrentFrame = true;
 
-				//Check to see if id for pointable object is present
-				auto result = pointsMap.find(points.id());
-				//Checks to see if new pointable is drawing
-				if (result == pointsMap.end())
+				auto finalizableDrawEventIterator = finalizeableDrawEvents.find(guid);
+				bool finalizableDrawEventWasFound = finalizableDrawEventIterator != finalizeableDrawEvents.end();
+				
+				if(finalizableDrawEventWasFound) //continuation of series of draw events
 				{
-					/*LEAP DRAW ALL SHAPES CODE. NOT READY FOR IMPLEMENTATION*/
-					illustrator.beginTouchShapes(points.id(), vec2(leapXCoordinate, leapYCoordinate));
+					auto finalizableEvent = finalizableDrawEventIterator->second;
 
-					pointsMap.emplace(points.id(), vec2(leapXCoordinate, leapYCoordinate));
-					activePointsMap.emplace(points.id(), true);
+					//reset life of finilizable draw event, so it doesnt die
+					finalizableEvent.ResetCurrentAge();
+
+					//check if we are continuing any temp draw events
+					auto tempDrawEventIterator = temporaryDrawEvents.find(guid);
+					bool tempDrawEventWasFound = tempDrawEventIterator != temporaryDrawEvents.end();
+					
+					if (tempDrawEventWasFound) //continuation of previous temp draw event
+					{
+						auto tempDrawEvent = tempDrawEventIterator->second;
+						//finish temp draw event
+						tempDrawEvent.SetEndPoint(currentPoint);
+						//send it off
+						drawEventsToSendToIllustrator.push_back(tempDrawEvent);
+						//remove from temporaryDrawEvents
+						temporaryDrawEvents.erase(tempDrawEventIterator);
+					}
+					else
+					{
+						auto parentStartLocation = finalizableEvent.GetStartPoint();
+						//create new temp draw event
+						auto newTempDrawEvent = drawing::DrawEvent(currentPoint, parentStartLocation, guid, false, eventMaxLifeSpan);
+						temporaryDrawEvents.insert_or_assign(guid, newTempDrawEvent);
+					}
 				}
-				else
+				else //should be a new series of drawing events
 				{
-					/*LEAP DRAW ALL SHAPES CODE. NOT READY FOR IMPLEMENTATION*/
-					illustrator.movingTouchShapes(points.id(), vec2(leapXCoordinate, leapYCoordinate), pointsMap[points.id()]);
-					activePointsMap[points.id()] = true;
-					pointsMap[points.id()] = vec2(leapXCoordinate, leapYCoordinate);
+					//create new finilizable draw event
+					auto newFinalizableDrawEvent = drawing::DrawEvent(currentPoint, guid, true, eventMaxLifeSpan);
+					createPointIdToGuidMapping(pointId, guid);
+					finalizeableDrawEvents.insert_or_assign(guid, newFinalizableDrawEvent);
 				}
 			}
 		}
-		std::vector<uint32_t> list;
-		for (auto& points : activePointsMap)
+
+		if (fingerLocationCircles.size() > 0)
 		{
-			if (points.second)
+			illustrator.addToTemporaryCircles(fingerLocationCircles);
+		}
+
+		if (drawEventsToSendToIllustrator.size() > 0)
+		{
+			illustrator.addDrawEventsToQueue(drawEventsToSendToIllustrator);
+		}
+
+		//increment all draw events lifespan
+		//remove all those that exceed max life span
+		for (auto it = begin(temporaryDrawEvents); it != end(temporaryDrawEvents);)
+		{
+			if (!it->second.ShouldBeAlive())
 			{
-				points.second = false;
+				it = temporaryDrawEvents.erase(it);
 			}
 			else
-			{
-				illustrator.endTouchShapes(points.first);
-				list.emplace_back(points.first);
-				pointsMap.erase(points.first);
-			}
+				++it;
 		}
-		for (auto ids : list)
+		for (auto it = begin(finalizeableDrawEvents); it != end(finalizeableDrawEvents);)
 		{
-			activePointsMap.erase(ids);
+			if (!it->second.ShouldBeAlive())
+			{
+				it = finalizeableDrawEvents.erase(it);
+			}
+			else
+				++it;
 		}
 	}
 
@@ -329,5 +381,65 @@ namespace touchpoints { namespace devices
 		proxFbo->unbindFramebuffer();
 
 		proxActive = true;
+	}
+
+	ColorA LeapMotionHandler::distanceToColor(float distance) 
+	{
+		auto green = ColorA(0.0f, 1.0f, 0.0f, 1);
+		auto limeGreen = ColorA(0.33f, 1.0f, 0.0f, 1);
+		auto yellowGreen = ColorA(0.68f, 1.0f, 0.0f, 1);
+		auto pickle = ColorA(0.78f, 1.0f, 0.0f, 1);
+		auto yellow = ColorA(1.0f, 0.93f, 0.0f, 1);
+		auto sunset = ColorA(1.0f, 0.61f, 0.0f, 1);
+		auto orange = ColorA(1.0f, 0.38f, 0.0f, 1);
+		auto crimson = ColorA(1.0f, 0.18f, 0.0f, 1);
+		auto red = ColorA(1.0f, 0.0f, 0.0f, 1);
+
+		if(distance <= 0.1)
+		{
+			return green;
+		}
+		if (distance <= 0.2)
+		{
+			return limeGreen;
+		}
+		if (distance <= 0.3)
+		{
+			return yellowGreen;
+		}
+		if (distance <= 0.4)
+		{
+			return pickle;
+		}
+		if (distance <= 0.5)
+		{
+			return yellow;
+		}
+		if (distance <= 0.6)
+		{
+			return sunset;
+		}
+		if (distance <= 0.7)
+		{
+			return orange;
+		}
+		if (distance <= 0.8)
+		{
+			return crimson;
+		}
+		return red;
+	}
+
+	Guid LeapMotionHandler::getGuid(int pointId)
+	{
+		auto guidIterator = pointIdToGuidMap.find(pointId);
+		bool guidWasFound = guidIterator != pointIdToGuidMap.end();
+
+		return guidWasFound ? guidIterator->second : guidGenerator.newGuid();
+	}
+
+	void LeapMotionHandler::createPointIdToGuidMapping(int pointId, Guid guid)
+	{
+		pointIdToGuidMap.insert_or_assign(pointId, guid);
 	}
 }}

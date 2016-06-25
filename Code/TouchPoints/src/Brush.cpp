@@ -4,7 +4,7 @@ namespace touchpoints { namespace drawing
 {
 	Brush::Brush() {}
 
-	Brush::Brush(Shape::Shape shape, cinder::ColorA color, float alphaColor, int lineSize, bool filledShapes, bool randColor, bool eraserMode, SymmetryLine* mySymmetry)
+	Brush::Brush(Shape::Shape shape, cinder::ColorA color, float alphaColor, int lineSize, bool filledShapes, bool randColor, bool isEraserActive, SymmetryLine* mySymmetry)
 	{
 		mShape = shape;
 		mColor = color;
@@ -12,7 +12,7 @@ namespace touchpoints { namespace drawing
 		mFilledShapes = filledShapes;
 		mRandColor = randColor;
 		mMySymmetry = mySymmetry;
-		isEraserActive = eraserMode;
+		isEraserActive = isEraserActive;
 		mAlphaColor = alphaColor;
 		mStaticColor = ourColors::ourColors::Black;
 		//Fills our colorList with all our colors
@@ -156,9 +156,14 @@ namespace touchpoints { namespace drawing
 		mRandColor = randColor;
 	}
 
-	void Brush::changeEraserMode(bool eraserMode)
+	void Brush::activateEraser()
 	{
-		isEraserActive = eraserMode;
+		isEraserActive = true;
+	}
+
+	void Brush::deactivateEraser()
+	{
+		isEraserActive = false;
 	}
 
 	void Brush::changeAlphaColor(float alphaColor)
