@@ -776,15 +776,12 @@ namespace touchpoints { namespace app
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(radialFbo->getColorTexture());
 		}
-<<<<<<< HEAD
-=======
 		
 		//Draws proximity menu
 		if (proxActive)
 		{
 			gl::draw(proxFbo->getColorTexture());
 		}
->>>>>>> eagui037
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 		
@@ -834,109 +831,13 @@ namespace touchpoints { namespace app
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(fingerLocationFbo->getColorTexture());
 		}
-<<<<<<< HEAD
+
 
 		illustrator.processDrawEventQueue();
 		illustrator.drawActive();
 		illustrator.drawTemporary();
-=======
-	/**/
+
 }
-
-//	void TouchPointsApp::myResize()
-//	{
-//		
-////From TouchPointsApp.cpp
-//	windowWidth = getWindowSize().x;
-//	windowHeight = getWindowSize().y;
-//	radialCenter = vec2(windowWidth * .5, windowHeight * .5);
-//
-//	//		Sets window size and initializes framebuffers (layers).
-//	//setWindowSize(windowWidth, windowHeight);
-//	gl::Fbo::Format format;
-//	firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	secondFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	thirdFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	activeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//
-//	iconFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	saveImageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	//Set up UI
-//	uiFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	//Set up image feedback fbo
-//	imageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	//Set up fbo for proxy menu
-//	radialFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	//Set up fbo for proxy menu
-//	proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	//Background FBO Testing
-//	backgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//	//Set up fingerlocation FBo
-//	fingerLocationFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//
-//	setFrameRate(FRAME_RATE);
-//
-//	//create setter for mySymmetry
-//	// doesn't work
-//	//				mySymmetry.setSymmetryWindowWidth(windowWidth / 2, mySymmetry.getSymmetryOn());
-//	mySymmetry.setSymmetryWindowWidth(windowWidth / 2, true);
-//	//		mySymmetry = drawing::SymmetryLine(windowWidth / 2, true);
-//
-//	//Sets up layers
-//	layerList.emplace_back(firstFbo);
-//	layerList.emplace_back(secondFbo);
-//	layerList.emplace_back(thirdFbo);
-//
-//	//Set up Brush
-//	//		ColorA newColor = ColorA(0.0f, 0.0f, 0.0f, 1.0f);
-//	//		float tempFloat = 1.0f;
-//	//		int tempInt = 1;
-//	//Shape::Shape myShape = Shape::Shape::Line;
-//
-//	//create a setter for brush
-//	// i think it works
-//	//brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
-//	brush.setSymmetry(&mySymmetry);
-//
-//	//create a setter for illustrator
-//	illustrator = drawing::Illustrator(&brush, &layerList);
-//	//deviceHandler = devices::DeviceHandler();
-//	getHomeDirectory();
-//
-//	//create a setter for ImageHandler
-//	imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
-//
-//	//RealSense Setup
-//	//create a setter for RealSenseHandler
-//	realSenseHandler = devices::RealSenseHandler(&illustrator);
-//
-//	//Set up UI
-//
-//	//		deviceHandler.deviceConnection();
-//	//		lastDeviceCheck = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-//
-//
-//
-//	//create a setter for windowWidth, windowHeight, &brush, &illustrator, uiFbo, &layerList
-//	gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
-//
-//
-//
-//	//create a setter for leapMotionHandler
-//	leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight);
-//	leapMotionHandler.InitLeapMotion();
-//
-//
-//
-//	//		deviceHandler.deviceConnection();
-//	//		Mode::DefaultModes resultMode = deviceHandler.getDefaultMode();
-//	//		setDefaultMode(resultMode);
-//
-//	//		TX_CONNECTIONSTATE eyeXConnectedState = deviceHandler.GetEyeXConnected() ? TX_CONNECTIONSTATE_CONNECTED : TX_CONNECTIONSTATE_DISCONNECTED;
-//	//		eyeXHandler = devices::EyeXHandler(0.0f, 0.0f, eyeXConnectedState);
-//	//		eyeXHandler.InitEyeX();
-//	}
-
 
 	void TouchPointsApp::resize()
 	{
@@ -951,29 +852,15 @@ namespace touchpoints { namespace app
 			shared_ptr<gl::Fbo> secondFboTemp = secondFbo;
 			shared_ptr<gl::Fbo> thirdFboTemp = thirdFbo;
 
-//
+
 //			//Fbo for UserInterface
-//			shared_ptr<gl::Fbo> uiFbo;
-//			shared_ptr<gl::Fbo> imageFbo;
-//			shared_ptr<gl::Fbo> radialFbo;
-//			//Proxy Menu Fbo
-//			shared_ptr<gl::Fbo> proxFbo;
-//			shared_ptr<gl::Fbo> fingerLocationFbo;
-
-			//		Sets window size and initializes framebuffers (layers).
-			//setWindowSize(windowWidth, windowHeight);
-
 			//add bind, clear, and unbind for all fbos created here to test if it clears buffers
 			gl::Fbo::Format format;
 			firstFbo.reset();
 			secondFbo.reset();
 			thirdFbo.reset();
 			activeFbo.reset();
-//			firstFbo->mWidth = windowWidth;
-//			firstResizeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//			secondResizeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//			thirdResizeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//			firstFbo.swap(windowWidth, );
+
 			firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 			firstFbo->bindFramebuffer();
 			glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -1067,11 +954,6 @@ namespace touchpoints { namespace app
 
 			setFrameRate(FRAME_RATE);
 
-			//create setter for mySymmetry
-			// doesn't work
-			//				mySymmetry.setSymmetryWindowWidth(windowWidth / 2, mySymmetry.getSymmetryOn());
-			//		mySymmetry = drawing::SymmetryLine(windowWidth / 2, true);
-
 			mySymmetry.setSymmetryWindowWidth(windowWidth / 2, true);
 
 			//Sets up layers
@@ -1082,43 +964,29 @@ namespace touchpoints { namespace app
 			layerList.emplace_back(firstFbo);
 			layerList.emplace_back(secondFbo);
 			layerList.emplace_back(thirdFbo);
-//			layerList.emplace_back(firstResizeFbo);
-//			layerList.emplace_back(secondResizeFbo);
-//			layerList.emplace_back(thirdResizeFbo);
-
 
 			//create a setter for brush
-			// i think it works
-			//brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
 			brush.setSymmetry(&mySymmetry);
 
 			//create a setter for illustrator
-			//		illustrator = drawing::Illustrator(&brush, &layerList);
 			illustrator.setIllustratorResize(&brush, &layerList);
-			//deviceHandler = devices::DeviceHandler();
 			getHomeDirectory();
 
 			//create a setter for ImageHandler
-			//		imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
 			imageHandler.setImageHandlerResize(&layerList);
 
 			//RealSense Setup
 			//create a setter for RealSenseHandler
-			//		realSenseHandler = devices::RealSenseHandler(&illustrator);
 			realSenseHandler.setRealSenseResize(&illustrator);
 
 
 			//create a setter for windowWidth, windowHeight, &brush, &illustrator, uiFbo, &layerList
-			//		gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
 			gui.setUIResize(windowWidth, windowHeight, &brush, &illustrator, uiFbo, &layerList);
 
 
 			//create a setter for leapMotionHandler
-			//		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight);
 			leapMotionHandler.setLeapMotionResize(windowWidth, windowHeight);
 		}
 		resizeCount++;
-
->>>>>>> eagui037
 	}
 }}

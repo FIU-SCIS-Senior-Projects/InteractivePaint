@@ -182,9 +182,6 @@
     <ClInclude Include="..\src\KinectHandler.h">
       <Filter>devices</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\BRMenuHandler.h">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\TouchShape.h">
       <Filter>drawing\shapes</Filter>
     </ClInclude>

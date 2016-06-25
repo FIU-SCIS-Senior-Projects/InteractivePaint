@@ -3,7 +3,6 @@
 #include "Illustrator.h"
 #include "DeviceHandler.h"
 #include "TouchKeyboard.h"
-#include "BRMenuHandler.h"
 
 namespace touchpoints { namespace ui
 {
