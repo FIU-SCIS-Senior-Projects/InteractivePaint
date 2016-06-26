@@ -111,6 +111,9 @@
     <ClCompile Include="..\src\KinectHandler.cpp">
       <Filter>devices</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\TouchScreenHandler.cpp">
+      <Filter>devices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -182,8 +185,8 @@
     <ClInclude Include="..\src\KinectHandler.h">
       <Filter>devices</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TouchShape.h">
-      <Filter>drawing\shapes</Filter>
+    <ClInclude Include="..\src\TouchScreenHandler.h">
+      <Filter>devices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

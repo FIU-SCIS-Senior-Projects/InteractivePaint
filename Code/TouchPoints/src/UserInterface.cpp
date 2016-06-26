@@ -44,7 +44,7 @@ namespace touchpoints { namespace ui
 			(*layerAlpha).emplace_back(1.0f);
 		}
 		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
-//		brm::BRMenuHandler(windowWidth, windowHeight, modeChangeFlag, uiFbo, mBrush, illustrator, deviceHandler, backgroundColor, backgroundList);
+		//		brm::BRMenuHandler(windowWidth, windowHeight, modeChangeFlag, uiFbo, mBrush, illustrator, deviceHandler, backgroundColor, backgroundList);
 	}
 
 	void UserInterface::setUIResize(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, drawing::Illustrator* mIllustrator, std::shared_ptr<gl::Fbo> fbo, std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList)
@@ -62,21 +62,19 @@ namespace touchpoints { namespace ui
 		shapeButtonsFbo.reset();
 		colorButtonsFbo.reset();
 		settingsButtonsFbo.reset();
-		//Stores the 'Checkerboard pattern for background'
+		//Stores the 'Checkerboard pattern for background
 		transparentBackgroundFbo.reset();
 
-//		layerList->clear();
+		//		layerList->clear();
 		layerList = fboLayerList;
 		for (auto layers : *layerList)
 		{
 			(*layerAlpha).emplace_back(1.0f);
 		}
-//		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
+		//		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
 		keyboard.setTouchKeyboardResize(mWindowWidth, mWindowHeight);
 		uiSetup();
 		drawUi();
-		
-
 
 		//Note: need to create a width/height setter for BRMenuHandler
 	}
@@ -450,13 +448,12 @@ namespace touchpoints { namespace ui
 		//Draws Settings menu FBO
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
-//		settingsButtonsFbo.reset();
+		//settingsButtonsFbo.reset();
 		settingsButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		settingsButtonsFbo->bindFramebuffer();
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-
 
 		gl::lineWidth(3);
 
@@ -497,13 +494,13 @@ namespace touchpoints { namespace ui
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
 		//Draws Device Buttons FBO
-//		deviceButtonsFbo.reset();
+		//		deviceButtonsFbo.reset();
 		deviceButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		drawDeviceButtonsFbo();
 
 		//Draws Mode Buttons FBO.
-//		modeButtonsFbo.reset();
+		//		modeButtonsFbo.reset();
 		modeButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		modeButtonsFbo->bindFramebuffer();
@@ -595,13 +592,13 @@ namespace touchpoints { namespace ui
 		modeButtonsFbo->unbindFramebuffer();
 
 		//Sets Up Brush Buttons
-//		brushButtonsFbo.reset();
+		//		brushButtonsFbo.reset();
 		brushButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		drawBrushButtonsFbo();
 
 		//Sets up the draw calls for color buttons and writes them to an FBO.
-//		colorButtonsFbo.reset();
+		//		colorButtonsFbo.reset();
 		colorButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		colorButtonsFbo->bindFramebuffer();
@@ -622,14 +619,14 @@ namespace touchpoints { namespace ui
 		//Draws Shapes Buttons FBO.
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
-//		shapeButtonsFbo.reset();
+		//		shapeButtonsFbo.reset();
 		shapeButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		drawShapesButtonsFbo();
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 		//Loads the asset for transparent Background and writes it to the FBO.
-//		transparentBackgroundFbo.reset();
+		//		transparentBackgroundFbo.reset();
 		transparentBackgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		transparentBackgroundFbo->bindFramebuffer();
 		glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -1312,8 +1309,7 @@ namespace touchpoints { namespace ui
 	//draws the top left and bottom right menus
 	void UserInterface::drawUi()
 	{
-
-//		brm::BRMenuHandler::drawUiBRM();
+		//		brm::BRMenuHandler::drawUiBRM();
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
@@ -1372,18 +1368,18 @@ namespace touchpoints { namespace ui
 			else
 				switch (mBrush->getShape())
 				{
-				case Shape::Shape::Rectangle:
-					modeRectangle();
-					break;
-				case Shape::Shape::Circle:
-					modeCircle();
-					break;
-				case Shape::Shape::Triangle:
-					modeTriangle();
-					break;
-				case Shape::Shape::Line:
-					modeLine();
-					break;
+					case Shape::Shape::Rectangle:
+						modeRectangle();
+						break;
+					case Shape::Shape::Circle:
+						modeCircle();
+						break;
+					case Shape::Shape::Triangle:
+						modeTriangle();
+						break;
+					case Shape::Shape::Line:
+						modeLine();
+						break;
 				}
 
 			//auto maxTouches = System::getMaxMultiTouchPoints();

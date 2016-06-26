@@ -34,7 +34,7 @@ namespace touchpoints { namespace drawing
 		for (auto layers : *mLayerList)
 		{
 			std::list<std::shared_ptr<gl::Fbo>> storedFbo;
-//			myTimeMachine may need to be reset or be swaped with the previous pair
+			//			myTimeMachine may need to be reset or be swaped with the previous pair
 			myTimeMachine.insert(make_pair(layers, storedFbo));
 		}
 	}
@@ -61,7 +61,6 @@ namespace touchpoints { namespace drawing
 			activePoint.second.draw();
 			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(activePoint.second).draw();
 		}
-
 		for (auto& activePoint : myActiveCirclesEraser)
 		{
 			activePoint.second.draw();
@@ -490,10 +489,10 @@ namespace touchpoints { namespace drawing
 	{
 		temporaryCircles.push_back(tempCircle);
 	}
-	
+
 	void Illustrator::addToTemporaryCircles(vector<TouchCircle> tempCircles)
 	{
-		for(auto tempCircle : tempCircles)
+		for (auto tempCircle : tempCircles)
 		{
 			temporaryCircles.push_back(tempCircle);
 		}
@@ -529,7 +528,7 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::addToTemporaryRectangles(vector<TouchRectangle> tempRectangles)
 	{
-		for(auto tempRectangle : tempRectangles)
+		for (auto tempRectangle : tempRectangles)
 		{
 			temporaryRectangles.push_back(tempRectangle);
 		}
@@ -537,20 +536,7 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::addToActivePoints(TouchPoint activePoints, Guid key)
 	{
-		activePointsMap.insert_or_assign(key, activePoints);
-	}
-
-	void Illustrator::addToTemporaryPoints(TouchPoint tempPoint)
-	{
-		temporaryPoints.push_back(tempPoint);
-	}
-
-	void Illustrator::addToTemporaryPoints(vector<TouchPoint> tempPoints)
-	{
-		for(auto tempPoint : tempPoints)
-		{
-			temporaryPoints.push_back(tempPoint);
-		}
+		finalizedActivePointsMap.insert_or_assign(key, activePoints);
 	}
 
 	void Illustrator::drawActive() const
@@ -567,7 +553,11 @@ namespace touchpoints { namespace drawing
 		{
 			rectanglePair.second.draw();
 		}
-		for (auto pointPair : activePointsMap)
+		for (auto pointPair : finalizedActivePointsMap)
+		{
+			pointPair.second.draw();
+		}
+		for (auto pointPair : unfinalizedActivePointsMap)
 		{
 			pointPair.second.draw();
 		}
@@ -616,20 +606,6 @@ namespace touchpoints { namespace drawing
 				++it;
 			}
 		}
-
-		for (auto it = begin(temporaryPoints); it != end(temporaryPoints);)
-		{
-			if (!it->ShouldDraw())
-			{
-				it = temporaryPoints.erase(it);
-			}
-			else
-			{
-				it->draw();
-				it->DecrementFramesDrawn();
-				++it;
-			}
-		}
 	}
 
 	void Illustrator::addDrawEventToQueue(DrawEvent event)
@@ -639,7 +615,7 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::addDrawEventsToQueue(vector<DrawEvent> events)
 	{
-		for(auto event : events)
+		for (auto event : events)
 		{
 			drawEventQueue.push(event);
 		}
@@ -655,26 +631,26 @@ namespace touchpoints { namespace drawing
 
 			switch (currentShape)
 			{
-				case(Shape::Circle): 
-				{ 
-					circleEventHandler(event);
-					break;
-				}
+				case(Shape::Circle):
+					{
+						circleEventHandler(event);
+						break;
+					}
 				case(Shape::Triangle):
-				{
-					triangleEventHandler(event);
-					break;
-				}
+					{
+						triangleEventHandler(event);
+						break;
+					}
 				case(Shape::Rectangle):
-				{
-					rectangleEventHandler(event);
-					break;
-				}
+					{
+						rectangleEventHandler(event);
+						break;
+					}
 				case(Shape::Line):
-				{
-					lineEventHandler(event);
-					break;
-				}
+					{
+						lineEventHandler(event);
+						break;
+					}
 			}
 		}
 	}
@@ -687,7 +663,7 @@ namespace touchpoints { namespace drawing
 		auto midPoint = math::FindMidPoint(startPoint, endPoint);
 		auto circle = TouchCircle(midPoint, radius, mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 
-		if(event.ShouldFinalizeShape())
+		if (event.ShouldFinalizeShape())
 		{
 			addToActiveCircles(circle, event.GetShapeGuid());
 		}
@@ -706,10 +682,10 @@ namespace touchpoints { namespace drawing
 		bool isPointingDown = startPoint.y < endPoint.y;
 
 		auto geomTriangle = math::VerticalIsoscelesTriangle(startPoint, endPoint, isPointingDown);
-		
+
 		auto triangle = TouchVerticalIsoscelesTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
-			geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
-			mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
+		                                               geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
+		                                               mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 
 		if (event.ShouldFinalizeShape())
 		{
@@ -726,8 +702,8 @@ namespace touchpoints { namespace drawing
 		auto startPoint = event.ShouldFinalizeShape() ? event.GetStartPoint() : event.GetParentStartPoint();
 		auto endPoint = event.GetEndPoint();
 
-		TouchRectangle rectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 
-			mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
+		TouchRectangle rectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+		                         mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 
 		if (event.ShouldFinalizeShape())
 		{
@@ -741,23 +717,43 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::lineEventHandler(DrawEvent event)
 	{
-		auto shapeId = event.GetShapeGuid();
-		//should retrieve by reference?
-		auto parentLineIterator = activePointsMap.find(shapeId);
-		bool isContinuationLine = parentLineIterator != activePointsMap.end();
+		auto lineId = event.GetShapeGuid();
+		auto isFinalizableLine = event.ShouldFinalizeShape();
 
-		if(isContinuationLine)
+		auto parentLineIterator = unfinalizedActivePointsMap.find(lineId);
+		bool isContinuationLine = parentLineIterator != unfinalizedActivePointsMap.end();
+		if (isContinuationLine)
 		{
 			auto parentLine = parentLineIterator->second;
-			parentLine.addPoint(event.GetStartPoint());
+			if(!isFinalizableLine)
+			{
+				//do not add start point of finalizing event, that is way back at the beggining of the line
+				parentLine.addPoint(event.GetStartPoint());
+			}
 			parentLine.addPoint(event.GetEndPoint());
-			activePointsMap.insert_or_assign(shapeId, parentLine);
+
+			if(isFinalizableLine)
+			{
+				finalizedActivePointsMap.insert_or_assign(lineId, parentLine);
+				unfinalizedActivePointsMap.erase(lineId);
+			}
+			else
+			{
+				unfinalizedActivePointsMap.insert_or_assign(lineId, parentLine);
+			}
 		}
-		else
+		else //create new line and finalize it
 		{
-			auto newLine = TouchPoint(event.GetStartPoint(), mBrush->getColor(), mBrush->getLineSize());
-			newLine.addPoint(event.GetEndPoint());
-			activePointsMap.insert_or_assign(shapeId, newLine);
+			auto line = drawing::TouchPoint(event.GetStartPoint(), event.GetEndPoint(), mBrush->getColor(), mBrush->getLineSize());
+
+			if (isFinalizableLine)
+			{
+				finalizedActivePointsMap.insert_or_assign(lineId, line);
+			}
+			else
+			{
+				unfinalizedActivePointsMap.insert_or_assign(lineId, line);
+			}
 		}
 	}
 }}

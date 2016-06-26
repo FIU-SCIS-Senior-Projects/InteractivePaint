@@ -10,13 +10,13 @@ namespace touchpoints { namespace drawing
 	public:
 		TouchPoint();
 		TouchPoint(vec2 initialPt, ColorA color, float size);
+		TouchPoint(vec2 initialPt, vec2 endPt, ColorA color, float size);
 		void addPoint(const vec2& pt);
 		void clearPoints();
 		vec2 getFirstPoint();
 		vector<vec2> getPointList() const;
 		void draw() override;
 	private:
-		vector<vec2> findMissedPoints(vec2 initialPoint, vec2 finalPoint);
 		vector<vec2> pointList;
 	};
 }}

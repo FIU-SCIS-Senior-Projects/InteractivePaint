@@ -20,7 +20,6 @@
 #include "DeviceHandler.h"
 #include "EyeXHandler.h"
 #include "LeapMotionHandler.h"
-/*Kinect*/
 #include "KinectHandler.h"
 
 using namespace cinder::app;
@@ -44,11 +43,9 @@ namespace touchpoints { namespace app
 		void drawRadial();
 		void setDefaultMode(Mode::DefaultModes mode);
 		void resize() override;
-//		void myResize();
+
 		//doesnt run resize when app is first built
 		int resizeCount = 0;
-
-
 
 		int windowWidth = getWindowSize().x;
 		int windowHeight = getWindowSize().y;

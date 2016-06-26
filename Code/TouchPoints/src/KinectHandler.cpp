@@ -250,7 +250,7 @@ namespace touchpoints {namespace devices
 
 		// Device lost, need to recreate the render target
 		// We'll dispose it now and retry drawing
-		if (D2DERR_RECREATE_TARGET == hr)
+		if (hr == D2DERR_RECREATE_TARGET)
 		{
 			hr = S_OK;
 			//DiscardDirect2DResources();

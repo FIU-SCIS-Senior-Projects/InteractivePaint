@@ -45,16 +45,11 @@ namespace touchpoints { namespace ui
 		float getLayerAlpha(int layerNumber);
 		void incrementBackground();
 		void endButtonPress(cinder::app::TouchEvent::Touch touch);
-
-		//Functions to get brush values
-
 	private:
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;
 		TouchKeyboard keyboard;
-//		brm::BRMenuHandler brMenu;
-		
 
 		//Frame Buffers for the UI. Mostly Fbo's that held button draw calls.
 		std::shared_ptr<gl::Fbo> uiFbo;
