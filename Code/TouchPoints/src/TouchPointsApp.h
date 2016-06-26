@@ -4,6 +4,7 @@
 #include "cinder/gl/Fbo.h"
 #include "cinder/gl/Texture.h"
 #include "cinder/app/AppBase.h"
+#include "cinder/app/Window.h"
 #include <chrono>
 #include <vector>
 #include <map>
