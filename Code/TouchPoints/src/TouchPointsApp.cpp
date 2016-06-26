@@ -16,55 +16,6 @@ namespace touchpoints { namespace app
 		// On mobile, if you disable multitouch then touch events will arrive via mouseDown(), mouseDrag(), etc.
 	}
 
-
-	//sets up frame buffers and framerate and symmetry
-//	void TouchPointsApp::myResize(int windowWidth, int windowHeight)
-//	{
-//		gl::Fbo::Format format;
-//		firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		secondFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		thirdFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		activeFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//
-//		iconFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		saveImageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		//Set up UI
-//		uiFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		//Set up image feedback fbo
-//		imageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		//Set up fbo for proxy menu
-//		radialFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		//Set up fbo for proxy menu
-//		proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		//Background FBO Testing
-//		backgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//		//Set up fingerlocation FBo
-//		fingerLocationFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-//
-//		setFrameRate(FRAME_RATE);
-//		
-//		mySymmetry = drawing::SymmetryLine(windowWidth / 2, true);
-//
-//		//Sets up layers
-//		layerList.emplace_back(firstFbo);
-//		layerList.emplace_back(secondFbo);
-//		layerList.emplace_back(thirdFbo);
-//
-//		//Set up Brush
-//		ColorA newColor = ColorA(0.0f, 0.0f, 0.0f, 1.0f);
-//		float tempFloat = 1.0f;
-//		int tempInt = 1;
-//		Shape::Shape myShape = Shape::Shape::Line;
-//		brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
-//		illustrator = drawing::Illustrator(&brush, &layerList);
-//		deviceHandler = devices::DeviceHandler();
-//		getHomeDirectory();
-//		imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
-//
-//		//RealSense Setup
-//		realSenseHandler = devices::RealSenseHandler(&illustrator);
-//	}
-
 	void TouchPointsApp::setup()
 	{
 		CI_LOG_I("MT: " << System::hasMultiTouch() << " Max points: " << System::getMaxMultiTouchPoints());

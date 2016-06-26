@@ -42,7 +42,6 @@ namespace touchpoints { namespace drawing
 		void addToTemporaryRectangles(TouchRectangle tempRectangle);
 		void addToTemporaryRectangles(vector<TouchRectangle> tempRectangles);
 		void addToActivePoints(TouchPoint activePoints, Guid key);
-		void addToTemporaryPoints(TouchPoint tempPoints);
 		void addToTemporaryPoints(vector<TouchPoint> tempPoints);
 		
 		void addDrawEventToQueue(DrawEvent event);
@@ -76,8 +75,10 @@ namespace touchpoints { namespace drawing
 		vector<TouchVerticalIsoscelesTriangle> temporaryTriangles;
 		unordered_map<Guid, TouchRectangle> activeRectanglesMap;
 		vector<TouchRectangle> temporaryRectangles;
-		unordered_map<Guid, TouchPoint> activePointsMap;
-		vector<TouchPoint> temporaryPoints;
+		//all lines are drawn every frame(active), but some of them can be appended to(unfinalized active)
+		//and others should not be appended to(finilized active)
+		unordered_map<Guid, TouchPoint> finalizedActivePointsMap;
+		unordered_map<Guid, TouchPoint> unfinalizedActivePointsMap;
 
 		queue<DrawEvent> drawEventQueue;
 
