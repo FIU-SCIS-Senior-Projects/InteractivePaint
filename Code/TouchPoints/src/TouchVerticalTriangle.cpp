@@ -1,4 +1,4 @@
-#include "TouchVerticalIsoscelesTriangle.h"
+#include "TouchVerticalTriangle.h"
 #include <cinder/gl/Context.h>
 #include <cinder/gl/draw.h>
 
@@ -6,9 +6,9 @@ using namespace cinder;
 
 namespace touchpoints { namespace drawing
 {
-	TouchVerticalIsoscelesTriangle::TouchVerticalIsoscelesTriangle() {}
+	TouchVerticalTriangle::TouchVerticalTriangle() {}
 
-	TouchVerticalIsoscelesTriangle::TouchVerticalIsoscelesTriangle(vec2 baseVertexLeft, vec2 baseVertexRight, vec2 oppositeBaseVertex, 
+	TouchVerticalTriangle::TouchVerticalTriangle(vec2 baseVertexLeft, vec2 baseVertexRight, vec2 oppositeBaseVertex, 
 		vec2 baseCenter, ColorA color, float size, bool filledShapes) : baseVertexLeft(baseVertexLeft), baseVertexRight(baseVertexRight),
 		oppositeBaseVertex(oppositeBaseVertex), baseCenter(baseCenter)
 	{
@@ -19,7 +19,7 @@ namespace touchpoints { namespace drawing
 		this->framesDrawn = 1;
 	}
 
-	TouchVerticalIsoscelesTriangle::TouchVerticalIsoscelesTriangle(vec2 baseVertexLeft, vec2 baseVertexRight, vec2 oppositeBaseVertex, 
+	TouchVerticalTriangle::TouchVerticalTriangle(vec2 baseVertexLeft, vec2 baseVertexRight, vec2 oppositeBaseVertex, 
 		vec2 baseCenter, ColorA color, float size, bool filledShapes, int framesDrawn) : baseVertexLeft(baseVertexLeft), 
 		baseVertexRight(baseVertexRight), oppositeBaseVertex(oppositeBaseVertex), baseCenter(baseCenter)
 	{
@@ -30,7 +30,7 @@ namespace touchpoints { namespace drawing
 		this->framesDrawn = framesDrawn;
 	}
 
-	void TouchVerticalIsoscelesTriangle::draw()
+	void TouchVerticalTriangle::draw()
 	{
 		gl::lineWidth(mSize);
 		gl::color(mColor);

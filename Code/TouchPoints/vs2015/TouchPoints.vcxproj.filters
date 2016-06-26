@@ -96,12 +96,6 @@
     <ClCompile Include="..\src\Rect.cpp">
       <Filter>math\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\VerticalIsoscelesTriangle.cpp">
-      <Filter>math\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TouchVerticalIsoscelesTriangle.cpp">
-      <Filter>drawing\shapes</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\DrawEvent.cpp">
       <Filter>drawing\events</Filter>
     </ClCompile>
@@ -111,8 +105,11 @@
     <ClCompile Include="..\src\KinectHandler.cpp">
       <Filter>devices</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TouchScreenHandler.cpp">
-      <Filter>devices</Filter>
+    <ClCompile Include="..\src\VerticalTriangle.cpp">
+      <Filter>math\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TouchVerticalTriangle.cpp">
+      <Filter>drawing\shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,20 +170,17 @@
     <ClInclude Include="..\src\Rect.h">
       <Filter>math\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\VerticalIsoscelesTriangle.h">
-      <Filter>math\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\TouchVerticalIsoscelesTriangle.h">
-      <Filter>drawing\shapes</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\DrawEvent.h">
       <Filter>drawing\events</Filter>
     </ClInclude>
     <ClInclude Include="..\src\KinectHandler.h">
       <Filter>devices</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TouchScreenHandler.h">
-      <Filter>devices</Filter>
+    <ClInclude Include="..\src\VerticalTriangle.h">
+      <Filter>math\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TouchVerticalTriangle.h">
+      <Filter>drawing\shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

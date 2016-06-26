@@ -97,7 +97,7 @@ namespace touchpoints { namespace drawing
 		return symmetricRectangle;
 	}
 
-	TouchVerticalIsoscelesTriangle SymmetryLine::symmetricTriangle(TouchVerticalIsoscelesTriangle triangle)
+	TouchVerticalTriangle SymmetryLine::symmetricTriangle(TouchVerticalTriangle triangle)
 	{
 		vec2 symPoint1 = symmetricPoint(triangle.GetBaseVertexLeft());
 		vec2 symPoint2 = symmetricPoint(triangle.GetBaseVertexRight());
@@ -105,7 +105,7 @@ namespace touchpoints { namespace drawing
 		vec2 symBaseCenter = symmetricPoint(triangle.GetBaseCenter());
 		bool symBool = triangle.getFilledShape();
 
-		TouchVerticalIsoscelesTriangle symmetricTriangle(symPoint1, symPoint2, symPoint3, symBaseCenter, triangle.getColor(), triangle.getSize(), symBool);
+		TouchVerticalTriangle symmetricTriangle(symPoint1, symPoint2, symPoint3, symBaseCenter, triangle.getColor(), triangle.getSize(), symBool);
 		return symmetricTriangle;
 	}
 }}

@@ -1,9 +1,9 @@
-#include "VerticalIsoscelesTriangle.h"
+#include "VerticalTriangle.h"
 #include "Line.h"
 
 namespace touchpoints { namespace math
 {
-	VerticalIsoscelesTriangle::VerticalIsoscelesTriangle(vec2 oneCorner, vec2 oppositeCorner, bool isPointingDown) : isPointingDown(isPointingDown)
+	VerticalTriangle::VerticalTriangle(vec2 oneCorner, vec2 oppositeCorner, bool isPointingDown) : isPointingDown(isPointingDown)
 	{
 		boundingRectangle = Rect(oneCorner, oppositeCorner);
 

@@ -3,7 +3,7 @@
 #include <cinder/gl/scoped.h>
 #include <cinder/gl/draw.h>
 #include "Line.h"
-#include "VerticalIsoscelesTriangle.h"
+#include "VerticalTriangle.h"
 
 namespace touchpoints { namespace drawing
 {
@@ -233,12 +233,12 @@ namespace touchpoints { namespace drawing
 					{
 						ColorA newColor(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
 						bool filledShapes = mBrush->getFilledShapes();
-						myActiveTriangles.insert(make_pair(myId, TouchVerticalIsoscelesTriangle(myPos, myPos, myPos, myPos, newColor, mBrush->getLineSize(), filledShapes)));
+						myActiveTriangles.insert(make_pair(myId, TouchVerticalTriangle(myPos, myPos, myPos, myPos, newColor, mBrush->getLineSize(), filledShapes)));
 					}
 					else
 					{
 						bool filledShapes = mBrush->getFilledShapes();
-						myActiveTriangles.insert(make_pair(myId, TouchVerticalIsoscelesTriangle(myPos, myPos, myPos, myPos, mBrush->getColor(), mBrush->getLineSize(), filledShapes)));
+						myActiveTriangles.insert(make_pair(myId, TouchVerticalTriangle(myPos, myPos, myPos, myPos, mBrush->getColor(), mBrush->getLineSize(), filledShapes)));
 					}
 			}
 		}
@@ -498,17 +498,17 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
-	void Illustrator::addToActiveTriangles(TouchVerticalIsoscelesTriangle activeTriangle, Guid key)
+	void Illustrator::addToActiveTriangles(TouchVerticalTriangle activeTriangle, Guid key)
 	{
 		activeTrianglesMap.insert_or_assign(key, activeTriangle);
 	}
 
-	void Illustrator::addToTemporaryTriangles(TouchVerticalIsoscelesTriangle tempTriangle)
+	void Illustrator::addToTemporaryTriangles(TouchVerticalTriangle tempTriangle)
 	{
 		temporaryTriangles.push_back(tempTriangle);
 	}
 
-	void Illustrator::addToTemporaryTriangles(vector<TouchVerticalIsoscelesTriangle> tempTriangles)
+	void Illustrator::addToTemporaryTriangles(vector<TouchVerticalTriangle> tempTriangles)
 	{
 		for (auto tempTriangle : tempTriangles)
 		{
@@ -681,9 +681,9 @@ namespace touchpoints { namespace drawing
 		//if the endPoint is further down than the start point the triangle is pointing down
 		bool isPointingDown = startPoint.y < endPoint.y;
 
-		auto geomTriangle = math::VerticalIsoscelesTriangle(startPoint, endPoint, isPointingDown);
+		auto geomTriangle = math::VerticalTriangle(startPoint, endPoint, isPointingDown);
 
-		auto triangle = TouchVerticalIsoscelesTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
+		auto triangle = TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
 		                                               geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
 		                                               mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 

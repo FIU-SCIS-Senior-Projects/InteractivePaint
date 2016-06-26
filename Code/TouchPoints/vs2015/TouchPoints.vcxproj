@@ -221,11 +221,10 @@
     <ClCompile Include="..\src\TouchPoint.cpp" />
     <ClCompile Include="..\src\TouchPointsApp.cpp" />
     <ClCompile Include="..\src\TouchRectangle.cpp" />
-    <ClCompile Include="..\src\TouchScreenHandler.cpp" />
     <ClCompile Include="..\src\TouchShape.cpp" />
-    <ClCompile Include="..\src\TouchVerticalIsoscelesTriangle.cpp" />
+    <ClCompile Include="..\src\TouchVerticalTriangle.cpp" />
     <ClCompile Include="..\src\UserInterface.cpp" />
-    <ClCompile Include="..\src\VerticalIsoscelesTriangle.cpp" />
+    <ClCompile Include="..\src\VerticalTriangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\AllShapes.h" />
@@ -247,10 +246,9 @@
     <ClInclude Include="..\src\TouchPoint.h" />
     <ClInclude Include="..\src\TouchPointsApp.h" />
     <ClInclude Include="..\src\TouchRectangle.h" />
-    <ClInclude Include="..\src\TouchScreenHandler.h" />
     <ClInclude Include="..\src\TouchShape.h" />
-    <ClInclude Include="..\src\TouchVerticalIsoscelesTriangle.h" />
-    <ClInclude Include="..\src\VerticalIsoscelesTriangle.h" />
+    <ClInclude Include="..\src\TouchVerticalTriangle.h" />
+    <ClInclude Include="..\src\VerticalTriangle.h" />
     <ClInclude Include="..\src\UserInterface.h" />
   </ItemGroup>
   <ItemGroup>

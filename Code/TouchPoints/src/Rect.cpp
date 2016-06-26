@@ -15,6 +15,6 @@ namespace  touchpoints { namespace math
 		topLeftCorner = vec2(left, top);
 		topRightCorner = vec2(right, top);
 		bottomRightCorner = vec2(right, bottom);
-		bottomLeftCorner = vec2(bottom, left);
+		bottomLeftCorner = vec2(left, bottom);
 	}
 }}

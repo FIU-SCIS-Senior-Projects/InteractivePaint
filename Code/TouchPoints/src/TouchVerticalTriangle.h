@@ -3,13 +3,13 @@
 
 namespace touchpoints { namespace drawing
 {
-	//Isosceles Triangle that points either up or down
+	//Triangle that points either up or down
 	//in other words its base is parallel to the x-axis
-	struct TouchVerticalIsoscelesTriangle : public TouchShape
+	struct TouchVerticalTriangle : public TouchShape
 	{
-		TouchVerticalIsoscelesTriangle();
-		TouchVerticalIsoscelesTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes);
-		TouchVerticalIsoscelesTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes, int framesDrawn);
+		TouchVerticalTriangle();
+		TouchVerticalTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes);
+		TouchVerticalTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes, int framesDrawn);
 		void draw() override;
 		inline vec2 GetBaseVertexLeft() { return baseVertexLeft; }
 		inline vec2 GetBaseVertexRight() { return baseVertexRight; }

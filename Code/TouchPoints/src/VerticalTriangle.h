@@ -6,12 +6,12 @@ using namespace cinder;
 
 namespace touchpoints { namespace math
 {
-	//Isosceles Triangle that points either up or down
+	//Triangle that points either up or down
 	//in other words its base is parallel to the x-axis
-	class VerticalIsoscelesTriangle
+	class VerticalTriangle
 	{
 	public:
-		VerticalIsoscelesTriangle(vec2 oneCorner, vec2 oppositeCorner, bool isPointingDown);
+		VerticalTriangle(vec2 oneCorner, vec2 oppositeCorner, bool isPointingDown);
 		inline bool GetIsPointingDown() { return isPointingDown; }
 		inline vec2 GetBaseVertexLeft() { return baseVertexLeft; }
 		inline vec2 GetBaseVertexRight() { return baseVertexRight; }

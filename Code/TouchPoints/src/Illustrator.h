@@ -35,9 +35,9 @@ namespace touchpoints { namespace drawing
 		void addToActiveCircles(TouchCircle activeCircle, Guid key);
 		void addToTemporaryCircles(TouchCircle tempCircle);
 		void addToTemporaryCircles(vector<TouchCircle> tempCircles);
-		void addToActiveTriangles(TouchVerticalIsoscelesTriangle activeTriangle, Guid key);
-		void addToTemporaryTriangles(TouchVerticalIsoscelesTriangle tempTriangle);
-		void addToTemporaryTriangles(vector<TouchVerticalIsoscelesTriangle> tempTriangles);
+		void addToActiveTriangles(TouchVerticalTriangle activeTriangle, Guid key);
+		void addToTemporaryTriangles(TouchVerticalTriangle tempTriangle);
+		void addToTemporaryTriangles(vector<TouchVerticalTriangle> tempTriangles);
 		void addToActiveRectangles(TouchRectangle activeRectangle, Guid key);
 		void addToTemporaryRectangles(TouchRectangle tempRectangle);
 		void addToTemporaryRectangles(vector<TouchRectangle> tempRectangles);
@@ -71,8 +71,8 @@ namespace touchpoints { namespace drawing
 		//...and also a vector of temporary shapes drawn only one frame
 		unordered_map<Guid, TouchCircle> activeCirclesMap;
 		vector<TouchCircle> temporaryCircles;
-		unordered_map<Guid, TouchVerticalIsoscelesTriangle> activeTrianglesMap;
-		vector<TouchVerticalIsoscelesTriangle> temporaryTriangles;
+		unordered_map<Guid, TouchVerticalTriangle> activeTrianglesMap;
+		vector<TouchVerticalTriangle> temporaryTriangles;
 		unordered_map<Guid, TouchRectangle> activeRectanglesMap;
 		vector<TouchRectangle> temporaryRectangles;
 		//all lines are drawn every frame(active), but some of them can be appended to(unfinalized active)
@@ -90,8 +90,8 @@ namespace touchpoints { namespace drawing
 		vector<TouchCircle> myCircles;
 		map<uint32_t, TouchRectangle> myActiveRectangles;
 		vector<TouchRectangle> myRectangles;
-		map<uint32_t, TouchVerticalIsoscelesTriangle> myActiveTriangles;
-		vector<TouchVerticalIsoscelesTriangle> myTriangles;
+		map<uint32_t, TouchVerticalTriangle> myActiveTriangles;
+		vector<TouchVerticalTriangle> myTriangles;
 
 		//TimeMachine 
 		map<shared_ptr<gl::Fbo>, list<shared_ptr<gl::Fbo>>> myTimeMachine;

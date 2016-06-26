@@ -12,7 +12,7 @@ namespace touchpoints { namespace drawing
 		TouchPoint symmetricLine(TouchPoint line);
 		TouchCircle symmetricCircle(TouchCircle circle);
 		TouchRectangle symmetricRectangle(TouchRectangle rectangle);
-		TouchVerticalIsoscelesTriangle symmetricTriangle(TouchVerticalIsoscelesTriangle triangle);
+		TouchVerticalTriangle symmetricTriangle(TouchVerticalTriangle triangle);
 		vec2 symmetricPoint(vec2 point);
 		void toggleSymmetry();
 		bool getSymmetryOn();

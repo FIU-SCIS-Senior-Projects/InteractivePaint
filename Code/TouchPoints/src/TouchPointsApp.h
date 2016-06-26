@@ -128,8 +128,8 @@ namespace touchpoints { namespace app
 		list<drawing::TouchCircle> myCircles;
 		map<uint32_t, drawing::TouchRectangle> myActiveRectangles;
 		list<drawing::TouchRectangle> myRectangles;
-		map<uint32_t, drawing::TouchVerticalIsoscelesTriangle> myActiveTriangles;
-		list<drawing::TouchVerticalIsoscelesTriangle> myTriangles;
+		map<uint32_t, drawing::TouchVerticalTriangle> myActiveTriangles;
+		list<drawing::TouchVerticalTriangle> myTriangles;
 
 		//Fbo's for Layering.
 		//We may want to set a vector of framebuffers?
