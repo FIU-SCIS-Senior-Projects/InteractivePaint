@@ -9,7 +9,7 @@ namespace touchpoints { namespace drawing
 {
 	Illustrator::Illustrator() {}
 
-	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList)
+	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList) : currentBackgroundColor(ColorA(1.0f, 1.0f, 1.0f, 1.0f))
 	{
 		mLayerList = layerList;
 		mBrush = brush;
@@ -60,10 +60,6 @@ namespace touchpoints { namespace drawing
 		{
 			activePoint.second.draw();
 			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(activePoint.second).draw();
-		}
-		for (auto& activePoint : myActiveCirclesEraser)
-		{
-			activePoint.second.draw();
 		}
 	}
 
@@ -179,7 +175,6 @@ namespace touchpoints { namespace drawing
 		{
 			numberOfActiveDrawings++;
 			myActivePoints.insert(make_pair(myId, TouchPoint(myPos, mBrush->getColor(), mBrush->getLineSize() * 2)));
-			myActiveCirclesEraser.insert(make_pair(myId, TouchCircle(myPos, mBrush->getLineSize() * 2, Color(0.0, 0.0, 0.0), 1, false)));
 		}
 		else
 		{
@@ -254,7 +249,6 @@ namespace touchpoints { namespace drawing
 			myPoints.push_back(myActivePoints[myId]);
 			myActivePoints[myId].clearPoints();
 
-			myActiveCirclesEraser[myId].changePosition(myPos);
 			//Draws to the layer at the end of the list. Which is drawn on 'top'
 			mLayerList->back()->bindFramebuffer();
 
@@ -339,7 +333,6 @@ namespace touchpoints { namespace drawing
 
 			numberOfActiveDrawings--;
 			myActivePoints.erase(myId);
-			myActiveCirclesEraser.erase(myId);
 		}
 
 		switch (mBrush->getShape())
@@ -561,6 +554,30 @@ namespace touchpoints { namespace drawing
 		{
 			pointPair.second.draw();
 		}
+
+		auto backBuffer = mLayerList->back();
+		backBuffer->bindFramebuffer();
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+
+		for (auto pointPair : finalizedActiveEraserMap)
+		{
+			auto eraserLine = pointPair.second;
+			eraserLine.draw();
+		}
+		for (auto pointPair : unfinalizedActiveEraserMap)
+		{
+			auto eraserLine = pointPair.second;
+			eraserLine.draw();
+		}
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+
+		mLayerList->back()->unbindFramebuffer();
 	}
 
 	void Illustrator::drawTemporary()
@@ -629,6 +646,12 @@ namespace touchpoints { namespace drawing
 			drawEventQueue.pop();
 			auto currentShape = mBrush->getCurrentShape();
 
+			if (mBrush->IsEraserActive())
+			{
+				eraserEventHandler(event);
+				return;
+			}
+
 			switch (currentShape)
 			{
 				case(Shape::Circle):
@@ -684,8 +707,8 @@ namespace touchpoints { namespace drawing
 		auto geomTriangle = math::VerticalTriangle(startPoint, endPoint, isPointingDown);
 
 		auto triangle = TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
-		                                               geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
-		                                               mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
+		                                      geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
+		                                      mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 
 		if (event.ShouldFinalizeShape())
 		{
@@ -725,14 +748,14 @@ namespace touchpoints { namespace drawing
 		if (isContinuationLine)
 		{
 			auto parentLine = parentLineIterator->second;
-			if(!isFinalizableLine)
+			if (!isFinalizableLine)
 			{
 				//do not add start point of finalizing event, that is way back at the beggining of the line
 				parentLine.addPoint(event.GetStartPoint());
 			}
 			parentLine.addPoint(event.GetEndPoint());
 
-			if(isFinalizableLine)
+			if (isFinalizableLine)
 			{
 				finalizedActivePointsMap.insert_or_assign(lineId, parentLine);
 				unfinalizedActivePointsMap.erase(lineId);
@@ -753,6 +776,48 @@ namespace touchpoints { namespace drawing
 			else
 			{
 				unfinalizedActivePointsMap.insert_or_assign(lineId, line);
+			}
+		}
+	}
+
+	void Illustrator::eraserEventHandler(DrawEvent event)
+	{
+		auto lineId = event.GetShapeGuid();
+		auto isFinalizableLine = event.ShouldFinalizeShape();
+
+		auto parentLineIterator = unfinalizedActiveEraserMap.find(lineId);
+		bool isContinuationLine = parentLineIterator != unfinalizedActiveEraserMap.end();
+		if (isContinuationLine)
+		{
+			auto parentLine = parentLineIterator->second;
+			if (!isFinalizableLine)
+			{
+				//do not add start point of finalizing event, that is way back at the beggining of the line
+				parentLine.addPoint(event.GetStartPoint());
+			}
+			parentLine.addPoint(event.GetEndPoint());
+
+			if (isFinalizableLine)
+			{
+				finalizedActiveEraserMap.insert_or_assign(lineId, parentLine);
+				unfinalizedActiveEraserMap.erase(lineId);
+			}
+			else
+			{
+				unfinalizedActiveEraserMap.insert_or_assign(lineId, parentLine);
+			}
+		}
+		else //create new line and finalize it
+		{
+			auto line = drawing::TouchPoint(event.GetStartPoint(), event.GetEndPoint(), mBrush->getColor(), mBrush->getLineSize() * 2);
+
+			if (isFinalizableLine)
+			{
+				finalizedActiveEraserMap.insert_or_assign(lineId, line);
+			}
+			else
+			{
+				unfinalizedActiveEraserMap.insert_or_assign(lineId, line);
 			}
 		}
 	}

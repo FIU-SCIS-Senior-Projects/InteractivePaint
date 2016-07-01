@@ -8,10 +8,11 @@ namespace touchpoints { namespace drawing
 	struct TouchShape
 	{
 	public:
-		float size() const;
-		ColorA getColor() const;
-		bool getFilledShape() const;
-		float getSize() const;
+		inline float size() const { return mSize; }
+		inline ColorA getColor() const { return mColor; }
+		inline bool getFilledShape() const { return mFilledShapes; }
+		inline float getSize() const { return mSize; }
+		inline void setColor(ColorA newColor) { mColor = newColor; }
 		inline void DecrementFramesDrawn() { framesDrawn--; }
 		inline bool ShouldDraw() { return framesDrawn > 0; }
 		virtual void draw() = 0;

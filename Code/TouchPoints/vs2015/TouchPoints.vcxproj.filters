@@ -69,9 +69,6 @@
     <ClCompile Include="..\src\TouchCircle.cpp">
       <Filter>drawing\shapes</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TouchShape.cpp">
-      <Filter>drawing\shapes</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\TouchRectangle.cpp">
       <Filter>drawing\shapes</Filter>
     </ClCompile>
@@ -109,6 +106,12 @@
       <Filter>math\geometry</Filter>
     </ClCompile>
     <ClCompile Include="..\src\TouchVerticalTriangle.cpp">
+      <Filter>drawing\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Layer.cpp">
+      <Filter>drawing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TouchEraserPoints.cpp">
       <Filter>drawing\shapes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,6 +183,12 @@
       <Filter>math\geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TouchVerticalTriangle.h">
+      <Filter>drawing\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Layer.h">
+      <Filter>drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TouchEraserPoints.h">
       <Filter>drawing\shapes</Filter>
     </ClInclude>
   </ItemGroup>

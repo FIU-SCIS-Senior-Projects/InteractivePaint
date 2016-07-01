@@ -674,7 +674,7 @@ namespace touchpoints { namespace ui
 		}
 		backgroundList.pop_front();
 		//Assign the new background color to the new front of list.
-		backgroundColor = backgroundList.front();
+		changeBackgroundColor(backgroundList.front());
 		//Place the old background color back into the list
 		backgroundList.emplace_back(tempColor);
 	}
@@ -743,6 +743,7 @@ namespace touchpoints { namespace ui
 	void UserInterface::changeBackgroundColor(Color background)
 	{
 		backgroundColor = background;
+		illustrator->SetBackgroundColor(background);
 	}
 
 	void UserInterface::slideButtons(TouchEvent::Touch touch)

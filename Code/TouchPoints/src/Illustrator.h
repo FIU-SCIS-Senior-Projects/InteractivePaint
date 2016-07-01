@@ -42,7 +42,6 @@ namespace touchpoints { namespace drawing
 		void addToTemporaryRectangles(TouchRectangle tempRectangle);
 		void addToTemporaryRectangles(vector<TouchRectangle> tempRectangles);
 		void addToActivePoints(TouchPoint activePoints, Guid key);
-		void addToTemporaryPoints(vector<TouchPoint> tempPoints);
 		
 		void addDrawEventToQueue(DrawEvent event);
 		void addDrawEventsToQueue(vector<DrawEvent> events);
@@ -55,14 +54,18 @@ namespace touchpoints { namespace drawing
 		//setters for resize() in TouchPointsApp
 		void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
 
+		inline void SetBackgroundColor(ColorA newColor) { currentBackgroundColor = newColor; }
 	private:
 		void circleEventHandler(DrawEvent event);
 		void triangleEventHandler(DrawEvent event);
 		void rectangleEventHandler(DrawEvent event);
 		void lineEventHandler(DrawEvent event);
+		void eraserEventHandler(DrawEvent event);
 
 		vector<shared_ptr<gl::Fbo>>* mLayerList;
 		Brush* mBrush;
+		//should be updated by the gui
+		ColorA currentBackgroundColor;
 		int numberOfActiveDrawings;
 
 		GuidGenerator guidGenerator;
@@ -79,13 +82,14 @@ namespace touchpoints { namespace drawing
 		//and others should not be appended to(finilized active)
 		unordered_map<Guid, TouchPoint> finalizedActivePointsMap;
 		unordered_map<Guid, TouchPoint> unfinalizedActivePointsMap;
+		//same with eraser lines
+		unordered_map<Guid, TouchPoint> finalizedActiveEraserMap;
+		unordered_map<Guid, TouchPoint> unfinalizedActiveEraserMap;
 
 		queue<DrawEvent> drawEventQueue;
 
 		map<uint32_t, TouchPoint> myActivePoints;
 		vector<TouchPoint> myPoints;
-		map<uint32_t, TouchCircle> myActiveCirclesEraser;
-		vector<TouchCircle> myCirclesEraser;
 		map<uint32_t, TouchCircle> myActiveCircles;
 		vector<TouchCircle> myCircles;
 		map<uint32_t, TouchRectangle> myActiveRectangles;
