@@ -28,12 +28,12 @@ namespace touchpoints { namespace devices
 		void ProcessDrawInput(bool& lockCurrentFrame);
 		void gestRecognition(bool isDrawing, bool& processing,
 			int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
-			drawing::ImageHandler& imageHandler, gl::Fbo* proxFbo);
+			drawing::ImageHandler& imageHandler);
 		inline Leap::Frame GetCurrentFrame() const { return this->currentFrame; }
 		inline void SetCurrentFrame() { this->currentFrame = this->leapController.frame(); }
 	private:
-		void toggleProximityMenu(gl::Fbo* proxFbo);
-		ColorA distanceToColor(float distance);
+		void toggleProximityMenu();
+		ColorA distanceToColor(float distance) const;
 		GuidGenerator guidGenerator;
 		shared_ptr<ui::Menu> proximityMenu;
 		drawing::Illustrator* illustrator;

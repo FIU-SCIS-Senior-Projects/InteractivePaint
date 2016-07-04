@@ -48,8 +48,6 @@ namespace touchpoints { namespace app
 		imageFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		//Set up fbo for proxy menu
 		radialFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-		//Set up fbo for proxy menu
-		proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		//Background FBO Testing
 		backgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		//Set up fingerlocation FBo
@@ -697,7 +695,7 @@ namespace touchpoints { namespace app
 				if (!lockCurrentFrame)
 				{
 					//Calls specified action from gesture recgonized
-					leapMotionHandler.gestRecognition(isDrawing, processing, currShape, imageFlag, brush, gui, imageHandler, proxFbo.get());
+					leapMotionHandler.gestRecognition(isDrawing, processing, currShape, imageFlag, brush, gui, imageHandler);
 				}
 			}
 			lockCurrentFrame = false;
@@ -876,15 +874,6 @@ namespace touchpoints { namespace app
 			glClearColor(1.0, 1.0, 1.0, 0.0);
 			glClear(GL_COLOR_BUFFER_BIT);
 			radialFbo->unbindFramebuffer();
-
-			//Set up fbo for proxy menu
-			proxFbo.reset();
-			proxFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-			proxFbo->bindFramebuffer();
-			glClearColor(1.0, 1.0, 1.0, 0.0);
-			glClear(GL_COLOR_BUFFER_BIT);
-			proxFbo->unbindFramebuffer();
-
 
 			//Background FBO Testing
 			backgroundFbo.reset();

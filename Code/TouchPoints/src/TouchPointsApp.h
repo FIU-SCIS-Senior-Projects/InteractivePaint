@@ -149,7 +149,6 @@ namespace touchpoints { namespace app
 		shared_ptr<gl::Fbo> imageFbo;
 		shared_ptr<gl::Fbo> radialFbo;
 		//Proxy Menu Fbo
-		shared_ptr<gl::Fbo> proxFbo;
 		shared_ptr<gl::Fbo> fingerLocationFbo;
 	};
 }}

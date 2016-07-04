@@ -47,7 +47,7 @@ namespace touchpoints { namespace devices
 
 	void LeapMotionHandler::gestRecognition(bool isDrawing, bool& processing,
 		int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
-		drawing::ImageHandler& imageHandler, gl::Fbo* proxFbo)
+		drawing::ImageHandler& imageHandler)
 	{
 		if (!isDrawing)
 		{
@@ -94,7 +94,7 @@ namespace touchpoints { namespace devices
 								else
 								{
 									//counterclockwise circle
-									toggleProximityMenu(proxFbo);
+									toggleProximityMenu();
 								}
 
 								// Calculate angle swept since last frame
@@ -377,13 +377,13 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	void LeapMotionHandler::toggleProximityMenu(gl::Fbo* proxFbo)
+	void LeapMotionHandler::toggleProximityMenu()
 	{
 		proximityMenu->ToggleVisiblibility();
 		isProximityMenuVisible = proximityMenu->IsVisible();
 	}
 
-	ColorA LeapMotionHandler::distanceToColor(float distance) 
+	ColorA LeapMotionHandler::distanceToColor(float distance) const 
 	{
 		auto green = ColorA(0.0f, 1.0f, 0.0f, 1);
 		auto limeGreen = ColorA(0.33f, 1.0f, 0.0f, 1);
