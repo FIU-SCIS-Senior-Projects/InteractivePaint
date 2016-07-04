@@ -114,6 +114,9 @@
     <ClCompile Include="..\src\TouchEraserPoints.cpp">
       <Filter>drawing\shapes</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Canvas.cpp">
+      <Filter>drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="..\src\TouchEraserPoints.h">
       <Filter>drawing\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Canvas.h">
+      <Filter>drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

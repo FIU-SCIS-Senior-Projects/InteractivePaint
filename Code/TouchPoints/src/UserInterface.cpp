@@ -743,7 +743,6 @@ namespace touchpoints { namespace ui
 	void UserInterface::changeBackgroundColor(Color background)
 	{
 		backgroundColor = background;
-		illustrator->SetBackgroundColor(background);
 	}
 
 	void UserInterface::slideButtons(TouchEvent::Touch touch)

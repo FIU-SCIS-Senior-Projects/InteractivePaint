@@ -7,10 +7,11 @@ namespace touchpoints { namespace drawing
 	class Layer
 	{
 	public:
-		Layer(int windowWidth, int windowHeight, Brush &brush);
+		Layer();
+		Layer(int windowWidth, int windowHeight);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
-		void SetWindowDemensions(int width, int height);
+		void SetWindowDimensions(int width, int height);
 		void AddShape(shared_ptr<TouchShape> shape);
 		void Draw();
 		void Undo();
@@ -21,8 +22,6 @@ namespace touchpoints { namespace drawing
 		shared_ptr<gl::Fbo> framebuffer;
 		gl::Fbo::Format format;
 		vector<shared_ptr<TouchShape>> shapesStack;
-		Brush brush;
-
 		void resetFramebuffer();
 	};
 }}

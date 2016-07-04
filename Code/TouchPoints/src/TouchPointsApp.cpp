@@ -70,7 +70,7 @@ namespace touchpoints { namespace app
 		int tempInt = 1;
 		Shape::Shape myShape = Shape::Shape::Line;
 		brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
-		illustrator = drawing::Illustrator(&brush, &layerList);
+		illustrator = drawing::Illustrator(&brush, &layerList, windowWidth, windowHeight);
 		deviceHandler = devices::DeviceHandler();
 		getHomeDirectory();
 		imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
@@ -669,6 +669,8 @@ namespace touchpoints { namespace app
 		//Draws all active Shapes (non-permanent);
 		illustrator.drawActiveShapes();
 		activeFbo->unbindFramebuffer();
+
+		illustrator.Update();
 	}
 
 	void TouchPointsApp::draw()
@@ -790,12 +792,8 @@ namespace touchpoints { namespace app
 			gl::draw(fingerLocationFbo->getColorTexture());
 		}
 
-
-		illustrator.processDrawEventQueue();
-		illustrator.drawActive();
-		illustrator.drawTemporary();
-
-}
+		illustrator.Draw();
+	}
 
 	void TouchPointsApp::resize()
 	{

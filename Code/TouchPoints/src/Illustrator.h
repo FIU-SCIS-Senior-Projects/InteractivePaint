@@ -10,6 +10,7 @@
 #include "DrawEvent.h"
 #include <unordered_map>
 #include "GuidHash.h"
+#include "Canvas.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ namespace touchpoints { namespace drawing
 	{
 	public:
 		Illustrator();
-		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
+		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight);
 		void beginTouchShapes(uint32_t myId, vec2 myPos);
 		void movingTouchShapes(uint32_t myId, vec2 myPos, vec2 prevPos);
 		void endTouchShapes(uint32_t myId);
@@ -51,10 +52,11 @@ namespace touchpoints { namespace drawing
 		//draws all temporary shapes and immediatedly disposes of them
 		void drawTemporary();
 
+		void Draw();
+		void Update();
+
 		//setters for resize() in TouchPointsApp
 		void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
-
-		inline void SetBackgroundColor(ColorA newColor) { currentBackgroundColor = newColor; }
 	private:
 		void circleEventHandler(DrawEvent event);
 		void triangleEventHandler(DrawEvent event);
@@ -64,10 +66,9 @@ namespace touchpoints { namespace drawing
 
 		vector<shared_ptr<gl::Fbo>>* mLayerList;
 		Brush* mBrush;
-		//should be updated by the gui
-		ColorA currentBackgroundColor;
 		int numberOfActiveDrawings;
 
+		Canvas canvas;
 		GuidGenerator guidGenerator;
 
 		//A hash map of each shape that is drawn each frame
@@ -83,8 +84,8 @@ namespace touchpoints { namespace drawing
 		unordered_map<Guid, TouchPoint> finalizedActivePointsMap;
 		unordered_map<Guid, TouchPoint> unfinalizedActivePointsMap;
 		//same with eraser lines
-		unordered_map<Guid, TouchPoint> finalizedActiveEraserMap;
-		unordered_map<Guid, TouchPoint> unfinalizedActiveEraserMap;
+		unordered_map<Guid, TouchEraserPoints> finalizedActiveEraserMap;
+		unordered_map<Guid, TouchEraserPoints> unfinalizedActiveEraserMap;
 
 		queue<DrawEvent> drawEventQueue;
 

@@ -3,6 +3,11 @@
 
 namespace touchpoints { namespace drawing
 {
+	TouchEraserPoints::TouchEraserPoints() {}
+	TouchEraserPoints::TouchEraserPoints(vec2 initialPt, ColorA color, float size) : TouchPoint(initialPt, color, size) {}
+	TouchEraserPoints::TouchEraserPoints(vec2 initialPt, vec2 endPt, ColorA color, float size)
+		: TouchPoint(initialPt, endPt, color, size) {}
+
 	void TouchEraserPoints::draw()
 	{
 		glEnable(GL_BLEND);

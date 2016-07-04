@@ -9,7 +9,8 @@ namespace touchpoints { namespace drawing
 {
 	Illustrator::Illustrator() {}
 
-	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList) : currentBackgroundColor(ColorA(1.0f, 1.0f, 1.0f, 1.0f))
+	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight) 
+		: canvas(windowWidth, windowHeight, 3)
 	{
 		mLayerList = layerList;
 		mBrush = brush;
@@ -625,6 +626,18 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
+	void Illustrator::Draw()
+	{
+		drawActive();
+		drawTemporary();
+		canvas.Draw();
+	}
+
+	void Illustrator::Update()
+	{
+		processDrawEventQueue();
+	}
+
 	void Illustrator::addDrawEventToQueue(DrawEvent event)
 	{
 		drawEventQueue.push(event);
@@ -684,14 +697,18 @@ namespace touchpoints { namespace drawing
 		auto endPoint = event.GetEndPoint();
 		auto radius = math::CalculateDistance(startPoint, endPoint) / 2;
 		auto midPoint = math::FindMidPoint(startPoint, endPoint);
-		auto circle = TouchCircle(midPoint, radius, mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
+
+		
 
 		if (event.ShouldFinalizeShape())
 		{
-			addToActiveCircles(circle, event.GetShapeGuid());
+			//addToActiveCircles(circle, event.GetShapeGuid());
+			auto sharedCircle = shared_ptr<TouchCircle>(new TouchCircle(midPoint, radius, mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
+			canvas.AddShape(sharedCircle);
 		}
 		else
 		{
+			auto circle = TouchCircle(midPoint, radius, mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 			addToTemporaryCircles(circle);
 		}
 	}
@@ -706,16 +723,21 @@ namespace touchpoints { namespace drawing
 
 		auto geomTriangle = math::VerticalTriangle(startPoint, endPoint, isPointingDown);
 
-		auto triangle = TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
-		                                      geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
-		                                      mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
+		
 
 		if (event.ShouldFinalizeShape())
 		{
-			addToActiveTriangles(triangle, event.GetShapeGuid());
+			//addToActiveTriangles(triangle, event.GetShapeGuid());
+			auto sharedTriangle = shared_ptr<TouchVerticalTriangle>(new TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
+				geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
+				mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
+			canvas.AddShape(sharedTriangle);
 		}
 		else
 		{
+			auto triangle = TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
+				geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
+				mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 			addToTemporaryTriangles(triangle);
 		}
 	}
@@ -725,15 +747,19 @@ namespace touchpoints { namespace drawing
 		auto startPoint = event.ShouldFinalizeShape() ? event.GetStartPoint() : event.GetParentStartPoint();
 		auto endPoint = event.GetEndPoint();
 
-		TouchRectangle rectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
-		                         mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
+		
 
 		if (event.ShouldFinalizeShape())
 		{
-			addToActiveRectangles(rectangle, event.GetShapeGuid());
+			//addToActiveRectangles(rectangle, event.GetShapeGuid());
+			auto sharedRectangle = shared_ptr<TouchRectangle>(new TouchRectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+				mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
+			canvas.AddShape(sharedRectangle);
 		}
 		else
 		{
+			TouchRectangle rectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+				mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3);
 			addToTemporaryRectangles(rectangle);
 		}
 	}
@@ -757,7 +783,9 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				finalizedActivePointsMap.insert_or_assign(lineId, parentLine);
+				//finalizedActivePointsMap.insert_or_assign(lineId, parentLine);
+				auto sharedLine = make_shared<TouchPoint>(parentLine);
+				canvas.AddShape(sharedLine);
 				unfinalizedActivePointsMap.erase(lineId);
 			}
 			else
@@ -771,7 +799,9 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				finalizedActivePointsMap.insert_or_assign(lineId, line);
+				//finalizedActivePointsMap.insert_or_assign(lineId, line);
+				auto sharedLine = make_shared<TouchPoint>(line);
+				canvas.AddShape(sharedLine);
 			}
 			else
 			{
@@ -799,7 +829,9 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				finalizedActiveEraserMap.insert_or_assign(lineId, parentLine);
+				//finalizedActiveEraserMap.insert_or_assign(lineId, parentLine);
+				auto sharedLine = make_shared<TouchEraserPoints>(parentLine);
+				canvas.AddShape(sharedLine);
 				unfinalizedActiveEraserMap.erase(lineId);
 			}
 			else
@@ -809,11 +841,13 @@ namespace touchpoints { namespace drawing
 		}
 		else //create new line and finalize it
 		{
-			auto line = drawing::TouchPoint(event.GetStartPoint(), event.GetEndPoint(), mBrush->getColor(), mBrush->getLineSize() * 2);
+			auto line = drawing::TouchEraserPoints(event.GetStartPoint(), event.GetEndPoint(), mBrush->getColor(), mBrush->getLineSize() * 2);
 
 			if (isFinalizableLine)
 			{
-				finalizedActiveEraserMap.insert_or_assign(lineId, line);
+				//finalizedActiveEraserMap.insert_or_assign(lineId, line);
+				auto sharedLine = make_shared<TouchPoint>(line);
+				canvas.AddShape(sharedLine);
 			}
 			else
 			{

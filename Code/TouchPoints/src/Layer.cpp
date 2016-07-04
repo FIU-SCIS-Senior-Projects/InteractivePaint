@@ -1,8 +1,12 @@
 #include "Layer.h"
+#include <cinder/gl/draw.h>
 
 namespace touchpoints { namespace drawing
 {
-	Layer::Layer(int windowWidth, int windowHeight, Brush &brush) : brush(brush)
+	Layer::Layer() {}
+
+	Layer::Layer(int windowWidth, int windowHeight) 
+		: windowWidth(windowWidth), windowHeight(windowHeight)
 	{
 		framebuffer = gl::Fbo::create(windowWidth, windowHeight, format);
 	}
@@ -19,7 +23,7 @@ namespace touchpoints { namespace drawing
 		resetFramebuffer();
 	}
 
-	void Layer::SetWindowDemensions(int width, int height)
+	void Layer::SetWindowDimensions(int width, int height)
 	{
 		windowWidth = width;
 		windowHeight = height;
@@ -45,6 +49,7 @@ namespace touchpoints { namespace drawing
 	void Layer::Draw()
 	{
 		framebuffer->bindFramebuffer();
+		
 
 		for(auto shape: shapesStack)
 		{
@@ -52,6 +57,8 @@ namespace touchpoints { namespace drawing
 		}
 
 		framebuffer->unbindFramebuffer();
+
+		gl::draw(framebuffer->getColorTexture());
 	}
 
 	void Layer::Undo()
