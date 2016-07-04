@@ -58,7 +58,7 @@ namespace touchpoints { namespace drawing
 		return mCenter;
 	}
 
-	void TouchCircle::draw()
+	void TouchCircle::Draw()
 	{
 		gl::color(mColor);
 		if (mFilledShapes)

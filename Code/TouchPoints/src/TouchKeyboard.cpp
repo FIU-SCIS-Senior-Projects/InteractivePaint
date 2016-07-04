@@ -245,7 +245,7 @@ namespace touchpoints { namespace ui
 			cinder::gl::color(0.0, 0.0, 0.0, 1.0);
 			cinder::gl::drawStrokedRect(cinder::Rectf(anchor.x - 100, anchor.y + j * 75, anchor.x + j * 20, anchor.y + (j + 1) * 75), 3);
 
-			//Prepares to draw text onto the boxes
+			//Prepares to Draw text onto the boxes
 			start = cinder::vec2(anchor.x - 100, anchor.y + j * 75);
 			stop = cinder::vec2(anchor.x + j * 20, anchor.y + (j + 1) * 75);
 			switch (j)
@@ -277,7 +277,7 @@ namespace touchpoints { namespace ui
 			cinder::gl::color(0.0, 0.0, 0.0, 1.0);
 			cinder::gl::drawStrokedRect(cinder::Rectf(anchor.x + 20 * j + 9 * 75, anchor.y + j * 75, anchor.x + 20 * j + ((3 - j) * 20) + 100 + (9 + 1) * 75, anchor.y + (j + 1) * 75), 3);
 
-			//Prepares to draw text  onto boxes
+			//Prepares to Draw text  onto boxes
 			start = cinder::vec2(anchor.x + 20 * j + 10 * 75, anchor.y + j * 75);
 			stop = cinder::vec2(anchor.x + 20 * j + ((3 - j) * 20) + 100 + (9 + 1) * 75, anchor.y + (j + 1) * 75);
 			switch (j)
@@ -325,7 +325,7 @@ namespace touchpoints { namespace ui
 				cinder::gl::draw(mTexture, cinder::Rectf(anchor.x + 20 * j + i * 75, anchor.y + j * 75, anchor.x + 20 * j + (i + 1) * 75, anchor.y + (j + 1) * 75));
 			}
 
-			//Manually draw any additional keys needed in the row
+			//Manually Draw any additional keys needed in the row
 		}
 
 		//Draw Space Bar.

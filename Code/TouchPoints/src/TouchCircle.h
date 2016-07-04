@@ -14,7 +14,7 @@ namespace touchpoints { namespace drawing
 		float getCenterX();
 		float getCenterY();
 		vec2 getCenter();
-		void draw() override;
+		void Draw() override;
 	private:
 		float mRadius;
 		vec2 mCenter;

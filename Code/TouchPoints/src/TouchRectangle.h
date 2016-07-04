@@ -12,7 +12,7 @@ namespace touchpoints { namespace drawing
 		inline int upperLeftY() { return mUpperLeftY; }
 		inline int lowerRightX() { return mLowerRightX; }
 		inline int lowerRightY() { return mLowerRightY; }
-		void draw() override;
+		void Draw() override;
 	private:
 		int mUpperLeftX;
 		int mUpperLeftY;

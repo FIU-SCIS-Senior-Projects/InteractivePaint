@@ -32,7 +32,7 @@ namespace touchpoints { namespace drawing
 		this->framesDrawn = framesDrawn;
 	}
 
-	void TouchRectangle::draw()
+	void TouchRectangle::Draw()
 	{
 		gl::color(mColor);
 		if (mFilledShapes)

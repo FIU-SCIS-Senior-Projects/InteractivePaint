@@ -468,7 +468,7 @@ namespace touchpoints { namespace devices
 
 	Mode::DefaultModes DeviceHandler::set_MLE_Mode()
 	{
-		//Turn off leapDraw
+		//Turn off ProcessDrawInput
 		leapDrawEnabled = false;
 		leapGestureEnabled = true;
 		return Mode::DefaultModes::MLE;

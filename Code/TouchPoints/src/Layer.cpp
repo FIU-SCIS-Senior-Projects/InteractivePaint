@@ -41,19 +41,20 @@ namespace touchpoints { namespace drawing
 		framebuffer->unbindFramebuffer();
 	}
 
-	void Layer::AddShape(shared_ptr<TouchShape> shape)
+	void Layer::AddDrawable(shared_ptr<IDrawable> drawable)
 	{
-		shapesStack.push_back(shape);
+		drawablesStack.push_back(drawable);
 	}
 
 	void Layer::Draw()
 	{
 		framebuffer->bindFramebuffer();
-		
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		for(auto shape: shapesStack)
+		for(auto drawable: drawablesStack)
 		{
-			shape->draw();
+			drawable->Draw();
 		}
 
 		framebuffer->unbindFramebuffer();
@@ -63,6 +64,6 @@ namespace touchpoints { namespace drawing
 
 	void Layer::Undo()
 	{
-		shapesStack.pop_back();
+		drawablesStack.pop_back();
 	}
 }}

@@ -54,7 +54,6 @@ namespace touchpoints { namespace app
 		bool radialActive = false;
 		gl::TextureRef imageTexture;
 		/*Code for Proximity Menu*/
-		bool proxActive = false;
 		float lineSize = 1.0f;
 		float r, g, b = 256.0f;
 		int currShape = 0;
@@ -95,7 +94,7 @@ namespace touchpoints { namespace app
 		//Keeps time for the last time we checked for connected or disconnected devices
 		std::chrono::milliseconds lastDeviceCheck;
 		
-		//may need to re call radial center draw to update radial center
+		//may need to re call radial center Draw to update radial center
 		vec2 radialCenter = vec2(windowWidth * .5, windowHeight * .5);
 
 		//Symmetry lines

@@ -43,7 +43,7 @@ namespace touchpoints { namespace drawing
 		return pointList;
 	}
 
-	void TouchPoint::draw()
+	void TouchPoint::Draw()
 	{
 		gl::lineWidth(mSize);
 		gl::color(mColor);

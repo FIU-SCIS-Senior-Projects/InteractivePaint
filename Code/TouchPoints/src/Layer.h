@@ -12,7 +12,7 @@ namespace touchpoints { namespace drawing
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);
-		void AddShape(shared_ptr<TouchShape> shape);
+		void AddDrawable(shared_ptr<IDrawable> drawable);
 		void Draw();
 		void Undo();
 	private:
@@ -21,7 +21,7 @@ namespace touchpoints { namespace drawing
 		//shared prt because this is the only way lib cinder will return an fbo
 		shared_ptr<gl::Fbo> framebuffer;
 		gl::Fbo::Format format;
-		vector<shared_ptr<TouchShape>> shapesStack;
+		vector<shared_ptr<IDrawable>> drawablesStack;
 		void resetFramebuffer();
 	};
 }}

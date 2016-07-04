@@ -174,7 +174,7 @@ namespace touchpoints {namespace devices
 						{
 							if (finalizeableLeftDrawEvents.HasStartPoint())
 							{
-								if (temporaryLeftDrawEvents.HasStartPoint()) //continuation of series of draw events
+								if (temporaryLeftDrawEvents.HasStartPoint()) //continuation of series of Draw events
 								{
 									temporaryLeftDrawEvents.SetEndPoint(currentLeftHandPoint);
 
@@ -213,7 +213,7 @@ namespace touchpoints {namespace devices
 						{
 							if (finalizeableRightDrawEvents.HasStartPoint())
 							{
-								if (temporaryRightDrawEvents.HasStartPoint()) //continuation of series of draw events
+								if (temporaryRightDrawEvents.HasStartPoint()) //continuation of series of Draw events
 								{
 									temporaryRightDrawEvents.SetEndPoint(currentRightHandPoint);
 

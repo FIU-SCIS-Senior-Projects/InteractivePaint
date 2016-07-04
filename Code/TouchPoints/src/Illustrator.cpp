@@ -10,10 +10,23 @@ namespace touchpoints { namespace drawing
 	Illustrator::Illustrator() {}
 
 	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight) 
-		: canvas(windowWidth, windowHeight, 3)
+		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(windowWidth, windowHeight)
 	{
 		mLayerList = layerList;
-		mBrush = brush;
+		numberOfActiveDrawings = 0;
+
+		//Create Map for all Fbo's in Program 
+		for (auto layers : *mLayerList)
+		{
+			std::list<std::shared_ptr<gl::Fbo>> storedFbo;
+			myTimeMachine.insert(make_pair(layers, storedFbo));
+		}
+	}
+
+	Illustrator::Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, Layer menuLayer)
+		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(menuLayer)
+	{
+		mLayerList = layerList;
 		numberOfActiveDrawings = 0;
 
 		//Create Map for all Fbo's in Program 
@@ -49,18 +62,18 @@ namespace touchpoints { namespace drawing
 	{
 		for (auto& activePoint : myActiveCircles)
 		{
-			activePoint.second.draw();
-			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricCircle(activePoint.second).draw();
+			activePoint.second.Draw();
+			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricCircle(activePoint.second).Draw();
 		}
 		for (auto& activePoint : myActiveRectangles)
 		{
-			activePoint.second.draw();
-			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricRectangle(activePoint.second).draw();
+			activePoint.second.Draw();
+			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricRectangle(activePoint.second).Draw();
 		}
 		for (auto& activePoint : myActiveTriangles)
 		{
-			activePoint.second.draw();
-			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(activePoint.second).draw();
+			activePoint.second.Draw();
+			if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(activePoint.second).Draw();
 		}
 	}
 
@@ -259,8 +272,8 @@ namespace touchpoints { namespace drawing
 
 			for (auto oldPoints = myPoints.begin(); oldPoints != myPoints.end();)
 			{
-				oldPoints->draw();
-				if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricLine(*oldPoints).draw();
+				oldPoints->Draw();
+				if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricLine(*oldPoints).Draw();
 				++oldPoints;
 			}
 
@@ -287,8 +300,8 @@ namespace touchpoints { namespace drawing
 					mLayerList->back()->bindFramebuffer();
 					for (auto oldPoints = myPoints.begin(); oldPoints != myPoints.end();)
 					{
-						oldPoints->draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricLine(*oldPoints).draw();
+						oldPoints->Draw();
+						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricLine(*oldPoints).Draw();
 						++oldPoints;
 					}
 					mLayerList->back()->unbindFramebuffer();
@@ -357,8 +370,8 @@ namespace touchpoints { namespace drawing
 					mLayerList->back()->bindFramebuffer();
 					for (auto oldPoints = myCircles.begin(); oldPoints != myCircles.end();)
 					{
-						oldPoints->draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricCircle(*oldPoints).draw();
+						oldPoints->Draw();
+						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricCircle(*oldPoints).Draw();
 						++oldPoints;
 					}
 					mLayerList->back()->unbindFramebuffer();
@@ -378,8 +391,8 @@ namespace touchpoints { namespace drawing
 					mLayerList->back()->bindFramebuffer();
 					for (auto oldPoints = myRectangles.begin(); oldPoints != myRectangles.end();)
 					{
-						oldPoints->draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricRectangle(*oldPoints).draw();
+						oldPoints->Draw();
+						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricRectangle(*oldPoints).Draw();
 						++oldPoints;
 					}
 					mLayerList->back()->unbindFramebuffer();
@@ -399,8 +412,8 @@ namespace touchpoints { namespace drawing
 					mLayerList->back()->bindFramebuffer();
 					for (auto oldPoints = myTriangles.begin(); oldPoints != myTriangles.end();)
 					{
-						oldPoints->draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(*oldPoints).draw();
+						oldPoints->Draw();
+						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(*oldPoints).Draw();
 						++oldPoints;
 					}
 					mLayerList->back()->unbindFramebuffer();
@@ -474,11 +487,6 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
-	void Illustrator::addToActiveCircles(TouchCircle activeCircle, Guid key)
-	{
-		activeCirclesMap.insert_or_assign(key, activeCircle);
-	}
-
 	void Illustrator::addToTemporaryCircles(TouchCircle tempCircle)
 	{
 		temporaryCircles.push_back(tempCircle);
@@ -490,11 +498,6 @@ namespace touchpoints { namespace drawing
 		{
 			temporaryCircles.push_back(tempCircle);
 		}
-	}
-
-	void Illustrator::addToActiveTriangles(TouchVerticalTriangle activeTriangle, Guid key)
-	{
-		activeTrianglesMap.insert_or_assign(key, activeTriangle);
 	}
 
 	void Illustrator::addToTemporaryTriangles(TouchVerticalTriangle tempTriangle)
@@ -510,11 +513,6 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
-	void Illustrator::addToActiveRectangles(TouchRectangle activeRectangle, Guid key)
-	{
-		activeRectanglesMap.insert_or_assign(key, activeRectangle);
-	}
-
 	void Illustrator::addToTemporaryRectangles(TouchRectangle tempRectangle)
 	{
 		temporaryRectangles.push_back(tempRectangle);
@@ -528,59 +526,6 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
-	void Illustrator::addToActivePoints(TouchPoint activePoints, Guid key)
-	{
-		finalizedActivePointsMap.insert_or_assign(key, activePoints);
-	}
-
-	void Illustrator::drawActive() const
-	{
-		for (auto circlePair : activeCirclesMap)
-		{
-			circlePair.second.draw();
-		}
-		for (auto trianglePair : activeTrianglesMap)
-		{
-			trianglePair.second.draw();
-		}
-		for (auto rectanglePair : activeRectanglesMap)
-		{
-			rectanglePair.second.draw();
-		}
-		for (auto pointPair : finalizedActivePointsMap)
-		{
-			pointPair.second.draw();
-		}
-		for (auto pointPair : unfinalizedActivePointsMap)
-		{
-			pointPair.second.draw();
-		}
-
-		auto backBuffer = mLayerList->back();
-		backBuffer->bindFramebuffer();
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendEquation(GL_FUNC_ADD);
-
-		for (auto pointPair : finalizedActiveEraserMap)
-		{
-			auto eraserLine = pointPair.second;
-			eraserLine.draw();
-		}
-		for (auto pointPair : unfinalizedActiveEraserMap)
-		{
-			auto eraserLine = pointPair.second;
-			eraserLine.draw();
-		}
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBlendEquation(GL_FUNC_ADD);
-
-		mLayerList->back()->unbindFramebuffer();
-	}
-
 	void Illustrator::drawTemporary()
 	{
 		for (auto it = begin(temporaryCircles); it != end(temporaryCircles);)
@@ -591,7 +536,7 @@ namespace touchpoints { namespace drawing
 			}
 			else
 			{
-				it->draw();
+				it->Draw();
 				it->DecrementFramesDrawn();
 				++it;
 			}
@@ -605,7 +550,7 @@ namespace touchpoints { namespace drawing
 			}
 			else
 			{
-				it->draw();
+				it->Draw();
 				it->DecrementFramesDrawn();
 				++it;
 			}
@@ -619,7 +564,7 @@ namespace touchpoints { namespace drawing
 			}
 			else
 			{
-				it->draw();
+				it->Draw();
 				it->DecrementFramesDrawn();
 				++it;
 			}
@@ -628,14 +573,19 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::Draw()
 	{
-		drawActive();
 		drawTemporary();
 		canvas.Draw();
+		menuLayer.Draw();
 	}
 
 	void Illustrator::Update()
 	{
 		processDrawEventQueue();
+	}
+
+	void Illustrator::AddMenu(shared_ptr<ui::Menu> menu)
+	{
+		menuLayer.AddDrawable(menu);
 	}
 
 	void Illustrator::addDrawEventToQueue(DrawEvent event)

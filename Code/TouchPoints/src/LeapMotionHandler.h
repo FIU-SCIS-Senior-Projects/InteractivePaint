@@ -4,6 +4,7 @@
 #include "UserInterface.h"
 #include "DrawEvent.h"
 #include "guid.h"
+#include "Menu.h"
 
 #define TOTAL_SYMBOLS 7
 
@@ -15,10 +16,8 @@ namespace touchpoints { namespace devices
 	{
 	public:
 		LeapMotionHandler();
-		LeapMotionHandler(int windowWidth, int windowHeight);
-
+		LeapMotionHandler(int windowWidth, int windowHeight, drawing::Illustrator* illustrator);
 		void setLeapMotionResize(int windowWidth, int windowHeight);
-
 		void InitLeapMotion();
 		void enableGest(Leap::Controller controller);
 		void leapSave(ui::UserInterface& gui, drawing::ImageHandler& imageHandler);
@@ -26,29 +25,28 @@ namespace touchpoints { namespace devices
 		    drawing::ImageHandler& imageHandler);
 		void leapShapeChange(int& currShape, bool& imageFlag, drawing::Brush& brush,
 		    ui::UserInterface& gui, drawing::ImageHandler& imageHandler);
-		void leapDraw(bool& lockCurrentFrame, bool proxActive, drawing::Illustrator& illustrator);
-		void gestRecognition(bool isDrawing, bool& processing, bool& proxActive,
+		void ProcessDrawInput(bool& lockCurrentFrame);
+		void gestRecognition(bool isDrawing, bool& processing,
 			int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
 			drawing::ImageHandler& imageHandler, gl::Fbo* proxFbo);
 		inline Leap::Frame GetCurrentFrame() const { return this->currentFrame; }
 		inline void SetCurrentFrame() { this->currentFrame = this->leapController.frame(); }
 	private:
-		void drawProx(bool& proxActive, gl::Fbo* proxFbo);
+		void toggleProximityMenu(gl::Fbo* proxFbo);
 		ColorA distanceToColor(float distance);
-
 		GuidGenerator guidGenerator;
+		shared_ptr<ui::Menu> proximityMenu;
+		drawing::Illustrator* illustrator;
+		bool isProximityMenuVisible;
 		//gets guid mapped to pointId, or returns a new Guid if not mapping exists
 		Guid getGuid(int pointId);
 		void createPointIdToGuidMapping(int pointId, Guid guid);
-
-		//keeping 2 lists of draw events, some that fire constantly while drawing(temporary draw events)
-		//and others that fire only once a touch id draws and then exits draw zone(finalizing the draw event)
+		//keeping 2 lists of Draw events, some that fire constantly while drawing(temporary Draw events)
+		//and others that fire only once a touch id draws and then exits Draw zone(finalizing the Draw event)
 		unordered_map<Guid, drawing::DrawEvent> finalizeableDrawEvents;
 		unordered_map<Guid, drawing::DrawEvent> temporaryDrawEvents;
-
 		//ensures that illustrator can uniquely identify objects from each device
 		unordered_map<int, Guid> pointIdToGuidMap;
-
 		int windowWidth;
 		int windowHeight;
 		Leap::Controller leapController;

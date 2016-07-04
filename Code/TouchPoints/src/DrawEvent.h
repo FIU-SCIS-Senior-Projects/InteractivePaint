@@ -28,7 +28,7 @@ namespace touchpoints { namespace drawing
 	private:
 		vec2 startPoint;
 		vec2 endPoint;
-		//for shapes that should draw based off of where an initial draw event began
+		//for shapes that should Draw based off of where an initial Draw event began
 		//e.g. shapes that havent been finilized yet
 		vec2 parentStartPoint;
 		//id to group together a sequence of DrawEvents

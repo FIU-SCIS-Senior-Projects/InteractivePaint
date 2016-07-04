@@ -10,7 +10,7 @@ namespace touchpoints { namespace drawing
 		TouchVerticalTriangle();
 		TouchVerticalTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes);
 		TouchVerticalTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes, int framesDrawn);
-		void draw() override;
+		void Draw() override;
 		inline vec2 GetBaseVertexLeft() { return baseVertexLeft; }
 		inline vec2 GetBaseVertexRight() { return baseVertexRight; }
 		inline vec2 GetOppositeBaseVertex() { return oppositeBaseVertex; }

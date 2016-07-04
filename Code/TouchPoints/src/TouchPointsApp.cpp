@@ -84,7 +84,7 @@ namespace touchpoints { namespace app
 
 		gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
 
-		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight);
+		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight, &illustrator);
 		leapMotionHandler.InitLeapMotion();
 
 		/*Kinect*/
@@ -137,7 +137,7 @@ namespace touchpoints { namespace app
 
 		radialFbo->bindFramebuffer();
 
-		//New way to draw icons to FBO.
+		//New way to Draw icons to FBO.
 		gl::TextureRef texture = gl::Texture::create(loadImage(loadAsset("Colors.png")));
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
@@ -680,7 +680,7 @@ namespace touchpoints { namespace app
 		glClearColor(myBG.r, myBG.g, myBG.b, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		//Currently leapDraw before drawing layers to prevent flickering. 
+		//Currently ProcessDrawInput before drawing layers to prevent flickering. 
 		//However, this makes it impossible to see green 'hands' on top of images.
 		if (deviceHandler.leapStatus())
 		{
@@ -689,7 +689,7 @@ namespace touchpoints { namespace app
 			{
 				if (leapDrawFlag)
 				{
-					leapMotionHandler.leapDraw(lockCurrentFrame, proxActive, illustrator);
+					leapMotionHandler.ProcessDrawInput(lockCurrentFrame);
 				}
 			}
 			if (deviceHandler.leapGesture())
@@ -697,7 +697,7 @@ namespace touchpoints { namespace app
 				if (!lockCurrentFrame)
 				{
 					//Calls specified action from gesture recgonized
-					leapMotionHandler.gestRecognition(isDrawing, processing, proxActive, currShape, imageFlag, brush, gui, imageHandler, proxFbo.get());
+					leapMotionHandler.gestRecognition(isDrawing, processing, currShape, imageFlag, brush, gui, imageHandler, proxFbo.get());
 				}
 			}
 			lockCurrentFrame = false;
@@ -735,12 +735,6 @@ namespace touchpoints { namespace app
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(radialFbo->getColorTexture());
-		}
-		
-		//Draws proximity menu
-		if (proxActive)
-		{
-			gl::draw(proxFbo->getColorTexture());
 		}
 
 		gl::color(1.0, 1.0, 1.0, 1.0);

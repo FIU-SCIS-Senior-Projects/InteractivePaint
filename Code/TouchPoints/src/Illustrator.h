@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include "GuidHash.h"
 #include "Canvas.h"
+#include "Menu.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ namespace touchpoints { namespace drawing
 	public:
 		Illustrator();
 		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight);
+		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, Layer menuLayer);
 		void beginTouchShapes(uint32_t myId, vec2 myPos);
 		void movingTouchShapes(uint32_t myId, vec2 myPos, vec2 prevPos);
 		void endTouchShapes(uint32_t myId);
@@ -32,28 +34,23 @@ namespace touchpoints { namespace drawing
 		void clearTimeMachine();
 		void drawActiveShapes();
 
-		//manually add shapes to draw
-		void addToActiveCircles(TouchCircle activeCircle, Guid key);
+		//manually add temp shapes to Draw
 		void addToTemporaryCircles(TouchCircle tempCircle);
 		void addToTemporaryCircles(vector<TouchCircle> tempCircles);
-		void addToActiveTriangles(TouchVerticalTriangle activeTriangle, Guid key);
 		void addToTemporaryTriangles(TouchVerticalTriangle tempTriangle);
 		void addToTemporaryTriangles(vector<TouchVerticalTriangle> tempTriangles);
-		void addToActiveRectangles(TouchRectangle activeRectangle, Guid key);
 		void addToTemporaryRectangles(TouchRectangle tempRectangle);
 		void addToTemporaryRectangles(vector<TouchRectangle> tempRectangles);
-		void addToActivePoints(TouchPoint activePoints, Guid key);
 		
 		void addDrawEventToQueue(DrawEvent event);
 		void addDrawEventsToQueue(vector<DrawEvent> events);
 		void processDrawEventQueue();
-		//draws all active shapes
-		void drawActive() const;
 		//draws all temporary shapes and immediatedly disposes of them
 		void drawTemporary();
 
 		void Draw();
 		void Update();
+		void AddMenu(shared_ptr<ui::Menu> menu);
 
 		//setters for resize() in TouchPointsApp
 		void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
@@ -69,22 +66,15 @@ namespace touchpoints { namespace drawing
 		int numberOfActiveDrawings;
 
 		Canvas canvas;
+		Layer menuLayer;
 		GuidGenerator guidGenerator;
 
-		//A hash map of each shape that is drawn each frame
-		//...and also a vector of temporary shapes drawn only one frame
-		unordered_map<Guid, TouchCircle> activeCirclesMap;
+		//vectors of temporary shapes drawn for a limited number of frames
 		vector<TouchCircle> temporaryCircles;
-		unordered_map<Guid, TouchVerticalTriangle> activeTrianglesMap;
 		vector<TouchVerticalTriangle> temporaryTriangles;
-		unordered_map<Guid, TouchRectangle> activeRectanglesMap;
 		vector<TouchRectangle> temporaryRectangles;
-		//all lines are drawn every frame(active), but some of them can be appended to(unfinalized active)
-		//and others should not be appended to(finilized active)
-		unordered_map<Guid, TouchPoint> finalizedActivePointsMap;
+		//lines not yet finished, can still be appended to by subsequent draw events
 		unordered_map<Guid, TouchPoint> unfinalizedActivePointsMap;
-		//same with eraser lines
-		unordered_map<Guid, TouchEraserPoints> finalizedActiveEraserMap;
 		unordered_map<Guid, TouchEraserPoints> unfinalizedActiveEraserMap;
 
 		queue<DrawEvent> drawEventQueue;

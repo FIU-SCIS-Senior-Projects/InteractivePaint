@@ -15,7 +15,7 @@ namespace touchpoints { namespace drawing
 		void clearPoints();
 		vec2 getFirstPoint();
 		vector<vec2> getPointList() const;
-		void draw() override;
+		void Draw() override;
 	private:
 		vector<vec2> pointList;
 	};

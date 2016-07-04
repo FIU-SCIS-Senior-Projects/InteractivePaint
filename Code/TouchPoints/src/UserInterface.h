@@ -51,7 +51,7 @@ namespace touchpoints { namespace ui
 		devices::DeviceHandler* deviceHandler;
 		TouchKeyboard keyboard;
 
-		//Frame Buffers for the UI. Mostly Fbo's that held button draw calls.
+		//Frame Buffers for the UI. Mostly Fbo's that held button Draw calls.
 		std::shared_ptr<gl::Fbo> uiFbo;
 		std::shared_ptr<gl::Fbo> modeButtonsFbo;
 		std::shared_ptr<gl::Fbo> brushButtonsFbo;

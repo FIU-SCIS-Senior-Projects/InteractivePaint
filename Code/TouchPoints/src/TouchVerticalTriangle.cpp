@@ -30,7 +30,7 @@ namespace touchpoints { namespace drawing
 		this->framesDrawn = framesDrawn;
 	}
 
-	void TouchVerticalTriangle::draw()
+	void TouchVerticalTriangle::Draw()
 	{
 		gl::lineWidth(mSize);
 		gl::color(mColor);

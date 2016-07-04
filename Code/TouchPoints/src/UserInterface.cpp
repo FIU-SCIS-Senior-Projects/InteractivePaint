@@ -441,7 +441,7 @@ namespace touchpoints { namespace ui
 
 	void UserInterface::uiSetup()
 	{
-		//Setup UI function. Sets up the UI, mainly draw calls to write the buttons to frame buffer objects.
+		//Setup UI function. Sets up the UI, mainly Draw calls to write the buttons to frame buffer objects.
 		//Errors occured when this function was called in TouchPointsApp 'setup', so it is now called in the update call.
 		gl::Fbo::Format format;
 
@@ -597,7 +597,7 @@ namespace touchpoints { namespace ui
 
 		drawBrushButtonsFbo();
 
-		//Sets up the draw calls for color buttons and writes them to an FBO.
+		//Sets up the Draw calls for color buttons and writes them to an FBO.
 		//		colorButtonsFbo.reset();
 		colorButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
@@ -1286,9 +1286,9 @@ namespace touchpoints { namespace ui
 			illustrator->missedPoints(windowWidth * .86, windowHeight * .90, windowWidth * .92, windowHeight * .84, newTouchPoints2);
 			drawing::TouchPoint newTouchPoints3(vec2(windowWidth * .88, windowHeight * .97), newColor3, mBrush->getLineSize());
 			illustrator->missedPoints(windowWidth * .88, windowHeight * .97, windowWidth * .94, windowHeight * .90, newTouchPoints3);
-			newTouchPoints1.draw();
-			newTouchPoints2.draw();
-			newTouchPoints3.draw();
+			newTouchPoints1.Draw();
+			newTouchPoints2.Draw();
+			newTouchPoints3.Draw();
 		}
 		else
 		{
@@ -1300,9 +1300,9 @@ namespace touchpoints { namespace ui
 			illustrator->missedPoints(windowWidth * .86, windowHeight * .90, windowWidth * .92, windowHeight * .84, newTouchPoints2);
 			drawing::TouchPoint newTouchPoints3(vec2(windowWidth * .88, windowHeight * .97), newColor, mBrush->getLineSize());
 			illustrator->missedPoints(windowWidth * .88, windowHeight * .97, windowWidth * .94, windowHeight * .90, newTouchPoints3);
-			newTouchPoints1.draw();
-			newTouchPoints2.draw();
-			newTouchPoints3.draw();
+			newTouchPoints1.Draw();
+			newTouchPoints2.Draw();
+			newTouchPoints3.Draw();
 		}
 	}
 
@@ -1359,11 +1359,11 @@ namespace touchpoints { namespace ui
 
 			gl::color(0.0, 0.0, 0.0);
 
-			//Switch to draw which shape is represented in the mode box.
+			//Switch to Draw which shape is represented in the mode box.
 			if (mBrush->IsEraserActive())
 			{
 				bool tempBool = false;
-				drawing::TouchCircle(vec2(windowWidth * .9, windowHeight * .9), mBrush->getLineSize() * 2, Color(1.0, 1.0, 1.0), 1, tempBool).draw();
+				drawing::TouchCircle(vec2(windowWidth * .9, windowHeight * .9), mBrush->getLineSize() * 2, Color(1.0, 1.0, 1.0), 1, tempBool).Draw();
 			}
 			else
 				switch (mBrush->getShape())

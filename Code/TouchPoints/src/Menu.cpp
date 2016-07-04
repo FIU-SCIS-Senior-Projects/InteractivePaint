@@ -4,16 +4,21 @@ namespace touchpoints { namespace ui
 {
 	Menu::Menu() {}
 	
-	Menu::Menu(int width, int height) : width(width), height(height) { }
+	Menu::Menu(int width, int height, bool visible) : width(width), height(height), visible(visible) { }
 	
-	Menu::Menu(int width, int height, multimap<int, shared_ptr<drawing::TouchShape>> composingShapes)
-		: width(width), height(height), composingShapes(composingShapes) { }
+	Menu::Menu(int width, int height, bool visible, multimap<int, shared_ptr<drawing::TouchShape>> composingShapes)
+		: width(width), height(height), visible(visible), composingShapes(composingShapes) { }
 	
 	void Menu::Draw()
 	{
+		if(!visible)
+		{
+			return;
+		}
+
 		for (auto zIndexShapePair : composingShapes)
 		{
-			zIndexShapePair.second->draw();
+			zIndexShapePair.second->Draw();
 		}
 	}
 }}

@@ -6,8 +6,21 @@ namespace touchpoints { namespace devices
 {
 	LeapMotionHandler::LeapMotionHandler() {};
 
-	LeapMotionHandler::LeapMotionHandler(int windowWidth, int windowHeight)
-		: windowWidth(windowWidth), windowHeight(windowHeight) {};
+	LeapMotionHandler::LeapMotionHandler(int windowWidth, int windowHeight, drawing::Illustrator* illustrator)
+		: windowWidth(windowWidth), windowHeight(windowHeight), illustrator(illustrator)
+	{
+		auto lineColor = ColorA(0.0, 0.0, 0.0, 1.0);
+		auto horizontalLine = shared_ptr<drawing::TouchPoint>
+			(new drawing::TouchPoint(vec2(0, windowHeight * .5), vec2(windowWidth, windowHeight * .5), lineColor, 10));
+		auto verticalLine = shared_ptr<drawing::TouchPoint>
+			(new drawing::TouchPoint(vec2(windowWidth * .5, windowHeight), vec2(windowWidth * .5, 0), lineColor, 10));
+		auto composingShapes = multimap<int, shared_ptr<drawing::TouchShape>>();
+		composingShapes.insert(pair<int, shared_ptr<drawing::TouchPoint>>(0, horizontalLine));
+		composingShapes.insert(pair<int, shared_ptr<drawing::TouchPoint>>(0, verticalLine));
+		proximityMenu = shared_ptr<ui::Menu>(new ui::Menu(windowWidth, windowHeight, false, composingShapes));
+		
+		illustrator->AddMenu(proximityMenu);
+	};
 
 	void LeapMotionHandler::setLeapMotionResize(int setWindowWidth, int setWindowHeight)
 	{
@@ -32,7 +45,7 @@ namespace touchpoints { namespace devices
 		controller.enableGesture(Leap::Gesture::TYPE_KEY_TAP);
 	}
 
-	void LeapMotionHandler::gestRecognition(bool isDrawing, bool& processing, bool& proxActive,
+	void LeapMotionHandler::gestRecognition(bool isDrawing, bool& processing,
 		int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
 		drawing::ImageHandler& imageHandler, gl::Fbo* proxFbo)
 	{
@@ -75,13 +88,13 @@ namespace touchpoints { namespace devices
 									}
 									if (position.x > 0 && position.y < 150)
 									{
-										proxActive = false;
+										isProximityMenuVisible = false;
 									}
 								}
 								else
 								{
 									//counterclockwise circle
-									drawProx(proxActive, proxFbo);
+									toggleProximityMenu(proxFbo);
 								}
 
 								// Calculate angle swept since last frame
@@ -128,10 +141,9 @@ namespace touchpoints { namespace devices
 		else imageHandler.saveCanvas(vec2(windowWidth, windowHeight), ColorA(gui.getBackgroundColor(), 1.0));
 	}
 
-	void LeapMotionHandler::leapDraw(bool& lockCurrentFrame, bool proxActive, drawing::Illustrator& illustrator)
+	void LeapMotionHandler::ProcessDrawInput(bool& lockCurrentFrame)
 	{
-		proxActive = false;
-		if (proxActive)
+		if (isProximityMenuVisible)
 		{
 			return;
 		}
@@ -186,21 +198,21 @@ namespace touchpoints { namespace devices
 				auto finalizableDrawEventIterator = finalizeableDrawEvents.find(guid);
 				bool finalizableDrawEventWasFound = finalizableDrawEventIterator != finalizeableDrawEvents.end();
 				
-				if(finalizableDrawEventWasFound) //continuation of series of draw events
+				if(finalizableDrawEventWasFound) //continuation of series of Draw events
 				{
 					auto finalizableEvent = finalizableDrawEventIterator->second;
 
-					//reset life of finilizable draw event, so it doesnt die
+					//reset life of finilizable Draw event, so it doesnt die
 					finalizableEvent.ResetCurrentAge();
 
-					//check if we are continuing any temp draw events
+					//check if we are continuing any temp Draw events
 					auto tempDrawEventIterator = temporaryDrawEvents.find(guid);
 					bool tempDrawEventWasFound = tempDrawEventIterator != temporaryDrawEvents.end();
 					
-					if (tempDrawEventWasFound) //continuation of previous temp draw event
+					if (tempDrawEventWasFound) //continuation of previous temp Draw event
 					{
 						auto tempDrawEvent = tempDrawEventIterator->second;
-						//finish temp draw event
+						//finish temp Draw event
 						tempDrawEvent.SetEndPoint(currentPoint);
 						//send it off
 						drawEventsToSendToIllustrator.push_back(tempDrawEvent);
@@ -210,14 +222,14 @@ namespace touchpoints { namespace devices
 					else
 					{
 						auto parentStartLocation = finalizableEvent.GetStartPoint();
-						//create new temp draw event
+						//create new temp Draw event
 						auto newTempDrawEvent = drawing::DrawEvent(currentPoint, parentStartLocation, guid, false, eventMaxLifeSpan);
 						temporaryDrawEvents.insert_or_assign(guid, newTempDrawEvent);
 					}
 				}
 				else //should be a new series of drawing events
 				{
-					//create new finilizable draw event
+					//create new finilizable Draw event
 					auto newFinalizableDrawEvent = drawing::DrawEvent(currentPoint, guid, true, eventMaxLifeSpan);
 					createPointIdToGuidMapping(pointId, guid);
 					finalizeableDrawEvents.insert_or_assign(guid, newFinalizableDrawEvent);
@@ -227,15 +239,15 @@ namespace touchpoints { namespace devices
 
 		if (fingerLocationCircles.size() > 0)
 		{
-			illustrator.addToTemporaryCircles(fingerLocationCircles);
+			illustrator->addToTemporaryCircles(fingerLocationCircles);
 		}
 
 		if (drawEventsToSendToIllustrator.size() > 0)
 		{
-			illustrator.addDrawEventsToQueue(drawEventsToSendToIllustrator);
+			illustrator->addDrawEventsToQueue(drawEventsToSendToIllustrator);
 		}
 
-		//increment all draw events lifespan
+		//increment all Draw events lifespan
 		//remove all those that exceed max life span
 		for (auto it = begin(temporaryDrawEvents); it != end(temporaryDrawEvents);)
 		{
@@ -365,28 +377,10 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	void LeapMotionHandler::drawProx(bool& proxActive, gl::Fbo* proxFbo)
+	void LeapMotionHandler::toggleProximityMenu(gl::Fbo* proxFbo)
 	{
-		proxFbo->bindFramebuffer();
-		glClearColor(1.0, 1.0, 1.0, 0.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-		proxFbo->unbindFramebuffer();
-
-		//Draw to radial menu buffer
-		proxFbo->bindFramebuffer();
-		//Make background transparent
-		glClearColor(1.0, 1.0, 1.0, 0.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		gl::lineWidth(10);
-		gl::color(0.0, 0.0, 0.0, 1.0);
-		gl::drawLine(vec2(windowWidth * .5, windowHeight), vec2(windowWidth * .5, 0));
-
-		gl::drawLine(vec2(0, windowHeight * .5), vec2(windowWidth, windowHeight * .5));
-
-		proxFbo->unbindFramebuffer();
-
-		proxActive = true;
+		proximityMenu->ToggleVisiblibility();
+		isProximityMenuVisible = proximityMenu->IsVisible();
 	}
 
 	ColorA LeapMotionHandler::distanceToColor(float distance) 

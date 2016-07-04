@@ -117,6 +117,9 @@
     <ClCompile Include="..\src\Canvas.cpp">
       <Filter>drawing</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Menu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -195,6 +198,12 @@
       <Filter>drawing\shapes</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Canvas.h">
+      <Filter>drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Menu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IDrawable.h">
       <Filter>drawing</Filter>
     </ClInclude>
   </ItemGroup>

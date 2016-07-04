@@ -66,6 +66,6 @@ namespace touchpoints { namespace drawing
 
 	void Canvas::AddShape(shared_ptr<TouchShape> shape)
 	{
-		layers[activeLayerIndex].AddShape(shape);
+		layers[activeLayerIndex].AddDrawable(shape);
 	}
 }}

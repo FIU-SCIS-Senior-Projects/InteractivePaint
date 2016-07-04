@@ -420,7 +420,7 @@ namespace touchpoints { namespace devices
 		else if (realDrawFlag)
 		{
 			auto result = realPointsMap.find(currentId);
-			//New cursor is has started to draw
+			//New cursor is has started to Draw
 			if (result == realPointsMap.end())
 			{
 				myIllustrator->beginTouchShapes(currentId, vec2(xPosition, yPosition));
