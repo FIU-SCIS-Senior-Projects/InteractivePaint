@@ -50,16 +50,12 @@ namespace touchpoints { namespace app
 		int windowWidth = getWindowSize().x;
 		int windowHeight = getWindowSize().y;
 
-		bool processing = false;
 		bool radialActive = false;
 		gl::TextureRef imageTexture;
 		/*Code for Proximity Menu*/
 		float lineSize = 1.0f;
 		float r, g, b = 256.0f;
-		int currShape = 0;
 		bool lockCurrentFrame = false;
-		bool imageFlag = false;
-		bool isDrawing = false;
 		bool leapDrawFlag = true;
 
 		//List of drawUI Flags

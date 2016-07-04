@@ -6,8 +6,10 @@ namespace touchpoints { namespace devices
 {
 	LeapMotionHandler::LeapMotionHandler() {};
 
-	LeapMotionHandler::LeapMotionHandler(int windowWidth, int windowHeight, drawing::Illustrator* illustrator)
-		: windowWidth(windowWidth), windowHeight(windowHeight), illustrator(illustrator)
+	LeapMotionHandler::LeapMotionHandler(int windowWidth, int windowHeight, drawing::Illustrator* illustrator,
+		drawing::Brush* brush, drawing::ImageHandler* imageHandler, ui::UserInterface* gui)
+		: windowWidth(windowWidth), windowHeight(windowHeight), illustrator(illustrator), brush(brush),
+		imageHandler(imageHandler), gui(gui)
 	{
 		auto lineColor = ColorA(0.0, 0.0, 0.0, 1.0);
 		auto horizontalLine = shared_ptr<drawing::TouchPoint>
@@ -18,7 +20,8 @@ namespace touchpoints { namespace devices
 		composingShapes.insert(pair<int, shared_ptr<drawing::TouchPoint>>(0, horizontalLine));
 		composingShapes.insert(pair<int, shared_ptr<drawing::TouchPoint>>(0, verticalLine));
 		proximityMenu = shared_ptr<ui::Menu>(new ui::Menu(windowWidth, windowHeight, false, composingShapes));
-		
+		isProximityMenuVisible = false;
+
 		illustrator->AddMenu(proximityMenu);
 	};
 
@@ -45,100 +48,87 @@ namespace touchpoints { namespace devices
 		controller.enableGesture(Leap::Gesture::TYPE_KEY_TAP);
 	}
 
-	void LeapMotionHandler::gestRecognition(bool isDrawing, bool& processing,
-		int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
-		drawing::ImageHandler& imageHandler)
+	void LeapMotionHandler::gestRecognition()
 	{
-		if (!isDrawing)
+		//List of all gestures
+		gestureList = this->currentFrame.gestures();
+		//Process gestures...
+		if (!imageHandler->getIconFlag())
 		{
-			//List of all gestures
-			gestureList = this->currentFrame.gestures();
-			//Process gestures...
-			if (!imageHandler.getIconFlag())
+			for (Leap::Gesture gesture : gestureList)
 			{
-				for (Leap::Gesture gesture : gestureList)
+				switch (gesture.type())
 				{
-					switch (gesture.type())
-					{
-						case Leap::Gesture::TYPE_CIRCLE:
+					case Leap::Gesture::TYPE_CIRCLE:
+						{
+							Leap::CircleGesture circle = gesture;
+
+							if (circle.pointable().direction().angleTo(circle.normal()) <= M_PI / 2)
 							{
-								Leap::CircleGesture circle = gesture;
+								//clockwise circle
+								Leap::Vector position = circle.pointable().tipPosition();
 
-								if (circle.pointable().direction().angleTo(circle.normal()) <= M_PI / 2)
+								if (position.x < 0 && position.y > 250)
 								{
-									//clockwise circle
-									Leap::Vector position = circle.pointable().tipPosition();
-
-									if (position.x < 0 && position.y > 250)
-									{
-										processing = true;
-										leapColorChange(brush, gui, imageHandler);
-									}
-
-									if (position.x < 0 && position.y < 150)
-									{
-										processing = true;
-										leapShapeChange(currShape, imageFlag, brush, gui, imageHandler);
-									}
-
-									if (position.x > 0 && position.y > 250)
-									{
-										processing = true;
-										leapSave(gui, imageHandler);
-									}
-									if (position.x > 0 && position.y < 150)
-									{
-										isProximityMenuVisible = false;
-									}
-								}
-								else
-								{
-									//counterclockwise circle
-									toggleProximityMenu();
+									leapColorChange();
 								}
 
-								// Calculate angle swept since last frame
-								float sweptAngle = 0;
-								if (circle.state() != Leap::Gesture::STATE_START)
+								if (position.x < 0 && position.y < 150)
 								{
-									Leap::CircleGesture previousUpdate = Leap::CircleGesture(this->leapController.frame(1).gesture(circle.id()));
-									sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * M_PI;
+									leapShapeChange();
 								}
-								break;
+
+								if (position.x > 0 && position.y > 250)
+								{
+									leapSave();
+								}
+								if (position.x > 0 && position.y < 150)
+								{
+									isProximityMenuVisible = false;
+								}
 							}
-						case Leap::Gesture::TYPE_SWIPE:
+							else
 							{
-								processing = true;
-								leapColorChange(brush, gui, imageHandler);
-								break;
+								//counterclockwise circle
+								toggleProximityMenu();
 							}
-						case Leap::Gesture::TYPE_KEY_TAP:
+
+							if (circle.state() != Leap::Gesture::STATE_START)
 							{
-								processing = true;
-								leapSave(gui, imageHandler);
-								break;
+								Leap::CircleGesture previousUpdate = Leap::CircleGesture(this->leapController.frame(1).gesture(circle.id()));
 							}
-						case Leap::Gesture::TYPE_SCREEN_TAP:
-							{
-								Leap::ScreenTapGesture screentap = gesture;
-								break;
-							}
-						default:
-							std::cout << std::string(2, ' ') << "Unknown gesture type." << std::endl;
 							break;
-					}
+						}
+					case Leap::Gesture::TYPE_SWIPE:
+						{
+							leapColorChange();
+							break;
+						}
+					case Leap::Gesture::TYPE_KEY_TAP:
+						{
+							leapSave();
+							break;
+						}
+					case Leap::Gesture::TYPE_SCREEN_TAP:
+						{
+							Leap::ScreenTapGesture screentap = gesture;
+							break;
+						}
+					default:
+						std::cout << std::string(2, ' ') << "Unknown gesture type." << std::endl;
+						break;
 				}
 			}
 		}
 	}
 
-	void LeapMotionHandler::leapSave(ui::UserInterface& gui, drawing::ImageHandler& imageHandler)
+	void LeapMotionHandler::leapSave()
 	{
-		if (gui.isBackgroundTransparent())
+		if (gui->isBackgroundTransparent())
 		{
-			imageHandler.saveCanvas(vec2(windowWidth, windowHeight), ColorA(gui.getBackgroundColor(), 0.0));
+			imageHandler->saveCanvas(vec2(windowWidth, windowHeight), ColorA(gui->getBackgroundColor(), 0.0));
 		}
-		else imageHandler.saveCanvas(vec2(windowWidth, windowHeight), ColorA(gui.getBackgroundColor(), 1.0));
+		else imageHandler->saveCanvas(vec2(windowWidth, windowHeight), ColorA(gui->getBackgroundColor(), 1.0));
 	}
 
 	void LeapMotionHandler::ProcessDrawInput(bool& lockCurrentFrame)
@@ -269,45 +259,34 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	void LeapMotionHandler::leapShapeChange(int& currShape, bool& imageFlag, drawing::Brush& brush,
-	                                        ui::UserInterface& gui, drawing::ImageHandler& imageHandler)
+	void LeapMotionHandler::leapShapeChange()
 	{
-		if (currShape != TOTAL_SYMBOLS - 1)
-		{
-			currShape++;
-		}
-		else
-		{
-			currShape = 0;
-		}
-		brush.incrementShape();
-		gui.setModeChangeFlag();
-		switch (brush.getCurrentShape())
+		brush->incrementShape();
+		gui->setModeChangeFlag();
+		switch (brush->getCurrentShape())
 		{
 			case 0:
 				{
-					imageHandler.loadIcon(SHAPE_LINE);
+					imageHandler->loadIcon(SHAPE_LINE);
 
 					break;
 				}
 			case 1:
 				{
-					if (!brush.getFilledShapes()) imageHandler.loadIcon(SHAPE_Circle);
-					else imageHandler.loadIcon(SHAPE_Filled_Circle);
+					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Circle);
+					else imageHandler->loadIcon(SHAPE_Filled_Circle);
 					break;
 				}
 			case 2:
 				{
-					if (!brush.getFilledShapes()) imageHandler.loadIcon(SHAPE_Rectangle);
-					else imageHandler.loadIcon(SHAPE_Filled_Rectangle);
-					imageFlag = true;
+					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Rectangle);
+					else imageHandler->loadIcon(SHAPE_Filled_Rectangle);
 					break;
 				}
 			case 3:
 				{
-					if (!brush.getFilledShapes()) imageHandler.loadIcon(SHAPE_Triangle);
-					else imageHandler.loadIcon(SHAPE_Filled_Triangle);
-					imageFlag = true;
+					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Triangle);
+					else imageHandler->loadIcon(SHAPE_Filled_Triangle);
 					break;
 				}
 			default:
@@ -317,57 +296,56 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	void LeapMotionHandler::leapColorChange(drawing::Brush& brush, ui::UserInterface& gui,
-	                                        drawing::ImageHandler& imageHandler)
+	void LeapMotionHandler::leapColorChange()
 	{
-		brush.incrementColor();
-		gui.setModeChangeFlag();
+		brush->incrementColor();
+		gui->setModeChangeFlag();
 		//Provides correct image to provide feedback
-		switch (brush.getCurrentColor())
+		switch (brush->getCurrentColor())
 		{
 			case 0:
 				{
-					imageHandler.loadIcon(COLOR_ZERO);
+					imageHandler->loadIcon(COLOR_ZERO);
 
 					break;
 				}
 			case 1:
 				{
-					imageHandler.loadIcon(COLOR_ONE);
+					imageHandler->loadIcon(COLOR_ONE);
 
 					break;
 				}
 			case 2:
 				{
-					imageHandler.loadIcon(COLOR_TWO);
+					imageHandler->loadIcon(COLOR_TWO);
 
 					break;
 				}
 			case 3:
 				{
-					imageHandler.loadIcon(COLOR_THREE);
+					imageHandler->loadIcon(COLOR_THREE);
 
 					break;
 				}
 			case 4:
 				{
-					imageHandler.loadIcon(COLOR_FOUR);
+					imageHandler->loadIcon(COLOR_FOUR);
 					break;
 				}
 			case 5:
 				{
-					imageHandler.loadIcon(COLOR_FIVE);
+					imageHandler->loadIcon(COLOR_FIVE);
 
 					break;
 				}
 			case 6:
 				{
-					imageHandler.loadIcon(COLOR_SIX);
+					imageHandler->loadIcon(COLOR_SIX);
 					break;
 				}
 			case 7:
 				{
-					imageHandler.loadIcon(COLOR_SEVEN);
+					imageHandler->loadIcon(COLOR_SEVEN);
 					break;
 				}
 			default:

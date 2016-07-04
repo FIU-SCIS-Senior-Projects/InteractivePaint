@@ -82,7 +82,7 @@ namespace touchpoints { namespace app
 
 		gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
 
-		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight, &illustrator);
+		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight, &illustrator, &brush, &imageHandler, &gui);
 		leapMotionHandler.InitLeapMotion();
 
 		/*Kinect*/
@@ -268,7 +268,7 @@ namespace touchpoints { namespace app
 		}
 		else if (event.getChar() == 'n')
 		{
-			leapMotionHandler.leapSave(gui, imageHandler);
+			leapMotionHandler.leapSave();
 		}
 		else if (event.getChar() == 'j')
 		{
@@ -330,15 +330,15 @@ namespace touchpoints { namespace app
 		}
 		else if (event.getChar() == 'l')
 		{
-			leapMotionHandler.leapShapeChange(currShape, imageFlag, brush, gui, imageHandler);
+			leapMotionHandler.leapShapeChange();
 		}
 		else if (event.getChar() == 'k')
 		{
-			leapMotionHandler.leapColorChange(brush, gui, imageHandler);
+			leapMotionHandler.leapColorChange();
 		}
 		else if (event.getChar() == '1')
 		{
-			leapMotionHandler.leapShapeChange(currShape, imageFlag, brush, gui, imageHandler);
+			leapMotionHandler.leapShapeChange();
 		}
 		else if (event.getChar() == '2')
 		{
@@ -346,7 +346,7 @@ namespace touchpoints { namespace app
 		}
 		else if (event.getChar() == '3')
 		{
-			leapMotionHandler.leapColorChange(brush, gui, imageHandler);
+			leapMotionHandler.leapColorChange();
 		}
 		else if (event.getChar() == '4')
 		{
@@ -385,7 +385,7 @@ namespace touchpoints { namespace app
 			{
 				if ((previousPoint.getY() < currentPoint.getY() + 120) && (previousPoint.getY() > currentPoint.getY() - 120))
 				{
-					leapMotionHandler.leapColorChange(brush, gui, imageHandler);
+					leapMotionHandler.leapColorChange();
 					bufferTouches.erase(previousPoint.getId());
 					bufferTouches.erase(currentPoint.getId());
 					return true;
@@ -412,14 +412,14 @@ namespace touchpoints { namespace app
 				if ((((radialCenter.x - 100) - 30) < x && x < ((radialCenter.x - 100) + 30)) && ((radialCenter.y - 30) < y && y < (radialCenter.y + 30)))
 				{
 					//brush.changeStaticColor();
-					leapMotionHandler.leapColorChange(brush, gui, imageHandler);
+					leapMotionHandler.leapColorChange();
 					return;
 				}
 
 				if ((((radialCenter.x + 100) - 30) < x && x < ((radialCenter.x + 100) + 30)) && ((radialCenter.y - 30) < y && y < (radialCenter.y + 30)))
 				{
 					//brush.cycleShape();
-					leapMotionHandler.leapShapeChange(currShape, imageFlag, brush, gui, imageHandler);
+					leapMotionHandler.leapShapeChange();
 					return;
 				}
 
@@ -484,7 +484,7 @@ namespace touchpoints { namespace app
 				//'Extended Touch' Gesture
 				if (touch.getPos() == touch.getPrevPos() && touch.getTime() > myTouch.getTime() + .75)
 				{
-					leapMotionHandler.leapShapeChange(currShape, imageFlag, brush, gui, imageHandler);
+					leapMotionHandler.leapShapeChange();
 					bufferTouches[touch.getId()].clear();
 					bufferTouches[touch.getId()].emplace_front(touch);
 				}
@@ -522,52 +522,52 @@ namespace touchpoints { namespace app
 
 	void TouchPointsApp::setDefaultMode(Mode::DefaultModes mode)
 	{
-		bool temp = false;
-		bool temp2 = true;
-
 		switch (mode)
 		{
+			case Mode::DefaultModes::MLER:
+				gui.changeModeButtons(true);
+				break; 
 			case Mode::DefaultModes::MLE:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::MLR:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::MER:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::LER:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 			case Mode::DefaultModes::ML:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::ME:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::MR:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::LE:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 			case Mode::DefaultModes::LR:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 			case Mode::DefaultModes::ER:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 			case Mode::DefaultModes::M:
-				gui.changeModeButtons(temp2);
+				gui.changeModeButtons(true);
 				break;
 			case Mode::DefaultModes::L:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 			case Mode::DefaultModes::E:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 			case Mode::DefaultModes::R:
-				gui.changeModeButtons(temp);
+				gui.changeModeButtons(false);
 				break;
 		}
 	}
@@ -639,11 +639,11 @@ namespace touchpoints { namespace app
 					}
 					if (realSenseHandler.getCheekGestureFlag())
 					{
-						leapMotionHandler.leapColorChange(brush, gui, imageHandler);
+						leapMotionHandler.leapColorChange();
 					}
 					if (realSenseHandler.getSmileGestureFlag())
 					{
-						leapMotionHandler.leapShapeChange(currShape, imageFlag, brush, gui, imageHandler);
+						leapMotionHandler.leapShapeChange();
 					}
 					realSenseHandler.resetGesturesFlag();
 				}
@@ -695,7 +695,7 @@ namespace touchpoints { namespace app
 				if (!lockCurrentFrame)
 				{
 					//Calls specified action from gesture recgonized
-					leapMotionHandler.gestRecognition(isDrawing, processing, currShape, imageFlag, brush, gui, imageHandler);
+					leapMotionHandler.gestRecognition();
 				}
 			}
 			lockCurrentFrame = false;

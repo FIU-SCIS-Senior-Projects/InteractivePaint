@@ -16,19 +16,16 @@ namespace touchpoints { namespace devices
 	{
 	public:
 		LeapMotionHandler();
-		LeapMotionHandler(int windowWidth, int windowHeight, drawing::Illustrator* illustrator);
+		LeapMotionHandler(int windowWidth, int windowHeight, drawing::Illustrator* illustrator,
+		    drawing::Brush* brush, drawing::ImageHandler* imageHandler, ui::UserInterface* gui);
 		void setLeapMotionResize(int windowWidth, int windowHeight);
 		void InitLeapMotion();
 		void enableGest(Leap::Controller controller);
-		void leapSave(ui::UserInterface& gui, drawing::ImageHandler& imageHandler);
-		void leapColorChange(drawing::Brush& brush, ui::UserInterface& gui,
-		    drawing::ImageHandler& imageHandler);
-		void leapShapeChange(int& currShape, bool& imageFlag, drawing::Brush& brush,
-		    ui::UserInterface& gui, drawing::ImageHandler& imageHandler);
+		void leapSave();
+		void leapColorChange();
+		void leapShapeChange();
 		void ProcessDrawInput(bool& lockCurrentFrame);
-		void gestRecognition(bool isDrawing, bool& processing,
-			int& currShape, bool& imageFlag, drawing::Brush& brush, ui::UserInterface& gui,
-			drawing::ImageHandler& imageHandler);
+		void gestRecognition();
 		inline Leap::Frame GetCurrentFrame() const { return this->currentFrame; }
 		inline void SetCurrentFrame() { this->currentFrame = this->leapController.frame(); }
 	private:
@@ -37,6 +34,9 @@ namespace touchpoints { namespace devices
 		GuidGenerator guidGenerator;
 		shared_ptr<ui::Menu> proximityMenu;
 		drawing::Illustrator* illustrator;
+		drawing::Brush* brush;
+		drawing::ImageHandler* imageHandler;
+		ui::UserInterface* gui;
 		bool isProximityMenuVisible;
 		//gets guid mapped to pointId, or returns a new Guid if not mapping exists
 		Guid getGuid(int pointId);
