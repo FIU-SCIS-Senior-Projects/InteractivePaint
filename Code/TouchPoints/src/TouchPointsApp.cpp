@@ -342,7 +342,9 @@ namespace touchpoints { namespace app
 		}
 		else if (event.getChar() == '2')
 		{
+			//TODO: remove this once all devices use new drawing system
 			illustrator.undoDraw(gui.getBackgroundColor());
+			illustrator.Undo();
 		}
 		else if (event.getChar() == '3')
 		{
@@ -426,7 +428,9 @@ namespace touchpoints { namespace app
 				if ((((radialCenter.x) - 30) < x && x < ((radialCenter.x) + 30)) && ((radialCenter.y - 100) - 30) < y && y < (radialCenter.y - 100) + 30)
 				{
 					//mySymmetry.toggleSymmetry();
+					//TODO: remove this once all devices use new drawing system
 					illustrator.undoDraw(gui.getBackgroundColor());
+					illustrator.Undo();
 					return;
 				}
 
@@ -627,7 +631,9 @@ namespace touchpoints { namespace app
 
 					if (realSenseHandler.getBrowGestureFlag())
 					{
+						//TODO: remove this once all devices use new drawing system
 						illustrator.undoDraw(gui.getBackgroundColor());
+						illustrator.Undo();
 					}
 					if (realSenseHandler.getKissGestureFlag())
 					{

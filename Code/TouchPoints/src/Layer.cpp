@@ -64,6 +64,9 @@ namespace touchpoints { namespace drawing
 
 	void Layer::Undo()
 	{
-		drawablesStack.pop_back();
+		if (drawablesStack.size() > 0)
+		{
+			drawablesStack.pop_back();
+		}
 	}
 }}

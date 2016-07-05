@@ -51,6 +51,7 @@ namespace touchpoints { namespace drawing
 		void Draw();
 		void Update();
 		void AddMenu(shared_ptr<ui::Menu> menu);
+		void Undo();
 
 		//setters for resize() in TouchPointsApp
 		void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);

@@ -986,7 +986,9 @@ namespace touchpoints { namespace ui
 					}
 					else if (x < 350 && y < 50)
 					{
+						//TODO: remove this once all devices use new drawing system
 						illustrator->undoDraw(backgroundColor);
+						illustrator->Undo();
 						return true;
 					}
 				}

@@ -588,6 +588,11 @@ namespace touchpoints { namespace drawing
 		menuLayer.AddDrawable(menu);
 	}
 
+	void Illustrator::Undo()
+	{
+		canvas.Undo();
+	}
+
 	void Illustrator::addDrawEventToQueue(DrawEvent event)
 	{
 		drawEventQueue.push(event);
