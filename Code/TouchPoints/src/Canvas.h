@@ -18,6 +18,10 @@ namespace touchpoints { namespace drawing
 		void Draw();
 		void Undo();
 		void AddShape(shared_ptr<TouchShape> shape);
+		inline float GetTopAlpha() { return layers[activeLayerIndex].GetAlpha(); }
+		inline void SetTopAlpha(float value) { layers[activeLayerIndex].SetAlpha(value); }
+		float GetAlpha(int index);
+		void SetAlpha(int index, float value);
 	private:
 		int numberOfLayers;
 		int activeLayerIndex;

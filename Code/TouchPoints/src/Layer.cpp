@@ -1,5 +1,6 @@
 #include "Layer.h"
 #include <cinder/gl/draw.h>
+#include <cinder/gl/scoped.h>
 
 namespace touchpoints { namespace drawing
 {
@@ -52,6 +53,10 @@ namespace touchpoints { namespace drawing
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+
 		for(auto drawable: drawablesStack)
 		{
 			drawable->Draw();
@@ -59,6 +64,11 @@ namespace touchpoints { namespace drawing
 
 		framebuffer->unbindFramebuffer();
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
+
+		gl::color(1.0, 1.0, 1.0, alpha.GetValue());
 		gl::draw(framebuffer->getColorTexture());
 	}
 

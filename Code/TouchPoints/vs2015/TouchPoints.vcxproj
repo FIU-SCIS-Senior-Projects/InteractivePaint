@@ -203,6 +203,7 @@
     <ResourceCompile Include="Resources.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Alpha.cpp" />
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\Brush.cpp" />
     <ClCompile Include="..\src\Canvas.cpp" />
@@ -231,6 +232,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\AllShapes.h" />
+    <ClInclude Include="..\src\Alpha.h" />
     <ClInclude Include="..\src\Brush.h" />
     <ClInclude Include="..\src\Canvas.h" />
     <ClInclude Include="..\src\DeviceHandler.h" />

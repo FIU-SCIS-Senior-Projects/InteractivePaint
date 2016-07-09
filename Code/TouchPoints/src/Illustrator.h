@@ -41,18 +41,19 @@ namespace touchpoints { namespace drawing
 		void addToTemporaryTriangles(vector<TouchVerticalTriangle> tempTriangles);
 		void addToTemporaryRectangles(TouchRectangle tempRectangle);
 		void addToTemporaryRectangles(vector<TouchRectangle> tempRectangles);
-		
 		void addDrawEventToQueue(DrawEvent event);
 		void addDrawEventsToQueue(vector<DrawEvent> events);
-		void processDrawEventQueue();
-		//draws all temporary shapes and immediatedly disposes of them
-		void drawTemporary();
-
 		void Draw();
 		void Update();
 		void AddMenu(shared_ptr<ui::Menu> menu);
 		void Undo();
-
+		inline void MakeLayerActive(int index) { canvas.MakeLayerActive(index); }
+		//alpha of the top layer
+		inline float GetTopAlpha() { return canvas.GetTopAlpha(); }
+		inline void SetTopAlpha(float value) { canvas.SetTopAlpha(value); }
+		//alpha of i-th layer
+		inline float GetAlpha(int index) { return canvas.GetAlpha(index); }
+		inline void SetAlpha(int index, float value) { canvas.SetAlpha(index, value); }
 		//setters for resize() in TouchPointsApp
 		void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
 	private:
@@ -94,5 +95,8 @@ namespace touchpoints { namespace drawing
 		//Stack that tells which item in map to pop
 		stack<shared_ptr<gl::Fbo>> undoOrder;
 		int undoCount = 0;
+
+		void drawTemporary();
+		void processDrawEventQueue();
 	};
 }}

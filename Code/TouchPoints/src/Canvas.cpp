@@ -1,4 +1,5 @@
 #include "Canvas.h"
+#include <cassert>
 
 namespace touchpoints { namespace drawing
 {
@@ -42,7 +43,7 @@ namespace touchpoints { namespace drawing
 
 	void Canvas::MakeLayerActive(int index)
 	{
-		assert(index >= 0 && index < numberOfLayers);
+		assert(index >= 0 && index < numberOfLayers, "Cannot make layer active, index out of range");
 
 		auto layerIndexOrderBeggining = layerIndexOrder.begin();
 		auto newActiveLayerIndex = *layerIndexOrder.erase(layerIndexOrderBeggining + index);
@@ -67,5 +68,19 @@ namespace touchpoints { namespace drawing
 	void Canvas::AddShape(shared_ptr<TouchShape> shape)
 	{
 		layers[activeLayerIndex].AddDrawable(shape);
+	}
+
+	float Canvas::GetAlpha(int index)
+	{
+		assert(index >= 0 && index < numberOfLayers, "Cannot get alpha of layer, index out of range");
+
+		return layers[index].GetAlpha();
+	}
+
+	void Canvas::SetAlpha(int index, float value)
+	{
+		assert(index >= 0 && index < numberOfLayers, "Cannot set alpha of layer, index out of range");
+
+		layers[index].SetAlpha(value);
 	}
 }}

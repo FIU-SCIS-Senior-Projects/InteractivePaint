@@ -720,11 +720,9 @@ namespace touchpoints { namespace ui
 		for (auto layer : *layerList)
 		{
 			layer->bindFramebuffer();
-			//glClearColor(1.0,1.0,1.0, 0.0);
 			glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 0.0);
 
 			glClear(GL_COLOR_BUFFER_BIT);
-			//gl::clear(Color(1.0,1.0,1.0)/*ColorA(backgroundColor)*/, 0.0);
 			layer->unbindFramebuffer();
 		}
 		illustrator->clearTimeMachine();
