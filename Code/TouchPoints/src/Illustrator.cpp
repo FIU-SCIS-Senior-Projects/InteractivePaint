@@ -573,8 +573,8 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::Draw()
 	{
-		drawTemporary();
 		canvas.Draw();
+		drawTemporary();
 		menuLayer.Draw();
 	}
 

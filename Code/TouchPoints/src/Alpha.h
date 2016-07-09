@@ -7,7 +7,7 @@ namespace touchpoints { namespace drawing
 	public:
 		Alpha();
 		Alpha(float value);
-		inline float GetValue() { return alpha; }
+		inline float GetValue() const { return alpha; }
 		void SetValue(float value);
 	private:
 		float alpha;

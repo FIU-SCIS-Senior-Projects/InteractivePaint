@@ -44,7 +44,6 @@ namespace touchpoints { namespace ui
 			(*layerAlpha).emplace_back(1.0f);
 		}
 		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
-		//		brm::BRMenuHandler(windowWidth, windowHeight, modeChangeFlag, uiFbo, mBrush, illustrator, deviceHandler, backgroundColor, backgroundList);
 	}
 
 	void UserInterface::setUIResize(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, drawing::Illustrator* mIllustrator, std::shared_ptr<gl::Fbo> fbo, std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList)
@@ -65,18 +64,16 @@ namespace touchpoints { namespace ui
 		//Stores the 'Checkerboard pattern for background
 		transparentBackgroundFbo.reset();
 
-		//		layerList->clear();
+		//layerList->clear();
 		layerList = fboLayerList;
 		for (auto layers : *layerList)
 		{
 			(*layerAlpha).emplace_back(1.0f);
 		}
-		//		keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
+		//keyboard = TouchKeyboard(mWindowWidth, mWindowHeight);
 		keyboard.setTouchKeyboardResize(mWindowWidth, mWindowHeight);
 		uiSetup();
 		drawUi();
-
-		//Note: need to create a width/height setter for BRMenuHandler
 	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)
@@ -751,17 +748,21 @@ namespace touchpoints { namespace ui
 		{
 			int yDist = (*layerList).size() * 200 + 50;
 			int size = 0;
+			auto index = illustrator->GetNumberOfLayersInCanvas() - 1;
 			for (auto frame : (*layerList))
 			{
 				if (x > 200 && x < 250)
 				{
 					if (y > yDist - 200 && y < yDist)
 					{
-						(*layerAlpha)[size] = ((y - ((float)yDist - 200)) / ((float)yDist - ((float)yDist - 200)));
+						auto newAlpha = ((y - ((float)yDist - 200)) / ((float)yDist - ((float)yDist - 200)));
+						(*layerAlpha)[size] = newAlpha;
+						illustrator->SetAlpha(index, newAlpha);
 					}
 				}
 				yDist = yDist - 200;
 				size = size + 1;
+				index--;
 			}
 		}
 		if (keyboard.keyboardStatus())
@@ -1013,6 +1014,7 @@ namespace touchpoints { namespace ui
 		{
 			int yDist = (*layerList).size() * 200 + 50;
 			int size = 0;
+			int index = illustrator->GetNumberOfLayersInCanvas() - 1;
 			for (auto frame : (*layerList))
 			{
 				if (x > 200 && x < 600)
@@ -1024,6 +1026,7 @@ namespace touchpoints { namespace ui
 					}
 					if (y > yDist - 200 && y < yDist)
 					{
+						illustrator->MakeLayerActive(index);
 						//Swaps layers
 						std::shared_ptr<gl::Fbo> temp = (*layerList)[2];
 						(*layerList)[2] = (*layerList)[size];
@@ -1039,6 +1042,7 @@ namespace touchpoints { namespace ui
 				}
 				yDist = yDist - 200;
 				size = size + 1;
+				index--;
 			}
 		}
 
@@ -1459,6 +1463,7 @@ namespace touchpoints { namespace ui
 			int y = layerList->size();
 			y = y * 200 + 50;
 			int layerNumber = 0;
+			int index = illustrator->GetNumberOfLayersInCanvas() - 1;
 			for (auto frame : *layerList)
 			{
 				gl::color(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0);
@@ -1466,8 +1471,10 @@ namespace touchpoints { namespace ui
 
 				gl::color(0.75, 0.75, .75, 1.0);
 				gl::drawStrokedRect(Rectf(200, y - 200, 600, y), uiOutlineSize);
+				//gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
 				gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
-				gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
+				//gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
+				gl::draw(illustrator->GetLayerTexture(index), Rectf(200, (y - 200), 600, y));
 				gl::color(0.0, 0.0, 0.0, 1.0);
 				gl::drawSolidRect(Rectf(200, y - 200, 250, y));
 				gl::color(0.75, 0.75, .75, 1.0);
@@ -1485,6 +1492,7 @@ namespace touchpoints { namespace ui
 				}
 				y = y - 200;
 				layerNumber++;
+				index--;
 			}
 		}
 

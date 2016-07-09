@@ -45,9 +45,9 @@ namespace touchpoints { namespace drawing
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot make layer active, index out of range");
 
-		auto layerIndexOrderBeggining = layerIndexOrder.begin();
-		auto newActiveLayerIndex = *layerIndexOrder.erase(layerIndexOrderBeggining + index);
-		layerIndexOrder.insert(layerIndexOrderBeggining, newActiveLayerIndex);
+		auto newActiveLayerIndex = layerIndexOrder[index];
+		layerIndexOrder.erase(layerIndexOrder.begin() + index);
+		layerIndexOrder.insert(layerIndexOrder.begin(), newActiveLayerIndex);
 		activeLayerIndex = newActiveLayerIndex;
 	}
 
@@ -70,17 +70,27 @@ namespace touchpoints { namespace drawing
 		layers[activeLayerIndex].AddDrawable(shape);
 	}
 
-	float Canvas::GetAlpha(int index)
+	float Canvas::GetAlpha(int index) const
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot get alpha of layer, index out of range");
 
-		return layers[index].GetAlpha();
+		auto actualIndex = layerIndexOrder[index];
+		return layers[actualIndex].GetAlpha();
 	}
 
 	void Canvas::SetAlpha(int index, float value)
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot set alpha of layer, index out of range");
 
-		layers[index].SetAlpha(value);
+		auto actualIndex = layerIndexOrder[index];
+		layers[actualIndex].SetAlpha(value);
+	}
+
+	gl::Texture2dRef Canvas::GetLayerTexture(int index) const
+	{
+		assert(index >= 0 && index < numberOfLayers, "Cannot get texture of layer, index out of range");
+
+		auto actualIndex = layerIndexOrder[index];
+		return layers[actualIndex].GetFrameBufferTexture();
 	}
 }}

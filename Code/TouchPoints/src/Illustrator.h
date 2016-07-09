@@ -47,13 +47,16 @@ namespace touchpoints { namespace drawing
 		void Update();
 		void AddMenu(shared_ptr<ui::Menu> menu);
 		void Undo();
+		inline int GetNumberOfLayersInCanvas() const { return canvas.GetNumberOfLayers(); }
 		inline void MakeLayerActive(int index) { canvas.MakeLayerActive(index); }
 		//alpha of the top layer
-		inline float GetTopAlpha() { return canvas.GetTopAlpha(); }
+		inline float GetTopAlpha() const { return canvas.GetTopAlpha(); }
 		inline void SetTopAlpha(float value) { canvas.SetTopAlpha(value); }
 		//alpha of i-th layer
-		inline float GetAlpha(int index) { return canvas.GetAlpha(index); }
+		inline float GetAlpha(int index) const { return canvas.GetAlpha(index); }
 		inline void SetAlpha(int index, float value) { canvas.SetAlpha(index, value); }
+		inline gl::Texture2dRef GetTopLayerTexture() const { return canvas.GetTopLayerTexture(); }
+		inline gl::Texture2dRef GetLayerTexture(int index) const { return canvas.GetLayerTexture(index); }
 		//setters for resize() in TouchPointsApp
 		void Illustrator::setIllustratorResize(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList);
 	private:
