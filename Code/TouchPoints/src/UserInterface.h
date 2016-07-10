@@ -64,8 +64,8 @@ namespace touchpoints { namespace ui
 		//Stores the 'Checkerboard pattern for background'
 		std::shared_ptr<gl::Fbo> transparentBackgroundFbo; //can remove after finishing BRMenuHandler
 
-		MenuLayer menuLayer;
-		shared_ptr<TouchMenu> touchMenu;
+		//MenuLayer menuLayer;
+		//shared_ptr<TouchMenu> touchMenu;
 
 		int windowWidth;
 		int windowHeight;
