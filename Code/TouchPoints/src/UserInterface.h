@@ -3,6 +3,8 @@
 #include "Illustrator.h"
 #include "DeviceHandler.h"
 #include "TouchKeyboard.h"
+#include "MenuLayer.h"
+#include "TouchMenu.h"
 
 namespace touchpoints { namespace ui
 {
@@ -61,6 +63,9 @@ namespace touchpoints { namespace ui
 		std::shared_ptr<gl::Fbo> settingsButtonsFbo;
 		//Stores the 'Checkerboard pattern for background'
 		std::shared_ptr<gl::Fbo> transparentBackgroundFbo; //can remove after finishing BRMenuHandler
+
+		MenuLayer menuLayer;
+		shared_ptr<TouchMenu> touchMenu;
 
 		int windowWidth;
 		int windowHeight;

@@ -35,6 +35,13 @@ namespace touchpoints { namespace ui
 		backgroundList.emplace_back(Color(0.0f, 0.0f, 256.0f));
 		backgroundList.emplace_back(Color(256.0f, 0.0f, 256.0f));
 
+		touchMenu = shared_ptr<TouchMenu>(new TouchMenu(vec2(0, 0), windowWidth, windowHeight, true, 
+			function<void(vec2 point, TouchMenu *self)>([](vec2 point, TouchMenu *self)->void { self->ToggleVisiblibility();})));
+		
+		
+		menuLayer = MenuLayer(windowWidth, windowHeight);
+		menuLayer.AddMenu(touchMenu);
+
 		backgroundColor = backgroundList.front();
 		incrementBackground();
 		layerList = fboLayerList;
@@ -779,6 +786,7 @@ namespace touchpoints { namespace ui
 
 	bool UserInterface::inInteractiveUi(float x, float y, uint32_t id)
 	{
+		menuLayer.OnTouch(vec2(x, y));
 		//ONLY ON IF MULTITOUCH IS DISABLED!
 		if (deviceHandler->multiTouchStatus() == false)
 		{

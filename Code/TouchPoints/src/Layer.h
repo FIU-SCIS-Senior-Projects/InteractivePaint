@@ -19,7 +19,7 @@ namespace touchpoints { namespace drawing
 		inline float GetAlpha() const { return alpha.GetValue(); }
 		inline void SetAlpha(float value) { alpha.SetValue(value); }
 		inline gl::Texture2dRef GetFrameBufferTexture() const { return framebuffer->getColorTexture(); }
-	private:
+	protected:
 		int windowWidth;
 		int windowHeight;
 		//shared prt because this is the only way lib cinder will return an fbo
@@ -27,6 +27,9 @@ namespace touchpoints { namespace drawing
 		Alpha alpha;
 		gl::Fbo::Format format;
 		vector<shared_ptr<IDrawable>> drawablesStack;
+		void drawSetup() const;
+		void drawTearDown() const;
+	private:
 		void resetFramebuffer();
 	};
 }}

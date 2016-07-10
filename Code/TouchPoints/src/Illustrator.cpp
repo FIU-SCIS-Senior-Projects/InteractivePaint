@@ -23,7 +23,7 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
-	Illustrator::Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, Layer menuLayer)
+	Illustrator::Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, ui::MenuLayer menuLayer)
 		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(menuLayer)
 	{
 		mLayerList = layerList;
@@ -585,7 +585,7 @@ namespace touchpoints { namespace drawing
 
 	void Illustrator::AddMenu(shared_ptr<ui::Menu> menu)
 	{
-		menuLayer.AddDrawable(menu);
+		menuLayer.AddMenu(menu);
 	}
 
 	void Illustrator::Undo()

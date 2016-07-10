@@ -12,6 +12,7 @@
 #include "GuidHash.h"
 #include "Canvas.h"
 #include "Menu.h"
+#include "MenuLayer.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ namespace touchpoints { namespace drawing
 	public:
 		Illustrator();
 		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight);
-		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, Layer menuLayer);
+		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, ui::MenuLayer menuLayer);
 		void beginTouchShapes(uint32_t myId, vec2 myPos);
 		void movingTouchShapes(uint32_t myId, vec2 myPos, vec2 prevPos);
 		void endTouchShapes(uint32_t myId);
@@ -71,7 +72,7 @@ namespace touchpoints { namespace drawing
 		int numberOfActiveDrawings;
 
 		Canvas canvas;
-		Layer menuLayer;
+		ui::MenuLayer menuLayer;
 		GuidGenerator guidGenerator;
 
 		//vectors of temporary shapes drawn for a limited number of frames

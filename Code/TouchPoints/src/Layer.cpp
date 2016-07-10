@@ -49,6 +49,18 @@ namespace touchpoints { namespace drawing
 
 	void Layer::Draw()
 	{
+		drawSetup();
+
+		for(auto drawable: drawablesStack)
+		{
+			drawable->Draw();
+		}
+
+		drawTearDown();
+	}
+
+	void Layer::drawSetup() const
+	{
 		framebuffer->bindFramebuffer();
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -56,12 +68,10 @@ namespace touchpoints { namespace drawing
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		glBlendEquation(GL_FUNC_ADD);
+	}
 
-		for(auto drawable: drawablesStack)
-		{
-			drawable->Draw();
-		}
-
+	void Layer::drawTearDown() const
+	{
 		framebuffer->unbindFramebuffer();
 
 		glEnable(GL_BLEND);

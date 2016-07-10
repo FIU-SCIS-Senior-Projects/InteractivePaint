@@ -123,6 +123,12 @@
     <ClCompile Include="..\src\Alpha.cpp">
       <Filter>drawing</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MenuLayer.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TouchMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -211,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Alpha.h">
       <Filter>drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MenuLayer.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TouchMenu.h">
+      <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
