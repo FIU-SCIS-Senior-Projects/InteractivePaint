@@ -15,8 +15,8 @@ namespace touchpoints { namespace drawing
 		inline float getSize() const { return mSize; }
 		inline void setColor(ColorA newColor) { mColor = newColor; }
 		inline void DecrementFramesDrawn() { framesDrawn--; }
-		inline bool ShouldDraw() { return framesDrawn > 0; }
-		virtual void Draw() = 0;
+		inline bool ShouldDraw() const { return framesDrawn > 0; }
+		virtual void Draw() override = 0;
 	protected:
 		bool mFilledShapes;
 		ColorA mColor;

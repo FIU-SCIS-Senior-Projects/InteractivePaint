@@ -13,7 +13,7 @@ namespace touchpoints { namespace ui
 			menu->OnTouch(point);
 		}
 	}
-	void MenuLayer::AddMenu(shared_ptr<Menu> menu)
+	void MenuLayer::AddMenu(shared_ptr<IMenu> menu)
 	{
 		drawablesStack.push_back(menu);
 	}

@@ -21,6 +21,8 @@ namespace touchpoints { namespace drawing
 		float getAlphaColor();
 		//Change brush 
 		void changeColor(ColorA color);
+		//changes to the color at that specified index in the colorList
+		void changeColor(int index);
 		void changeLineSize(int lineSize);
 		void increaseLineSize();
 		void decreaseLineSize();

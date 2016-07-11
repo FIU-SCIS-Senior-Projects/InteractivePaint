@@ -1,5 +1,7 @@
 #include "UserInterface.h"
 #include <cinder/Rand.h>
+#include "ModeSelectorMenu.h"
+#include "BrushModeSelectorMenu.h"
 
 using namespace cinder::app;
 
@@ -35,13 +37,72 @@ namespace touchpoints { namespace ui
 		backgroundList.emplace_back(Color(0.0f, 0.0f, 256.0f));
 		backgroundList.emplace_back(Color(256.0f, 0.0f, 256.0f));
 
-		/*touchMenu = shared_ptr<TouchMenu>(new TouchMenu(vec2(0, 0), windowWidth, windowHeight, true, 
-			function<void(vec2 point, TouchMenu *self)>([](vec2 point, TouchMenu *self)->void { self->ToggleVisiblibility();})));
-		
-		
+		multimap<int, shared_ptr<drawing::TouchShape>> colorPickerShapes;
+		auto x1 = 0;
+		auto y1 = 60;
+		auto x2 = 60;
+		auto y2 = 120;
+
+		for (auto color : mBrush->getColorList())
+		{
+			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1,y1,x2,y2, color, 0, true))));
+			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1,y1,x2,y2, color, ModeSelectorMenu::lineThickness, false))));
+			y1 += 60;
+			y2 += 60;
+		}
+
+		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> colorPickerHandler =
+			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
+			{
+				auto correctedY = point.y - 60;
+				int index = static_cast<int>(correctedY / 60);
+				brush->changeColor(index);
+			};
+
+		auto colorPickerMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(0,60), 60, 480, false, mBrush, colorPickerHandler, colorPickerShapes));
+
+		auto map = multimap<int, shared_ptr<IMenu>>
+		{
+			make_pair(0, colorPickerMenu)
+		};
+		function<void(vec2 point, ModeSelectorMenu *self)> dropdownMenuCallback =
+			[](vec2 point, ModeSelectorMenu *self) { self->ToggleContainingMenusVisibility(); };
+
+		auto colorPickerModeSelector = ModeSelectorMenu(vec2(0, 0), "Colors.png", map, dropdownMenuCallback);
+		auto shapePickerModeSelector = ModeSelectorMenu(vec2(60, 0), "Shapes.png", dropdownMenuCallback);
+		auto brushPickerModeSelector = ModeSelectorMenu(vec2(120, 0), "Brush.png", dropdownMenuCallback);
+		auto symmetryModeSelector = 
+			ModeSelectorMenu(vec2(180, 0), "", 
+				multimap<int, shared_ptr<drawing::TouchShape>> 
+				{
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness)))
+				},
+			nullptr);
+		auto layerModeSelector = ModeSelectorMenu(vec2(240, 0), "Layers.png", dropdownMenuCallback);
+		auto textModeSelector = ModeSelectorMenu(vec2(300, 0), "Letter.png", nullptr);
+		auto undoModeSelector = ModeSelectorMenu(vec2(360, 0), "Undo.png", nullptr);
+
+		topRightMenu = shared_ptr<MenuGroup>(new MenuGroup(multimap<int, shared_ptr<IMenu>>{
+			make_pair(0, make_shared<ModeSelectorMenu>(colorPickerModeSelector)),
+			make_pair(0, make_shared<ModeSelectorMenu>(shapePickerModeSelector)),
+			make_pair(0, make_shared<ModeSelectorMenu>(brushPickerModeSelector)),
+			make_pair(0, make_shared<ModeSelectorMenu>(symmetryModeSelector)),
+			make_pair(0, make_shared<ModeSelectorMenu>(layerModeSelector)),
+			make_pair(0, make_shared<ModeSelectorMenu>(textModeSelector)),
+			make_pair(0, make_shared<ModeSelectorMenu>(undoModeSelector))
+		}));
+
 		menuLayer = MenuLayer(windowWidth, windowHeight);
-		menuLayer.AddMenu(touchMenu);
-*/
+		menuLayer.AddMenu(topRightMenu);
+
 		backgroundColor = backgroundList.front();
 		incrementBackground();
 		layerList = fboLayerList;
@@ -509,89 +570,85 @@ namespace touchpoints { namespace ui
 
 		modeButtonsFbo->bindFramebuffer();
 
-		glClearColor(1.0, 1.0, 1.0, 0.0);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClearColor(1.0, 1.0, 1.0, 0.0);
+		//glClear(GL_COLOR_BUFFER_BIT);
 
-		gl::color(0.3, 0.2, 0.5, 1.0);
-		gl::drawSolidRect(Rectf(0, 0, 350, 50));
+		//gl::color(0.3, 0.2, 0.5, 1.0);
+		//gl::drawSolidRect(Rectf(0, 0, 350, 50));
 
-		//Color Button
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(0, 2, 50, 50), uiOutlineSize);
-		gl::color(0.3, 0.2, 0.5, 1.0);
-		gl::drawSolidRect(Rectf(0, 2, 50, 50));
+		////Color Button
 
-		gl::TextureRef texture = gl::Texture::create(loadImage(loadAsset("Colors.png")));
+		//gl::TextureRef texture = gl::Texture::create(loadImage(loadAsset("Colors.png")));
 
-		gl::color(1.0, 1.0, 1.0, 1.0);
-		gl::draw(texture, Rectf(5, 5, 45, 45));
+		//gl::color(1.0, 1.0, 1.0, 1.0);
+		//gl::draw(texture, Rectf(5, 5, 45, 45));
 
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(0, 2, 100, 50), uiOutlineSize);
+		//gl::color(0.75, 0.75, .75, 1.0);
+		//gl::drawStrokedRect(Rectf(0, 2, 100, 50), uiOutlineSize);
 
-		//Shapes button
-		gl::color(0.3, 0.2, 0.5, 1.0);
-		gl::drawSolidRect(Rectf(50, 2, 100, 50));
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(50, 2, 100, 50), uiOutlineSize);
+		////Shapes button
+		///*gl::color(0.3, 0.2, 0.5, 1.0);
+		//gl::drawSolidRect(Rectf(50, 2, 100, 50));*/
+		//gl::color(0.75, 0.75, .75, 1.0);
+		//gl::drawStrokedRect(Rectf(50, 2, 100, 50), uiOutlineSize);
 
-		texture = gl::Texture::create(loadImage(loadAsset("Shapes.png")));
+		//texture = gl::Texture::create(loadImage(loadAsset("Shapes.png")));
 
-		gl::color(1.0, 1.0, 1.0, 1.0);
-		gl::draw(texture, Rectf(58, 8, 92, 42));
+		//gl::color(1.0, 1.0, 1.0, 1.0);
+		//gl::draw(texture, Rectf(58, 8, 92, 42));
 
-		//Brush button
-		gl::color(0.3, 0.2, 0.5, 1.0);
-		gl::drawSolidRect(Rectf(100, 2, 150, 50));
+		////Brush button
+		//gl::color(0.3, 0.2, 0.5, 1.0);
+		//gl::drawSolidRect(Rectf(100, 2, 150, 50));
 
-		texture = gl::Texture::create(loadImage(loadAsset("Brush.png")));
+		//texture = gl::Texture::create(loadImage(loadAsset("Brush.png")));
 
-		gl::color(1.0, 1.0, 1.0, 1.0);
-		gl::draw(texture, Rectf(100, 0, 150, 50));
+		//gl::color(1.0, 1.0, 1.0, 1.0);
+		//gl::draw(texture, Rectf(100, 0, 150, 50));
 
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(100, 2, 150, 50), uiOutlineSize);
+		//gl::color(0.75, 0.75, .75, 1.0);
+		//gl::drawStrokedRect(Rectf(100, 2, 150, 50), uiOutlineSize);
 
-		//Symmetry Button
+		////Symmetry Button
 
-		gl::color(0.3, 0.2, 0.5, 1.0);
-		gl::drawSolidRect(Rectf(150, 2, 200, 50));
+		//gl::color(0.3, 0.2, 0.5, 1.0);
+		//gl::drawSolidRect(Rectf(150, 2, 200, 50));
 
-		gl::color(0.75, 0.75, .75, 1.0);
+		//gl::color(0.75, 0.75, .75, 1.0);
 
-		gl::drawLine(vec2(175, 2), vec2(175, 15));
-		gl::drawLine(vec2(175, 20), vec2(175, 25));
-		gl::drawLine(vec2(175, 30), vec2(175, 35));
-		gl::drawLine(vec2(175, 40), vec2(175, 45));
+		//gl::drawLine(vec2(175, 2), vec2(175, 15));
+		//gl::drawLine(vec2(175, 20), vec2(175, 25));
+		//gl::drawLine(vec2(175, 30), vec2(175, 35));
+		//gl::drawLine(vec2(175, 40), vec2(175, 45));
 
-		gl::drawStrokedRect(Rectf(150, 2, 200, 50), uiOutlineSize);
+		//gl::drawStrokedRect(Rectf(150, 2, 200, 50), uiOutlineSize);
 
-		//Layer Visualization Button
-		texture = gl::Texture::create(loadImage(loadAsset("Layers.png")));
+		////Layer Visualization Button
+		//texture = gl::Texture::create(loadImage(loadAsset("Layers.png")));
 
-		gl::color(1.0, 1.0, 1.0, 1.0);
-		gl::draw(texture, Rectf(205, 5, 245, 45));
+		//gl::color(1.0, 1.0, 1.0, 1.0);
+		//gl::draw(texture, Rectf(205, 5, 245, 45));
 
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(200, 0, 250, 50), uiOutlineSize);
+		//gl::color(0.75, 0.75, .75, 1.0);
+		//gl::drawStrokedRect(Rectf(200, 0, 250, 50), uiOutlineSize);
 
-		//Text Button
-		texture = gl::Texture::create(loadImage(loadAsset("Letter.png")));
+		////Text Button
+		//texture = gl::Texture::create(loadImage(loadAsset("Letter.png")));
 
-		gl::color(1.0, 1.0, 1.0, 1.0);
-		gl::draw(texture, Rectf(255, 5, 295, 45));
+		//gl::color(1.0, 1.0, 1.0, 1.0);
+		//gl::draw(texture, Rectf(255, 5, 295, 45));
 
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(250, 2, 300, 50), uiOutlineSize);
+		//gl::color(0.75, 0.75, .75, 1.0);
+		//gl::drawStrokedRect(Rectf(250, 2, 300, 50), uiOutlineSize);
 
-		//Undo Button
-		texture = gl::Texture::create(loadImage(loadAsset("Undo.png")));
+		////Undo Button
+		//texture = gl::Texture::create(loadImage(loadAsset("Undo.png")));
 
-		gl::color(1.0, 1.0, 1.0, 1.0);
-		gl::draw(texture, Rectf(305, 5, 345, 45));
+		//gl::color(1.0, 1.0, 1.0, 1.0);
+		//gl::draw(texture, Rectf(305, 5, 345, 45));
 
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(300, 2, 350, 50), uiOutlineSize);
+		//gl::color(0.75, 0.75, .75, 1.0);
+		//gl::drawStrokedRect(Rectf(300, 2, 350, 50), uiOutlineSize);
 
 		modeButtonsFbo->unbindFramebuffer();
 
@@ -786,7 +843,7 @@ namespace touchpoints { namespace ui
 
 	bool UserInterface::inInteractiveUi(float x, float y, uint32_t id)
 	{
-		//menuLayer.OnTouch(vec2(x, y));
+		menuLayer.OnTouch(vec2(x, y));
 		//ONLY ON IF MULTITOUCH IS DISABLED!
 		if (deviceHandler->multiTouchStatus() == false)
 		{
@@ -1321,6 +1378,7 @@ namespace touchpoints { namespace ui
 	//draws the top left and bottom right menus
 	void UserInterface::drawUi()
 	{
+		menuLayer.Draw();
 		//		brm::BRMenuHandler::drawUiBRM();
 
 		gl::color(1.0, 1.0, 1.0, 1.0);

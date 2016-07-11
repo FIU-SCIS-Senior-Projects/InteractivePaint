@@ -5,14 +5,16 @@ namespace touchpoints { namespace ui
 	Menu::Menu() {}
 	
 	Menu::Menu(vec2 startPoint, int width, int height, bool visible)
-		: startPoint(startPoint), width(width), height(height), visible(visible)
+		: startPoint(startPoint), width(width), height(height)
 	{
+		this->visible = visible;
 		initilizeBoundingRect();
 	}
 	
 	Menu::Menu(vec2 startPoint, int width, int height, bool visible, multimap<int, shared_ptr<drawing::TouchShape>> composingShapes)
-		: startPoint(startPoint), width(width), height(height), visible(visible) 
+		: startPoint(startPoint), width(width), height(height)
 	{
+		this->visible = visible;
 		initilizeBoundingRect();
 	}
 	
@@ -27,6 +29,11 @@ namespace touchpoints { namespace ui
 		{
 			zIndexShapePair.second->Draw();
 		}
+	}
+
+	void Menu::AddShape(int zIndex, shared_ptr<drawing::TouchShape> shape)
+	{
+		composingShapes.insert(pair<int, shared_ptr<drawing::TouchShape>>(zIndex, shape));
 	}
 
 	void Menu::initilizeBoundingRect()

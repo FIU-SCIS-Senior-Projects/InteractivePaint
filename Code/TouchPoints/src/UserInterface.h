@@ -4,7 +4,7 @@
 #include "DeviceHandler.h"
 #include "TouchKeyboard.h"
 #include "MenuLayer.h"
-#include "TouchMenu.h"
+#include "MenuGroup.h"
 
 namespace touchpoints { namespace ui
 {
@@ -64,8 +64,8 @@ namespace touchpoints { namespace ui
 		//Stores the 'Checkerboard pattern for background'
 		std::shared_ptr<gl::Fbo> transparentBackgroundFbo; //can remove after finishing BRMenuHandler
 
-		//MenuLayer menuLayer;
-		//shared_ptr<TouchMenu> touchMenu;
+		MenuLayer menuLayer;
+		shared_ptr<MenuGroup> topRightMenu;
 
 		int windowWidth;
 		int windowHeight;

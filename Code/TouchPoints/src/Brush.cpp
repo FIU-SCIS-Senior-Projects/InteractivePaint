@@ -130,6 +130,13 @@ namespace touchpoints { namespace drawing
 		mColor = color;
 	}
 
+	void Brush::changeColor(int index)
+	{
+		assert(index >= 0 && index < colorList.size(), "Cannot change to that color, index out of bounds");
+
+		mColor = colorList[index];
+	}
+
 	void Brush::changeLineSize(int lineSize)
 	{
 		mLineSize = lineSize;

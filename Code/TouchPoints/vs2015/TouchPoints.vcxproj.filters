@@ -126,7 +126,16 @@
     <ClCompile Include="..\src\MenuLayer.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TouchMenu.cpp">
+    <ClCompile Include="..\src\MenuGroup.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TouchImage.cpp">
+      <Filter>drawing\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ModeSelectorMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BrushModeSelectorMenu.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -221,7 +230,19 @@
     <ClInclude Include="..\src\MenuLayer.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TouchMenu.h">
+    <ClInclude Include="..\src\MenuGroup.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TouchImage.h">
+      <Filter>drawing\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ModeSelectorMenu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IMenu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BrushModeSelectorMenu.h">
       <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>

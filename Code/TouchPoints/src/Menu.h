@@ -1,13 +1,13 @@
 #pragma once
 #include "TouchShape.h"
-#include "IDrawable.h"
 #include "Rect.h"
+#include "IMenu.h"
 
 using namespace std;
 
 namespace touchpoints { namespace ui
 {
-	class Menu : public drawing::IDrawable
+	class Menu : public IMenu
 	{
 	public:
 		Menu();
@@ -16,18 +16,14 @@ namespace touchpoints { namespace ui
 		virtual void SetWidth(int width) {};
 		virtual void SetHeight(int height) {};
 		virtual void SetDimensions(int width, int height) {};
-		inline void ToggleVisiblibility() { visible = !visible; }
-		inline bool IsVisible() const { return visible; }
 		void Draw() override;
-		virtual void Update() {};
-		virtual void OnTouch(vec2 point) {};
+		void AddShape(int zIndex, shared_ptr<drawing::TouchShape> shape);
 	protected:
 		vec2 startPoint;
 		int width;
 		int height;
-		bool visible;
 		math::Rect boundingRect;
-		//collection of shapes that compose this menu along with their corresponding z-index
+		//collection of drawables that that compose this menu along with their corresponding z-index
 		//shapes with low z-index get drawn first, high z-index shapes get drawn after
 		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes;
 	private:
