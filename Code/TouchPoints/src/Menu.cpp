@@ -3,21 +3,35 @@
 namespace touchpoints { namespace ui
 {
 	Menu::Menu() {}
-	
-	Menu::Menu(vec2 startPoint, int width, int height, bool visible)
-		: startPoint(startPoint), width(width), height(height)
+
+	Menu::Menu(vec2 startPoint, int width, int height, bool visible,
+		function<void(vec2 point, Menu* self)> touchEventHandler)
+		: Menu(startPoint, width, height, visible, multimap<int, shared_ptr<drawing::TouchShape>>(), 
+			multimap<int, shared_ptr<Menu>>(), touchEventHandler) {}
+
+	Menu::Menu(vec2 startPoint, int width, int height, bool visible,
+		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
+		function<void(vec2 point, Menu* self)> touchEventHandler)
+		: Menu(startPoint, width, height, visible, composingShapes,
+			multimap<int, shared_ptr<Menu>>(), touchEventHandler) {}
+
+	Menu::Menu(vec2 startPoint, int width, int height, bool visible,
+		multimap<int, shared_ptr<Menu>> composingMenus,
+		function<void(vec2 point, Menu* self)> touchEventHandler)
+		: Menu(startPoint, width, height, visible, multimap<int, shared_ptr<drawing::TouchShape>>(),
+			composingMenus, touchEventHandler) {}
+
+	Menu::Menu(vec2 startPoint, int width, int height, bool visible,
+		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
+		multimap<int, shared_ptr<Menu>> composingMenus,
+		function<void(vec2 point, Menu* self)> touchEventHandler)
+		: visible(visible), startPoint(startPoint), width(width), height(height),
+		composingShapes(composingShapes), composingMenus(composingMenus), 
+		touchEventHandler(touchEventHandler)
 	{
-		this->visible = visible;
 		initilizeBoundingRect();
 	}
-	
-	Menu::Menu(vec2 startPoint, int width, int height, bool visible, multimap<int, shared_ptr<drawing::TouchShape>> composingShapes)
-		: startPoint(startPoint), width(width), height(height)
-	{
-		this->visible = visible;
-		initilizeBoundingRect();
-	}
-	
+
 	void Menu::Draw()
 	{
 		if(!visible)
@@ -29,11 +43,42 @@ namespace touchpoints { namespace ui
 		{
 			zIndexShapePair.second->Draw();
 		}
+
+		for (auto zIndexMenuPair : composingMenus)
+		{
+			zIndexMenuPair.second->Draw();
+		}
+	}
+
+	void Menu::OnTouch(vec2 point)
+	{
+		if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
+		{
+			touchEventHandler(point, this);
+		}
+
+		for (auto zIndexMenuPair : composingMenus)
+		{
+			zIndexMenuPair.second->OnTouch(point);
+		}
 	}
 
 	void Menu::AddShape(int zIndex, shared_ptr<drawing::TouchShape> shape)
 	{
 		composingShapes.insert(pair<int, shared_ptr<drawing::TouchShape>>(zIndex, shape));
+	}
+
+	void Menu::AddMenu(int zIndex, shared_ptr<Menu> menu)
+	{
+		composingMenus.insert(pair<int, shared_ptr<Menu>>(zIndex, menu));
+	}
+
+	void Menu::ToggleContainingMenusVisibility()
+	{
+		for (auto zIndexMenuPair : composingMenus)
+		{
+			zIndexMenuPair.second->ToggleVisiblibility();
+		}
 	}
 
 	void Menu::initilizeBoundingRect()

@@ -19,7 +19,7 @@ namespace touchpoints { namespace devices
 		auto composingShapes = multimap<int, shared_ptr<drawing::TouchShape>>();
 		composingShapes.insert(pair<int, shared_ptr<drawing::TouchPoint>>(0, horizontalLine));
 		composingShapes.insert(pair<int, shared_ptr<drawing::TouchPoint>>(0, verticalLine));
-		proximityMenu = shared_ptr<ui::Menu>(new ui::Menu(vec2(0,0), windowWidth, windowHeight, false, composingShapes));
+		proximityMenu = shared_ptr<ui::Menu>(new ui::Menu(vec2(0,0), windowWidth, windowHeight, false, composingShapes, nullptr));
 		isProximityMenuVisible = false;
 
 		illustrator->AddMenu(proximityMenu);

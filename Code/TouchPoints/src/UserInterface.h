@@ -4,7 +4,6 @@
 #include "DeviceHandler.h"
 #include "TouchKeyboard.h"
 #include "MenuLayer.h"
-#include "MenuGroup.h"
 
 namespace touchpoints { namespace ui
 {
@@ -48,6 +47,9 @@ namespace touchpoints { namespace ui
 		void incrementBackground();
 		void endButtonPress(cinder::app::TouchEvent::Touch touch);
 	private:
+		void initializeMenuLayer();
+		void initializeColorPickerMenu();
+
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;
@@ -65,7 +67,7 @@ namespace touchpoints { namespace ui
 		std::shared_ptr<gl::Fbo> transparentBackgroundFbo; //can remove after finishing BRMenuHandler
 
 		MenuLayer menuLayer;
-		shared_ptr<MenuGroup> topRightMenu;
+		shared_ptr<Menu> topLeftMenu;
 
 		int windowWidth;
 		int windowHeight;

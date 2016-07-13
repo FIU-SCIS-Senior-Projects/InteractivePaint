@@ -10,7 +10,7 @@ namespace touchpoints { namespace ui
 		MenuLayer();
 		MenuLayer(int windowWidth, int windowHeight);
 		void OnTouch(vec2 point) const;
-		void AddMenu(shared_ptr<IMenu> menu);
+		void AddMenu(shared_ptr<Menu> menu);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);
@@ -20,6 +20,6 @@ namespace touchpoints { namespace ui
 		void SetAlpha(float value);
 		gl::Texture2dRef GetFrameBufferTexture() const;
 	private:
-		vector<shared_ptr<IMenu>> drawablesStack;
+		vector<shared_ptr<Menu>> drawablesStack;
 	};
 }}

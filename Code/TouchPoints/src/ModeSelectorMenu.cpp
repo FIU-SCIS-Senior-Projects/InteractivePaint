@@ -8,31 +8,29 @@ namespace touchpoints { namespace ui {
 
 	ModeSelectorMenu::ModeSelectorMenu() {}
 
-	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath, 
-		function<void(vec2 point, ModeSelectorMenu *self)> touchEventHandler) : ModeSelectorMenu(startPoint, filePath,
-		multimap<int, shared_ptr<drawing::TouchShape>>(), multimap<int, shared_ptr<IMenu>>(), touchEventHandler) {}
+	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath, bool visible,
+		function<void(vec2 point, Menu *self)> touchEventHandler) : ModeSelectorMenu(startPoint, filePath,
+		visible, multimap<int, shared_ptr<drawing::TouchShape>>(), multimap<int, shared_ptr<Menu>>(), touchEventHandler) {}
 
-	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath,
+	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath, bool visible,
 		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
-		function<void(vec2 point, ModeSelectorMenu *self)> touchEventHandler) 
-		: ModeSelectorMenu(startPoint, filePath, composingShapes, 
-			multimap<int, shared_ptr<IMenu>>(), touchEventHandler) {}
+		function<void(vec2 point, Menu *self)> touchEventHandler) 
+		: ModeSelectorMenu(startPoint, filePath, visible, composingShapes,
+			multimap<int, shared_ptr<Menu>>(), touchEventHandler) {}
 
-	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath,
-		multimap<int, shared_ptr<IMenu>> composingMenus, 
-		function<void(vec2 point, ModeSelectorMenu *self)> touchEventHandler) 
-		: ModeSelectorMenu(startPoint, filePath,
+	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath, bool visible,
+		multimap<int, shared_ptr<Menu>> composingMenus, 
+		function<void(vec2 point, Menu *self)> touchEventHandler) 
+		: ModeSelectorMenu(startPoint, filePath, visible,
 		multimap<int, shared_ptr<drawing::TouchShape>>(), composingMenus, touchEventHandler) {}
 
-	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath,
+	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath, bool visible,
 		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
-		multimap<int, shared_ptr<IMenu>> composingMenus, 
-		function<void(vec2 point, ModeSelectorMenu *self)> touchEventHandler) 
-		: startPoint(startPoint), filePath(filePath), touchEventHandler(touchEventHandler)
+		multimap<int, shared_ptr<Menu>> composingMenus, 
+		function<void(vec2 point, Menu *self)> touchEventHandler) 
+		: Menu(startPoint, width, height, visible, composingShapes, composingMenus, touchEventHandler), 
+		filePath(filePath)
 	{
-		this->composingShapes = composingShapes;
-		this->composingMenus = composingMenus;
-
 		populateShapes();
 	}
 
@@ -52,20 +50,14 @@ namespace touchpoints { namespace ui {
 		}
 	}
 	
-	void ModeSelectorMenu::OnTouch(vec2 point)
-	{
-		if(touchEventHandler != nullptr)
-		{
-			touchEventHandler(point, this);
-		}
-		MenuGroup::OnTouch(point);
-	}
+	//void ModeSelectorMenu::OnTouch(vec2 point)
+	//{
+	//	if(touchEventHandler != nullptr && visible && boundingRect.Contains(point))
+	//	{
+	//		touchEventHandler(point, this);
+	//	}
+	//	MenuGroup::OnTouch(point);
+	//}
 
-	void ModeSelectorMenu::ToggleContainingMenusVisibility()
-	{
-		for(auto zIndexMenuPair : composingMenus)
-		{
-			zIndexMenuPair.second->ToggleVisiblibility();
-		}
-	}
+
 }}

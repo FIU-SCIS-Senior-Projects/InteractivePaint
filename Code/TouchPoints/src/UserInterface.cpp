@@ -37,71 +37,7 @@ namespace touchpoints { namespace ui
 		backgroundList.emplace_back(Color(0.0f, 0.0f, 256.0f));
 		backgroundList.emplace_back(Color(256.0f, 0.0f, 256.0f));
 
-		multimap<int, shared_ptr<drawing::TouchShape>> colorPickerShapes;
-		auto x1 = 0;
-		auto y1 = 60;
-		auto x2 = 60;
-		auto y2 = 120;
-
-		for (auto color : mBrush->getColorList())
-		{
-			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1,y1,x2,y2, color, 0, true))));
-			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1,y1,x2,y2, color, ModeSelectorMenu::lineThickness, false))));
-			y1 += 60;
-			y2 += 60;
-		}
-
-		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> colorPickerHandler =
-			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
-			{
-				auto correctedY = point.y - 60;
-				int index = static_cast<int>(correctedY / 60);
-				brush->changeColor(index);
-			};
-
-		auto colorPickerMenu = shared_ptr<BrushModeSelectorMenu>
-			(new BrushModeSelectorMenu(vec2(0,60), 60, 480, false, mBrush, colorPickerHandler, colorPickerShapes));
-
-		auto map = multimap<int, shared_ptr<IMenu>>
-		{
-			make_pair(0, colorPickerMenu)
-		};
-		function<void(vec2 point, ModeSelectorMenu *self)> dropdownMenuCallback =
-			[](vec2 point, ModeSelectorMenu *self) { self->ToggleContainingMenusVisibility(); };
-
-		auto colorPickerModeSelector = ModeSelectorMenu(vec2(0, 0), "Colors.png", map, dropdownMenuCallback);
-		auto shapePickerModeSelector = ModeSelectorMenu(vec2(60, 0), "Shapes.png", dropdownMenuCallback);
-		auto brushPickerModeSelector = ModeSelectorMenu(vec2(120, 0), "Brush.png", dropdownMenuCallback);
-		auto symmetryModeSelector = 
-			ModeSelectorMenu(vec2(180, 0), "", 
-				multimap<int, shared_ptr<drawing::TouchShape>> 
-				{
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness)))
-				},
-			nullptr);
-		auto layerModeSelector = ModeSelectorMenu(vec2(240, 0), "Layers.png", dropdownMenuCallback);
-		auto textModeSelector = ModeSelectorMenu(vec2(300, 0), "Letter.png", nullptr);
-		auto undoModeSelector = ModeSelectorMenu(vec2(360, 0), "Undo.png", nullptr);
-
-		topRightMenu = shared_ptr<MenuGroup>(new MenuGroup(multimap<int, shared_ptr<IMenu>>{
-			make_pair(0, make_shared<ModeSelectorMenu>(colorPickerModeSelector)),
-			make_pair(0, make_shared<ModeSelectorMenu>(shapePickerModeSelector)),
-			make_pair(0, make_shared<ModeSelectorMenu>(brushPickerModeSelector)),
-			make_pair(0, make_shared<ModeSelectorMenu>(symmetryModeSelector)),
-			make_pair(0, make_shared<ModeSelectorMenu>(layerModeSelector)),
-			make_pair(0, make_shared<ModeSelectorMenu>(textModeSelector)),
-			make_pair(0, make_shared<ModeSelectorMenu>(undoModeSelector))
-		}));
-
-		menuLayer = MenuLayer(windowWidth, windowHeight);
-		menuLayer.AddMenu(topRightMenu);
+		initializeMenuLayer();
 
 		backgroundColor = backgroundList.front();
 		incrementBackground();
@@ -142,6 +78,72 @@ namespace touchpoints { namespace ui
 		keyboard.setTouchKeyboardResize(mWindowWidth, mWindowHeight);
 		uiSetup();
 		drawUi();
+	}
+
+	void UserInterface::initializeMenuLayer()
+	{
+		multimap<int, shared_ptr<drawing::TouchShape>> colorPickerShapes;
+		auto x1 = 0;
+		auto y1 = 60;
+		auto x2 = 60;
+		auto y2 = 120;
+
+		for (auto color : mBrush->getColorList())
+		{
+			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, color, 0, true))));
+			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
+			y1 += 60;
+			y2 += 60;
+		}
+
+		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> colorPickerHandler =
+			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
+		{
+			auto correctedY = point.y - 60;
+			int index = static_cast<int>(correctedY / 60);
+			brush->changeColor(index);
+		};
+
+		auto colorPickerMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, colorPickerHandler, colorPickerShapes));
+
+		auto map = multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, colorPickerMenu)
+		};
+		function<void(vec2 point, Menu *self)> dropdownMenuCallback =
+			[](vec2 point, Menu *self) { self->ToggleContainingMenusVisibility(); };
+
+		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(0, 0), "Colors.png", true, map, dropdownMenuCallback))),
+				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(60, 0), "Shapes.png", true, dropdownMenuCallback))),
+				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(120, 0), "Brush.png", true, dropdownMenuCallback))),
+				make_pair(0,
+					shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(180, 0), "", true,
+						multimap<int, shared_ptr<drawing::TouchShape>>
+			{
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
+					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness)))
+			},
+						nullptr))),
+				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, dropdownMenuCallback))),
+					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
+					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
+		}, nullptr));
+
+		menuLayer = MenuLayer(windowWidth, windowHeight);
+		menuLayer.AddMenu(topLeftMenu);
+	}
+
+	void initializeColorPickerMenu()
+	{
+		
 	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)
@@ -844,6 +846,8 @@ namespace touchpoints { namespace ui
 	bool UserInterface::inInteractiveUi(float x, float y, uint32_t id)
 	{
 		menuLayer.OnTouch(vec2(x, y));
+		return true;
+
 		//ONLY ON IF MULTITOUCH IS DISABLED!
 		if (deviceHandler->multiTouchStatus() == false)
 		{

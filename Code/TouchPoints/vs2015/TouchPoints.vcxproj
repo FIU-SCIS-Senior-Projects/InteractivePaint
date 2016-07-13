@@ -218,7 +218,6 @@
     <ClCompile Include="..\src\Layer.cpp" />
     <ClCompile Include="..\src\LeapMotionHandler.cpp" />
     <ClCompile Include="..\src\Menu.cpp" />
-    <ClCompile Include="..\src\MenuGroup.cpp" />
     <ClCompile Include="..\src\MenuLayer.cpp" />
     <ClCompile Include="..\src\ModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\RealSenseHandler.cpp" />
@@ -248,13 +247,11 @@
     <ClInclude Include="..\src\IDrawable.h" />
     <ClInclude Include="..\src\Illustrator.h" />
     <ClInclude Include="..\src\ImageHandler.h" />
-    <ClInclude Include="..\src\IMenu.h" />
     <ClInclude Include="..\src\KinectHandler.h" />
     <ClInclude Include="..\src\Layer.h" />
     <ClInclude Include="..\src\LeapMotionHandler.h" />
     <ClInclude Include="..\src\Line.h" />
     <ClInclude Include="..\src\Menu.h" />
-    <ClInclude Include="..\src\MenuGroup.h" />
     <ClInclude Include="..\src\MenuLayer.h" />
     <ClInclude Include="..\src\ModeSelectorMenu.h" />
     <ClInclude Include="..\src\RealSenseHandler.h" />
