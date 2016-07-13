@@ -39,11 +39,6 @@ namespace touchpoints { namespace drawing
 		return currColor;
 	}
 
-	int Brush::getCurrentShape()
-	{
-		return mShape;
-	}
-
 	void Brush::incrementShape()
 	{
 		if (mShape == Shape::Shape::Line)
@@ -60,16 +55,11 @@ namespace touchpoints { namespace drawing
 		}
 		else if (mShape == Shape::Shape::Triangle)
 		{
-			if (mFilledShapes == true)
-			{
-				mShape = Shape::Shape::Line;
-				mFilledShapes = false;
-			}
-			else
-			{
-				mFilledShapes = true;
-				mShape = Shape::Shape::Circle;
-			}
+			mShape = Shape::Shape::Eraser;
+		}
+		else if (mShape == Shape::Shape::Eraser)
+		{
+			mShape = Shape::Shape::Line;
 		}
 	}
 
@@ -86,11 +76,6 @@ namespace touchpoints { namespace drawing
 	int Brush::getLineSize()
 	{
 		return mLineSize;
-	}
-
-	Shape::Shape Brush::getShape()
-	{
-		return mShape;
 	}
 
 	bool Brush::getFilledShapes()
@@ -114,9 +99,9 @@ namespace touchpoints { namespace drawing
 		return mRandColor;
 	}
 
-	bool Brush::IsEraserActive()
+	bool Brush::IsEraserActive() const
 	{
-		return isEraserActive;
+		return mShape == Shape::Eraser;
 	}
 
 	float Brush::getAlphaColor()
@@ -167,16 +152,6 @@ namespace touchpoints { namespace drawing
 	void Brush::changeRandColor(bool randColor)
 	{
 		mRandColor = randColor;
-	}
-
-	void Brush::activateEraser()
-	{
-		isEraserActive = true;
-	}
-
-	void Brush::deactivateEraser()
-	{
-		isEraserActive = false;
 	}
 
 	void Brush::changeAlphaColor(float alphaColor)

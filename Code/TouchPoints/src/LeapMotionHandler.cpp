@@ -263,27 +263,27 @@ namespace touchpoints { namespace devices
 	{
 		brush->incrementShape();
 		gui->setModeChangeFlag();
-		switch (brush->getCurrentShape())
+		switch (brush->getShape())
 		{
-			case 0:
+			case Shape::Line:
 				{
 					imageHandler->loadIcon(SHAPE_LINE);
 
 					break;
 				}
-			case 1:
+			case Shape::Circle:
 				{
 					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Circle);
 					else imageHandler->loadIcon(SHAPE_Filled_Circle);
 					break;
 				}
-			case 2:
+			case Shape::Rectangle:
 				{
 					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Rectangle);
 					else imageHandler->loadIcon(SHAPE_Filled_Rectangle);
 					break;
 				}
-			case 3:
+			case Shape::Triangle:
 				{
 					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Triangle);
 					else imageHandler->loadIcon(SHAPE_Filled_Triangle);

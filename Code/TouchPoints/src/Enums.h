@@ -26,7 +26,8 @@ namespace touchpoints
 			Line,
 			Circle,
 			Rectangle,
-			Triangle
+			Triangle, 
+			Eraser
 		};
 	}
 

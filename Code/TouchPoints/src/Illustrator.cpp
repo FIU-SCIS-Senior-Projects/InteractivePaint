@@ -185,16 +185,10 @@ namespace touchpoints { namespace drawing
 		/*Should go here*/
 		saveCurrentFbo();
 
-		if (mBrush->IsEraserActive())
-		{
-			numberOfActiveDrawings++;
-			myActivePoints.insert(make_pair(myId, TouchPoint(myPos, mBrush->getColor(), mBrush->getLineSize() * 2)));
-		}
-		else
-		{
-			switch (mBrush->getShape())
+		switch (mBrush->getShape())
 			{
 				case Shape::Shape::Line:
+				{
 					numberOfActiveDrawings++;
 					if (mBrush->getRandColor())
 					{
@@ -206,8 +200,9 @@ namespace touchpoints { namespace drawing
 						myActivePoints.insert(make_pair(myId, TouchPoint(myPos, mBrush->getColor(), mBrush->getLineSize())));
 					}
 					break;
-
+				}
 				case Shape::Shape::Circle:
+				{
 					numberOfActiveDrawings++;
 					if (mBrush->getRandColor())
 					{
@@ -221,8 +216,9 @@ namespace touchpoints { namespace drawing
 						myActiveCircles.insert(make_pair(myId, TouchCircle(myPos, 30.0f, mBrush->getColor(), mBrush->getLineSize(), filledShapes)));
 					}
 					break;
-
+				}
 				case Shape::Shape::Rectangle:
+				{
 					numberOfActiveDrawings++;
 					if (mBrush->getRandColor())
 					{
@@ -235,8 +231,10 @@ namespace touchpoints { namespace drawing
 						bool filledShapes = mBrush->getFilledShapes();
 						myActiveRectangles.insert(make_pair(myId, TouchRectangle(myPos.x, myPos.y, myPos.x, myPos.y, mBrush->getColor(), mBrush->getLineSize(), filledShapes)));
 					}
-
+					break;
+				}
 				case Shape::Shape::Triangle:
+				{
 					numberOfActiveDrawings++;
 					if (mBrush->getRandColor())
 					{
@@ -249,47 +247,23 @@ namespace touchpoints { namespace drawing
 						bool filledShapes = mBrush->getFilledShapes();
 						myActiveTriangles.insert(make_pair(myId, TouchVerticalTriangle(myPos, myPos, myPos, myPos, mBrush->getColor(), mBrush->getLineSize(), filledShapes)));
 					}
+					break;
+				}
+				case Shape::Shape::Eraser:
+				{
+					numberOfActiveDrawings++;
+					myActivePoints.insert(make_pair(myId, TouchPoint(myPos, mBrush->getColor(), mBrush->getLineSize() * 2)));
+					break;
+				}
 			}
-		}
 	}
 
 	void Illustrator::movingTouchShapes(uint32_t myId, vec2 myPos, vec2 prevPos)
 	{
-		if (mBrush->IsEraserActive())
-		{
-			if (myActivePoints.find(myId) == myActivePoints.end()) return;
-
-			missedPoints(prevPos.x, prevPos.y, myPos.x, myPos.y, myActivePoints[myId]);
-			myPoints.push_back(myActivePoints[myId]);
-			myActivePoints[myId].clearPoints();
-
-			//Draws to the layer at the end of the list. Which is drawn on 'top'
-			mLayerList->back()->bindFramebuffer();
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
-			glBlendEquation(GL_FUNC_ADD);
-
-			for (auto oldPoints = myPoints.begin(); oldPoints != myPoints.end();)
-			{
-				oldPoints->Draw();
-				if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricLine(*oldPoints).Draw();
-				++oldPoints;
-			}
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glBlendEquation(GL_FUNC_ADD);
-
-			mLayerList->back()->unbindFramebuffer();
-
-			myPoints.clear();
-		}
-		else
-		{
 			switch (mBrush->getShape())
 			{
 				case Shape::Shape::Line:
+				{
 					if (myActivePoints.find(myId) == myActivePoints.end()) return;
 
 					missedPoints(prevPos.x, prevPos.y, myPos.x, myPos.y, myActivePoints[myId]);
@@ -307,9 +281,9 @@ namespace touchpoints { namespace drawing
 					mLayerList->back()->unbindFramebuffer();
 					myPoints.clear();
 					break;
-
+				}
 				case Shape::Shape::Circle:
-
+				{
 					if (myActiveCircles.find(myId) == myActiveCircles.end()) return;
 					float a;
 					float b;
@@ -322,105 +296,139 @@ namespace touchpoints { namespace drawing
 
 					myActiveCircles[myId].changeRadius(c);
 					break;
-
+				}
 				case Shape::Shape::Rectangle:
-					{
-						if (myActiveRectangles.find(myId) == myActiveRectangles.end()) return;
-						//myActiveRectangles[myId].changePoint(myPos.x, myPos.y);
-					}
+				{
+					if (myActiveRectangles.find(myId) == myActiveRectangles.end()) return;
+					//myActiveRectangles[myId].changePoint(myPos.x, myPos.y);
 					break;
+				}
 				case Shape::Shape::Triangle:
-					{
-						if (myActiveTriangles.find(myId) == myActiveTriangles.end()) return;
-						//myActiveTriangles[myId].changeSize(myPos.x, myPos.y);
-					}
+				{
+					if (myActiveTriangles.find(myId) == myActiveTriangles.end()) return;
+					//myActiveTriangles[myId].changeSize(myPos.x, myPos.y);
 					break;
+				}
+				case Shape::Shape::Eraser:
+				{
+					if (myActivePoints.find(myId) == myActivePoints.end()) return;
+
+					missedPoints(prevPos.x, prevPos.y, myPos.x, myPos.y, myActivePoints[myId]);
+					myPoints.push_back(myActivePoints[myId]);
+					myActivePoints[myId].clearPoints();
+
+					//Draws to the layer at the end of the list. Which is drawn on 'top'
+					mLayerList->back()->bindFramebuffer();
+
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ZERO, GL_ONE_MINUS_SRC_ALPHA);
+					glBlendEquation(GL_FUNC_ADD);
+
+					for (auto oldPoints = myPoints.begin(); oldPoints != myPoints.end();)
+					{
+						oldPoints->Draw();
+						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricLine(*oldPoints).Draw();
+						++oldPoints;
+					}
+
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					glBlendEquation(GL_FUNC_ADD);
+
+					mLayerList->back()->unbindFramebuffer();
+
+					myPoints.clear();
+				}
+				break;
 			}
-		}
 	}
 
 	void Illustrator::endTouchShapes(uint32_t myId)
 	{
-		if (mBrush->IsEraserActive())
-		{
-			if (myActivePoints.find(myId) == myActivePoints.end()) return;
-
-			numberOfActiveDrawings--;
-			myActivePoints.erase(myId);
-		}
-
 		switch (mBrush->getShape())
 		{
 			case Shape::Shape::Line:
-				{
-					if (myActivePoints.find(myId) == myActivePoints.end()) return;
+			{
+				if (myActivePoints.find(myId) == myActivePoints.end()) return;
 
-					numberOfActiveDrawings--;
-					myActivePoints.erase(myId);
-				}
+				numberOfActiveDrawings--;
+				myActivePoints.erase(myId);
+				break;
+			}
 			case Shape::Shape::Circle:
+			{
+				if (myActiveCircles.find(myId) == myActiveCircles.end()) return;
+
+				numberOfActiveDrawings--;
+
+				myCircles.push_back(myActiveCircles[myId]);
+
+				//Draws to the layer at the end of the list. Which is drawn on 'top'
+				mLayerList->back()->bindFramebuffer();
+				for (auto oldPoints = myCircles.begin(); oldPoints != myCircles.end();)
 				{
-					if (myActiveCircles.find(myId) == myActiveCircles.end()) return;
-
-					numberOfActiveDrawings--;
-
-					myCircles.push_back(myActiveCircles[myId]);
-
-					//Draws to the layer at the end of the list. Which is drawn on 'top'
-					mLayerList->back()->bindFramebuffer();
-					for (auto oldPoints = myCircles.begin(); oldPoints != myCircles.end();)
-					{
-						oldPoints->Draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricCircle(*oldPoints).Draw();
-						++oldPoints;
-					}
-					mLayerList->back()->unbindFramebuffer();
-					myActiveCircles.erase(myId);
-
-					myCircles.clear();
+					oldPoints->Draw();
+					if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricCircle(*oldPoints).Draw();
+					++oldPoints;
 				}
+				mLayerList->back()->unbindFramebuffer();
+				myActiveCircles.erase(myId);
+
+				myCircles.clear();
+				break;
+			}
 			case Shape::Shape::Rectangle:
+			{
+				if (myActiveRectangles.find(myId) == myActiveRectangles.end()) return;
+
+				numberOfActiveDrawings--;
+
+				myRectangles.push_back(myActiveRectangles[myId]);
+
+				//Draws to the layer at the end of the list. Which is drawn on 'top'
+				mLayerList->back()->bindFramebuffer();
+				for (auto oldPoints = myRectangles.begin(); oldPoints != myRectangles.end();)
 				{
-					if (myActiveRectangles.find(myId) == myActiveRectangles.end()) return;
-
-					numberOfActiveDrawings--;
-
-					myRectangles.push_back(myActiveRectangles[myId]);
-
-					//Draws to the layer at the end of the list. Which is drawn on 'top'
-					mLayerList->back()->bindFramebuffer();
-					for (auto oldPoints = myRectangles.begin(); oldPoints != myRectangles.end();)
-					{
-						oldPoints->Draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricRectangle(*oldPoints).Draw();
-						++oldPoints;
-					}
-					mLayerList->back()->unbindFramebuffer();
-					myActiveRectangles.erase(myId);
-
-					myRectangles.clear();
+					oldPoints->Draw();
+					if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricRectangle(*oldPoints).Draw();
+					++oldPoints;
 				}
+				mLayerList->back()->unbindFramebuffer();
+				myActiveRectangles.erase(myId);
+
+				myRectangles.clear();
+				break;
+			}
 			case Shape::Shape::Triangle:
+			{
+				if (myActiveTriangles.find(myId) == myActiveTriangles.end()) return;
+
+				numberOfActiveDrawings--;
+
+				myTriangles.push_back(myActiveTriangles[myId]);
+				myActiveTriangles.erase(myId);
+				//Draws to the layer at the end of the list. Which is drawn on 'top'
+				mLayerList->back()->bindFramebuffer();
+				for (auto oldPoints = myTriangles.begin(); oldPoints != myTriangles.end();)
 				{
-					if (myActiveTriangles.find(myId) == myActiveTriangles.end()) return;
-
-					numberOfActiveDrawings--;
-
-					myTriangles.push_back(myActiveTriangles[myId]);
-					myActiveTriangles.erase(myId);
-					//Draws to the layer at the end of the list. Which is drawn on 'top'
-					mLayerList->back()->bindFramebuffer();
-					for (auto oldPoints = myTriangles.begin(); oldPoints != myTriangles.end();)
-					{
-						oldPoints->Draw();
-						if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(*oldPoints).Draw();
-						++oldPoints;
-					}
-					mLayerList->back()->unbindFramebuffer();
-					myActiveTriangles.erase(myId);
-
-					myTriangles.clear();
+					oldPoints->Draw();
+					if (mBrush->getSymmetry()->getSymmetryOn()) mBrush->getSymmetry()->symmetricTriangle(*oldPoints).Draw();
+					++oldPoints;
 				}
+				mLayerList->back()->unbindFramebuffer();
+				myActiveTriangles.erase(myId);
+
+				myTriangles.clear();
+				break;
+			}
+			case Shape::Shape::Eraser:
+			{
+				if (myActivePoints.find(myId) == myActivePoints.end()) return;
+
+				numberOfActiveDrawings--;
+				myActivePoints.erase(myId);
+				break;
+			}
 		}
 	}
 
@@ -612,36 +620,35 @@ namespace touchpoints { namespace drawing
 		{
 			auto event = drawEventQueue.front();
 			drawEventQueue.pop();
-			auto currentShape = mBrush->getCurrentShape();
-
-			if (mBrush->IsEraserActive())
-			{
-				eraserEventHandler(event);
-				return;
-			}
+			auto currentShape = mBrush->getShape();
 
 			switch (currentShape)
 			{
 				case(Shape::Circle):
-					{
-						circleEventHandler(event);
-						break;
-					}
+				{
+					circleEventHandler(event);
+					break;
+				}
 				case(Shape::Triangle):
-					{
-						triangleEventHandler(event);
-						break;
-					}
+				{
+					triangleEventHandler(event);
+					break;
+				}
 				case(Shape::Rectangle):
-					{
-						rectangleEventHandler(event);
-						break;
-					}
+				{
+					rectangleEventHandler(event);
+					break;
+				}
 				case(Shape::Line):
-					{
-						lineEventHandler(event);
-						break;
-					}
+				{
+					lineEventHandler(event);
+					break;
+				}
+				case(Shape::Eraser):
+				{
+					eraserEventHandler(event);
+					break;
+				}
 			}
 		}
 	}

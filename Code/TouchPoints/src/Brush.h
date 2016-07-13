@@ -13,15 +13,13 @@ namespace touchpoints { namespace drawing
 		Brush(Shape::Shape shape, ColorA color, float alphaColor, int lineSize, bool filledShapes, bool randColor, bool eraserMode, SymmetryLine* mySymmetry);
 		ColorA getColor();
 		int getLineSize();
-		Shape::Shape getShape();
+		inline Shape::Shape getShape() const { return mShape; }
 		bool getFilledShapes();
 		SymmetryLine* getSymmetry();
 		bool getRandColor();
-		bool IsEraserActive();
+		bool IsEraserActive() const;
 		float getAlphaColor();
-		//Change brush 
 		void changeColor(ColorA color);
-		//changes to the color at that specified index in the colorList
 		void changeColor(int index);
 		void changeLineSize(int lineSize);
 		void increaseLineSize();
@@ -30,21 +28,15 @@ namespace touchpoints { namespace drawing
 		void changeFilledShapes(bool filledShapes);
 		void incrementShape();
 		void changeRandColor(bool randColor);
-		void activateEraser();
-		void deactivateEraser();
 		void changeAlphaColor(float alphaColor);
 		void increaseAlpha();
 		void decreaseAlpha();
 		void incrementColor();
 		void changeStaticColor(ourColors::ourColors staticColor);
 		int getCurrentColor();
-		int getCurrentShape();
 		void Brush::decrementColor();
 		std::vector<Color> getColorList();
-
-		//setters for resize in TouchPointsApp
 		void Brush::setSymmetry(SymmetryLine* mySymmetry);
-		
 	private:
 		ColorA mColor;
 		int mLineSize;
@@ -52,7 +44,6 @@ namespace touchpoints { namespace drawing
 		bool mFilledShapes;
 		SymmetryLine* mMySymmetry;
 		bool mRandColor;
-		bool isEraserActive;
 		float mAlphaColor;
 		ourColors::ourColors mStaticColor;
 		std::vector<Color> colorList;

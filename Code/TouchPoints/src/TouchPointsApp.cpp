@@ -221,15 +221,7 @@ namespace touchpoints { namespace app
 		}
 		else if (event.getChar() == 'e') //Eraser mode
 		{
-			if (brush.IsEraserActive())
-			{
-				brush.deactivateEraser();
-			}
-			else
-			{
-				brush.activateEraser();
-			}
-
+			brush.changeShape(Shape::Eraser);
 			gui.setModeChangeFlag();
 		}
 		else if (event.getChar() == 'c') //Clear Screen (Broken with framebuffers).
