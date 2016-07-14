@@ -49,15 +49,4 @@ namespace touchpoints { namespace ui {
 			AddShape(2, shared_ptr<drawing::TouchImage>(new drawing::TouchImage(imageStart, imageWidth, imageHeight, filePath)));
 		}
 	}
-	
-	//void ModeSelectorMenu::OnTouch(vec2 point)
-	//{
-	//	if(touchEventHandler != nullptr && visible && boundingRect.Contains(point))
-	//	{
-	//		touchEventHandler(point, this);
-	//	}
-	//	MenuGroup::OnTouch(point);
-	//}
-
-
 }}

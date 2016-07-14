@@ -31,6 +31,5 @@ namespace touchpoints { namespace ui
 	private:
 		string filePath;
 		void populateShapes();
-		//function<void(vec2 point, ModeSelectorMenu *self)> touchEventHandler;
 	};
 }}

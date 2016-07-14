@@ -151,7 +151,39 @@ namespace touchpoints { namespace ui
 	
 	multimap<int, shared_ptr<Menu>> UserInterface::createShapePickerMenu() const
 	{
-		return multimap<int, shared_ptr<Menu>>();
+		multimap<int, shared_ptr<drawing::TouchShape>> colorPickerShapes;
+		auto x1 = 0;
+		auto y1 = 60;
+		auto x2 = 60;
+		auto y2 = 120;
+
+		for (auto color : mBrush->getColorList())
+		{
+			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, color, 0, true))));
+			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
+			y1 += 60;
+			y2 += 60;
+		}
+
+		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> shapePickerHandler =
+			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
+		{
+			auto correctedY = point.y - 60;
+			int index = static_cast<int>(correctedY / 60);
+			brush->changeColor(index);
+		};
+
+		auto shapePickerMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, shapePickerHandler, colorPickerShapes));
+
+		auto colorPickerMap = multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, shapePickerMenu)
+		};
+
+		return colorPickerMap;
 	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)
