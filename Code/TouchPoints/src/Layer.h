@@ -16,6 +16,7 @@ namespace touchpoints { namespace drawing
 		void AddDrawable(shared_ptr<IDrawable> drawable);
 		void Draw();
 		void Undo();
+		void ClearLayer();
 		inline float GetAlpha() const { return alpha.GetValue(); }
 		inline void SetAlpha(float value) { alpha.SetValue(value); }
 		inline gl::Texture2dRef GetFrameBufferTexture() const { return framebuffer->getColorTexture(); }

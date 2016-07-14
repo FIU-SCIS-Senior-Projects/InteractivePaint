@@ -89,4 +89,10 @@ namespace touchpoints { namespace drawing
 			drawablesStack.pop_back();
 		}
 	}
+
+	void Layer::ClearLayer()
+	{
+		drawablesStack.clear();
+		resetFramebuffer();
+	}
 }}
