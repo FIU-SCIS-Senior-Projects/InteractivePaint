@@ -5,18 +5,18 @@ namespace touchpoints { namespace drawing
 {
 	Canvas::Canvas() {}
 
-	Canvas::Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers = 6)
+	Canvas::Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers)
 		: activeLayerIndex(0)
 	{
 		assert(numberOfLayers > 0 && numberOfLayers <= maxNumberOfLayers, "Error in creating canvas");
 
 		this->numberOfLayers = numberOfLayers;
 		this->maxNumberOfLayers = maxNumberOfLayers;
-		layerIndexOrder = vector<InderOrderAndActive>(numberOfLayers);
+		layerIndexActive = vector<IndexActive>(numberOfLayers);
 		layers = vector<Layer>(numberOfLayers);
 		for (int i = 0; i < numberOfLayers; i++)
 		{
-			layerIndexOrder[i] = InderOrderAndActive(i, true);
+			layerIndexActive[i] = IndexActive(i, true);
 			layers[i] = Layer(windowWidth, windowHeight);
 		}
 	}
@@ -49,19 +49,19 @@ namespace touchpoints { namespace drawing
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot make layer active, index out of range");
 
-		auto newActiveLayerIndex = layerIndexOrder[index];
-		layerIndexOrder.erase(layerIndexOrder.begin() + index);
-		layerIndexOrder.insert(layerIndexOrder.begin(), newActiveLayerIndex);
-		activeLayerIndex = newActiveLayerIndex.indexOrder;
+		auto newActiveLayerIndex = layerIndexActive[index];
+		layerIndexActive.erase(layerIndexActive.begin() + index);
+		layerIndexActive.insert(layerIndexActive.begin(), newActiveLayerIndex);
+		activeLayerIndex = newActiveLayerIndex.index;
 	}
 
 	void Canvas::Draw()
 	{
 		for (int i = numberOfLayers - 1; i >= 0; i--)
 		{
-			auto layerIndexAndActive = layerIndexOrder[i];
+			auto layerIndexAndActive = layerIndexActive[i];
 			bool layerIsActive = layerIndexAndActive.active;
-			int layerIndex = layerIndexAndActive.indexOrder;
+			int layerIndex = layerIndexAndActive.index;
 			if(layerIsActive)
 			{
 				layers[layerIndex].Draw();
@@ -83,13 +83,13 @@ namespace touchpoints { namespace drawing
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot delete layer, index out of range");
 
-		auto indexActive = layerIndexOrder[index];
-		layers[indexActive.indexOrder].ClearLayer();
+		auto indexActive = layerIndexActive[index];
+		layers[indexActive.index].ClearLayer();
 		//make layer inactive
 		indexActive.active = false;
 		//move indexactive down to bottom of list
-		layerIndexOrder.erase(layerIndexOrder.begin() + index);
-		layerIndexOrder.insert(layerIndexOrder.end(), indexActive);
+		layerIndexActive.erase(layerIndexActive.begin() + index);
+		layerIndexActive.insert(layerIndexActive.end(), indexActive);
 
 		numberOfLayers--;
 	}
@@ -98,7 +98,7 @@ namespace touchpoints { namespace drawing
 	{
 		assert(numberOfLayers + 1 <= maxNumberOfLayers, "Adding too many layers");
 
-		layerIndexOrder[numberOfLayers].active = true;
+		layerIndexActive[numberOfLayers].active = true;
 
 		numberOfLayers++;
 	}
@@ -107,7 +107,7 @@ namespace touchpoints { namespace drawing
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot get alpha of layer, index out of range");
 
-		auto actualIndex = layerIndexOrder[index].indexOrder;
+		auto actualIndex = layerIndexActive[index].index;
 		return layers[actualIndex].GetAlpha();
 	}
 
@@ -115,7 +115,7 @@ namespace touchpoints { namespace drawing
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot set alpha of layer, index out of range");
 
-		auto actualIndex = layerIndexOrder[index].indexOrder;
+		auto actualIndex = layerIndexActive[index].index;
 		layers[actualIndex].SetAlpha(value);
 	}
 
@@ -123,7 +123,7 @@ namespace touchpoints { namespace drawing
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot get texture of layer, index out of range");
 
-		auto actualIndex = layerIndexOrder[index].indexOrder;
+		auto actualIndex = layerIndexActive[index].index;
 		return layers[actualIndex].GetFrameBufferTexture();
 	}
 }}

@@ -6,10 +6,14 @@ using namespace std;
 
 namespace touchpoints { namespace drawing
 {
-	struct InderOrderAndActive
+
+
+	struct IndexActive
 	{
-		InderOrderAndActive(int indexOrder, bool active) : indexOrder(indexOrder), active(active) {}
-		int indexOrder;
+		IndexActive(){}
+
+		IndexActive(int index, bool active) : index(index), active(active) {}
+		int index;
 		bool active;
 	};
 
@@ -17,7 +21,7 @@ namespace touchpoints { namespace drawing
 	{
 	public:
 		Canvas();
-		Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers);
+		Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers = 6);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);
@@ -38,7 +42,7 @@ namespace touchpoints { namespace drawing
 		int numberOfLayers;
 		int maxNumberOfLayers;
 		int activeLayerIndex;
-		vector<InderOrderAndActive> layerIndexOrder;
+		vector<IndexActive> layerIndexActive;
 		vector<Layer> layers;
 	};
 }}
