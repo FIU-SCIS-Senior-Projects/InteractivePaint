@@ -2,6 +2,7 @@
 #include <cinder/Rand.h>
 #include "ModeSelectorMenu.h"
 #include "BrushModeSelectorMenu.h"
+#include "ShapeModeSelectorMenu.h"
 
 using namespace cinder::app;
 
@@ -83,29 +84,27 @@ namespace touchpoints { namespace ui
 	void UserInterface::initializeMenuLayer()
 	{
 		auto colorPickerMenu = createColorPickerMenu();
-
-		function<void(vec2 point, Menu *self)> dropdownMenuCallback =
-			[](vec2 point, Menu *self) { self->ToggleContainingMenusVisibility(); };
+		auto shapePickerMenu = createShapePickerMenu();
 
 		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(0, 0), "Colors.png", true, colorPickerMenu, dropdownMenuCallback))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(60, 0), "Shapes.png", true, dropdownMenuCallback))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(120, 0), "Brush.png", true, dropdownMenuCallback))),
-				make_pair(0,
-					shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(180, 0), "", true,
-						multimap<int, shared_ptr<drawing::TouchShape>>
-			{
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness)))
-			},
-						nullptr))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, dropdownMenuCallback))),
-					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
-					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(0, 0), "Colors.png", true, colorPickerMenu, Menu::defaultDropdownCallback))),
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(60, 0), "Shapes.png", true, shapePickerMenu, Menu::defaultDropdownCallback))),
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(120, 0), "Brush.png", true, Menu::defaultDropdownCallback))),
+			make_pair(0,
+				shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(180, 0), "", true,
+					multimap<int, shared_ptr<drawing::TouchShape>>
+					{
+						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
+						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
+						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
+						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
+						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
+						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), Menu::grey, ModeSelectorMenu::defaultBorderThickness)))
+					},
+					nullptr))),
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, Menu::defaultDropdownCallback))),
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
 		}, nullptr));
 
 		menuLayer = MenuLayer(windowWidth, windowHeight);
@@ -125,7 +124,7 @@ namespace touchpoints { namespace ui
 			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
 				(new drawing::TouchRectangle(x1, y1, x2, y2, color, 0, true))));
 			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
+				(new drawing::TouchRectangle(x1, y1, x2, y2, Menu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
 			y1 += 60;
 			y2 += 60;
 		}
@@ -141,49 +140,37 @@ namespace touchpoints { namespace ui
 		auto colorPickerMenu = shared_ptr<BrushModeSelectorMenu>
 			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, colorPickerHandler, colorPickerShapes));
 
-		auto colorPickerMap = multimap<int, shared_ptr<Menu>>
+		return multimap<int, shared_ptr<Menu>>
 		{
 			make_pair(0, colorPickerMenu)
 		};
-
-		return colorPickerMap;
 	}
 	
 	multimap<int, shared_ptr<Menu>> UserInterface::createShapePickerMenu() const
 	{
-		multimap<int, shared_ptr<drawing::TouchShape>> colorPickerShapes;
-		auto x1 = 0;
-		auto y1 = 60;
-		auto x2 = 60;
-		auto y2 = 120;
+		auto linePickerMenu = shared_ptr<ShapeModeSelectorMenu>
+			(new ShapeModeSelectorMenu(vec2(60, 60), false, mBrush, Shape::Line));
 
-		for (auto color : mBrush->getColorList())
-		{
-			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, color, 0, true))));
-			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
-			y1 += 60;
-			y2 += 60;
-		}
+		auto circlePickerMenu = shared_ptr<ShapeModeSelectorMenu>
+			(new ShapeModeSelectorMenu(vec2(60, 120), false, mBrush, Shape::Circle));
 
-		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> shapePickerHandler =
-			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
+		auto rectanglePickerMenu = shared_ptr<ShapeModeSelectorMenu>
+			(new ShapeModeSelectorMenu(vec2(60, 180), false, mBrush, Shape::Rectangle));
+
+		auto trianglePickerMenu = shared_ptr<ShapeModeSelectorMenu>
+			(new ShapeModeSelectorMenu(vec2(60, 240), false, mBrush, Shape::Triangle));
+
+		auto eraserPickerMenu = shared_ptr<ShapeModeSelectorMenu>
+			(new ShapeModeSelectorMenu(vec2(60, 300), false, mBrush, Shape::Eraser));
+
+		return multimap<int, shared_ptr<Menu>>
 		{
-			auto correctedY = point.y - 60;
-			int index = static_cast<int>(correctedY / 60);
-			brush->changeColor(index);
+			make_pair(0, linePickerMenu),
+			make_pair(0, circlePickerMenu),
+			make_pair(0, rectanglePickerMenu),
+			make_pair(0, trianglePickerMenu),
+			make_pair(0, eraserPickerMenu)
 		};
-
-		auto shapePickerMenu = shared_ptr<BrushModeSelectorMenu>
-			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, shapePickerHandler, colorPickerShapes));
-
-		auto colorPickerMap = multimap<int, shared_ptr<Menu>>
-		{
-			make_pair(0, shapePickerMenu)
-		};
-
-		return colorPickerMap;
 	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)

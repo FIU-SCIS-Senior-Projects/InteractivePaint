@@ -266,33 +266,33 @@ namespace touchpoints { namespace devices
 		switch (brush->getShape())
 		{
 			case Shape::Line:
-				{
-					imageHandler->loadIcon(SHAPE_LINE);
+			{
+				imageHandler->loadIcon(SHAPE_LINE);
 
-					break;
-				}
+				break;
+			}
 			case Shape::Circle:
-				{
-					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Circle);
-					else imageHandler->loadIcon(SHAPE_Filled_Circle);
-					break;
-				}
+			{
+				if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Circle);
+				else imageHandler->loadIcon(SHAPE_Filled_Circle);
+				break;
+			}
 			case Shape::Rectangle:
-				{
-					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Rectangle);
-					else imageHandler->loadIcon(SHAPE_Filled_Rectangle);
-					break;
-				}
+			{
+				if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Rectangle);
+				else imageHandler->loadIcon(SHAPE_Filled_Rectangle);
+				break;
+			}
 			case Shape::Triangle:
-				{
-					if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Triangle);
-					else imageHandler->loadIcon(SHAPE_Filled_Triangle);
-					break;
-				}
+			{
+				if (!brush->getFilledShapes()) imageHandler->loadIcon(SHAPE_Triangle);
+				else imageHandler->loadIcon(SHAPE_Filled_Triangle);
+				break;
+			}
 			default:
-				{
-					break;
-				}
+			{
+				break;
+			}
 		}
 	}
 
@@ -301,57 +301,57 @@ namespace touchpoints { namespace devices
 		brush->incrementColor();
 		gui->setModeChangeFlag();
 		//Provides correct image to provide feedback
-		switch (brush->getCurrentColor())
+		switch (brush->ColorToColorEnumMapper(brush->getColor()))
 		{
-			case 0:
-				{
-					imageHandler->loadIcon(COLOR_ZERO);
+			case ourColors::Black:
+			{
+				imageHandler->loadIcon(COLOR_ZERO);
 
-					break;
-				}
-			case 1:
-				{
-					imageHandler->loadIcon(COLOR_ONE);
+				break;
+			}
+			case ourColors::Red:
+			{
+				imageHandler->loadIcon(COLOR_ONE);
 
-					break;
-				}
-			case 2:
-				{
-					imageHandler->loadIcon(COLOR_TWO);
+				break;
+			}
+			case ourColors::Yellow:
+			{
+				imageHandler->loadIcon(COLOR_TWO);
 
-					break;
-				}
-			case 3:
-				{
-					imageHandler->loadIcon(COLOR_THREE);
+				break;
+			}
+			case ourColors::Green:
+			{
+				imageHandler->loadIcon(COLOR_THREE);
 
-					break;
-				}
-			case 4:
-				{
-					imageHandler->loadIcon(COLOR_FOUR);
-					break;
-				}
-			case 5:
-				{
-					imageHandler->loadIcon(COLOR_FIVE);
+				break;
+			}
+			case ourColors::Aqua:
+			{
+				imageHandler->loadIcon(COLOR_FOUR);
+				break;
+			}
+			case ourColors::Blue:
+			{
+				imageHandler->loadIcon(COLOR_FIVE);
 
-					break;
-				}
-			case 6:
-				{
-					imageHandler->loadIcon(COLOR_SIX);
-					break;
-				}
-			case 7:
-				{
-					imageHandler->loadIcon(COLOR_SEVEN);
-					break;
-				}
-			default:
-				{
-					break;
-				}
+				break;
+			}
+			case ourColors::Purple:
+			{
+				imageHandler->loadIcon(COLOR_SIX);
+				break;
+			}
+			case ourColors::Orange:
+			{
+				imageHandler->loadIcon(COLOR_SEVEN);
+				break;
+			}
+			default: //white
+			{
+				break;
+			}
 		}
 	}
 

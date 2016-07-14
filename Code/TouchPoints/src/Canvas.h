@@ -6,12 +6,9 @@ using namespace std;
 
 namespace touchpoints { namespace drawing
 {
-
-
 	struct IndexActive
 	{
-		IndexActive(){}
-
+		IndexActive() {}
 		IndexActive(int index, bool active) : index(index), active(active) {}
 		int index;
 		bool active;

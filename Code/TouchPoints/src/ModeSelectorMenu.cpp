@@ -3,9 +3,6 @@
 #include "TouchImage.h"
 
 namespace touchpoints { namespace ui {
-	const ColorA ModeSelectorMenu::grey = ColorA(0.75f, 0.75f, 0.75f, 1.0f);
-	const ColorA ModeSelectorMenu::purple = ColorA(0.3f, 0.2f, 0.5f, 1.0f);
-
 	ModeSelectorMenu::ModeSelectorMenu() {}
 
 	ModeSelectorMenu::ModeSelectorMenu(vec2 startPoint, string filePath, bool visible,
@@ -28,7 +25,7 @@ namespace touchpoints { namespace ui {
 		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
 		multimap<int, shared_ptr<Menu>> composingMenus, 
 		function<void(vec2 point, Menu *self)> touchEventHandler) 
-		: Menu(startPoint, width, height, visible, composingShapes, composingMenus, touchEventHandler), 
+		: Menu(startPoint, defaultWidth, defaultHeight, visible, composingShapes, composingMenus, touchEventHandler),
 		filePath(filePath)
 	{
 		populateShapes();
@@ -40,13 +37,13 @@ namespace touchpoints { namespace ui {
 		auto startY = startPoint.y;
 		auto endX = startX + width;
 		auto endY = startY + height;
-		auto imageStart = vec2(startX + imageOffsetX, startY + imageOffsetY);
+		auto imageStart = vec2(startX + Menu::defaultImageOffsetX, startY + Menu::defaultImageOffsetY);
 
 		AddShape(0, shared_ptr<drawing::TouchRectangle>(new drawing::TouchRectangle(startX, startY, endX, endY, purple, 0, true)));
-		AddShape(1, shared_ptr<drawing::TouchRectangle>(new drawing::TouchRectangle(startX, startY, endX, endY, grey, lineThickness, false)));
+		AddShape(1, shared_ptr<drawing::TouchRectangle>(new drawing::TouchRectangle(startX, startY, endX, endY, grey, defaultBorderThickness, false)));
 		if(filePath != "")
 		{
-			AddShape(2, shared_ptr<drawing::TouchImage>(new drawing::TouchImage(imageStart, imageWidth, imageHeight, filePath)));
+			AddShape(2, shared_ptr<drawing::TouchImage>(new drawing::TouchImage(imageStart, Menu::defaultImageWidth, Menu::defaultImageHeight, filePath)));
 		}
 	}
 }}

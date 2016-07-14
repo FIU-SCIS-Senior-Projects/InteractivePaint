@@ -5,3 +5,4 @@
 #include "TouchRectangle.h"
 #include "TouchVerticalTriangle.h"
 #include "TouchEraserPoints.h"
+#include "TouchImage.h"

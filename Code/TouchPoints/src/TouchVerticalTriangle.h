@@ -8,8 +8,10 @@ namespace touchpoints { namespace drawing
 	struct TouchVerticalTriangle : public TouchShape
 	{
 		TouchVerticalTriangle();
-		TouchVerticalTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes);
-		TouchVerticalTriangle(vec2 point1, vec2 point2, vec2 point3, vec2 baseCenter, ColorA color, float size, bool filledShapes, int framesDrawn);
+		TouchVerticalTriangle(vec2 baseVertexLeft, vec2 baseVertexRight, vec2 oppositeBaseVertex, 
+			vec2 baseCenter, ColorA color, float size, bool filledShapes);
+		TouchVerticalTriangle(vec2 baseVertexLeft, vec2 baseVertexRight, vec2 oppositeBaseVertex, 
+			vec2 baseCenter, ColorA color, float size, bool filledShapes, int framesDrawn);
 		void Draw() override;
 		inline vec2 GetBaseVertexLeft() { return baseVertexLeft; }
 		inline vec2 GetBaseVertexRight() { return baseVertexRight; }

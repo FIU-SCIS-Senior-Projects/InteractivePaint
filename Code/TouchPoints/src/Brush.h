@@ -33,7 +33,7 @@ namespace touchpoints { namespace drawing
 		void decreaseAlpha();
 		void incrementColor();
 		void changeStaticColor(ourColors::ourColors staticColor);
-		int getCurrentColor();
+		ourColors::ourColors ColorToColorEnumMapper(Color color);
 		void Brush::decrementColor();
 		std::vector<Color> getColorList();
 		void Brush::setSymmetry(SymmetryLine* mySymmetry);
