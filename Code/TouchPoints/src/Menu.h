@@ -3,6 +3,7 @@
 #include "Rect.h"
 #include "IDrawable.h"
 
+
 using namespace std;
 
 namespace touchpoints { namespace ui
@@ -36,6 +37,18 @@ namespace touchpoints { namespace ui
 		void ToggleContainingMenusVisibility();
 		virtual void Update() {};
 		virtual void OnTouch(vec2 point);
+		static const ColorA grey;
+		static const ColorA purple;
+		static const ColorA white;
+		static const int defaultBorderThickness = 5;
+		static const int defaultLineThickness = 1;
+		static const int defaultWidth = 60;
+		static const int defaultHeight = 60;
+		static const int defaultImageWidth = 50;
+		static const int defaultImageHeight = 50;
+		static const int defaultImageOffsetX = 5;
+		static const int defaultImageOffsetY = 5;
+		static const function<void(vec2 point, Menu *self)> defaultDropdownCallback;
 	protected:
 		bool visible;
 		vec2 startPoint;

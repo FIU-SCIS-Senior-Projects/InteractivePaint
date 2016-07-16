@@ -34,9 +34,44 @@ namespace touchpoints { namespace drawing
 		colorList.emplace_back(newColor8);
 	}
 
-	int drawing::Brush::getCurrentColor()
+	ourColors::ourColors Brush::ColorToColorEnumMapper(Color color)
 	{
-		return currColor;
+		if (color == Color(0.0f, 0.0f, 0.0f))
+		{
+			return ourColors::Black;
+		}
+		else if (color == Color(256.0f, 0.0f, 0.0f))
+		{
+			return ourColors::Red;
+		}
+		else if (color == Color(256.0f, 256.0f, 0.0f))
+		{
+			return ourColors::Yellow;
+		}
+		else if (color == Color(0.0f, 256.0f, 0.0f))
+		{
+			return ourColors::Green;
+		}
+		else if (color == Color(0.0f, 256.0f, 256.0f))
+		{
+			return ourColors::Aqua;
+		}
+		else if (color == Color(0.0f, 0.0f, 256.0f))
+		{
+			return ourColors::Blue;
+		}
+		else if (color == Color(256.0f, 0.0f, 256.0f))
+		{
+			return ourColors::Purple;
+		}
+		else if (color == Color(1.0f, 0.3f, 0.0f))
+		{
+			return ourColors::Orange;
+		}
+		else if (color == Color(1.0f, 1.0f, 1.0f))
+		{
+			return ourColors::White;
+		}
 	}
 
 	void Brush::incrementShape()

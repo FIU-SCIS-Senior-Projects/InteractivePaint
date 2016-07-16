@@ -12,6 +12,7 @@ namespace touchpoints { namespace drawing
 		inline float size() const { return mSize; }
 		inline ColorA getColor() const { return mColor; }
 		inline bool getFilledShape() const { return mFilledShapes; }
+		inline void setFilledShape(bool filledShapes) { mFilledShapes = filledShapes; }
 		inline float getSize() const { return mSize; }
 		inline void setColor(ColorA newColor) { mColor = newColor; }
 		inline void DecrementFramesDrawn() { framesDrawn--; }

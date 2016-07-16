@@ -2,6 +2,12 @@
 
 namespace touchpoints { namespace ui
 {
+	const ColorA Menu::grey = ColorA(0.75f, 0.75f, 0.75f, 1.0f);
+	const ColorA Menu::purple = ColorA(0.3f, 0.2f, 0.5f, 1.0f);
+	const ColorA Menu::white = ColorA(1.0f, 1.0f, 1.0f, 1.0f);
+	const function<void(vec2 point, Menu *self)> Menu::defaultDropdownCallback =
+		[](vec2 point, Menu *self) { self->ToggleContainingMenusVisibility(); };
+
 	Menu::Menu() {}
 
 	Menu::Menu(vec2 startPoint, int width, int height, bool visible,

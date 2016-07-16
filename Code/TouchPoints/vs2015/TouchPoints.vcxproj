@@ -223,6 +223,7 @@
     <ClCompile Include="..\src\ModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\RealSenseHandler.cpp" />
     <ClCompile Include="..\src\Rect.cpp" />
+    <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\SymmetryLine.cpp" />
     <ClCompile Include="..\src\TouchCircle.cpp" />
     <ClCompile Include="..\src\TouchEraserPoints.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="..\src\ModeSelectorMenu.h" />
     <ClInclude Include="..\src\RealSenseHandler.h" />
     <ClInclude Include="..\src\Rect.h" />
+    <ClInclude Include="..\src\ShapeModeSelectorMenu.h" />
     <ClInclude Include="..\src\SymmetryLine.h" />
     <ClInclude Include="..\src\TouchCircle.h" />
     <ClInclude Include="..\src\TouchEraserPoints.h" />

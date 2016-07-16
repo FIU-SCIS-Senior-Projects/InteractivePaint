@@ -135,7 +135,11 @@
     <ClCompile Include="..\src\BrushModeSelectorMenu.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\src\LayerVisualizationMenu.cpp">
+=======
+    <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp">
+>>>>>>> fda41f0541872517c9fb02775a87f7cc30baf73f
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,7 +243,11 @@
     <ClInclude Include="..\src\BrushModeSelectorMenu.h">
       <Filter>ui</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\src\LayerVisualizationMenu.h">
+=======
+    <ClInclude Include="..\src\ShapeModeSelectorMenu.h">
+>>>>>>> fda41f0541872517c9fb02775a87f7cc30baf73f
       <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
