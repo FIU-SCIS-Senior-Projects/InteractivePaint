@@ -18,7 +18,7 @@ namespace touchpoints { namespace drawing
 	{
 	public:
 		Canvas();
-		Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers = 6);
+		Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers = 3);//6);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);

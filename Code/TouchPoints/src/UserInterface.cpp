@@ -84,33 +84,8 @@ namespace touchpoints { namespace ui
 	void UserInterface::initializeMenuLayer()
 	{
 		auto colorPickerMenu = createColorPickerMenu();
-<<<<<<< HEAD
-		auto layerVisualizationMenu = createLayerVisualizationMenu();
-
-		function<void(vec2 point, Menu *self)> dropdownMenuCallback =
-			[](vec2 point, Menu *self) { self->ToggleContainingMenusVisibility(); };
-
-		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(0, 0), "Colors.png", true, colorPickerMenu, dropdownMenuCallback))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(60, 0), "Shapes.png", true, dropdownMenuCallback))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(120, 0), "Brush.png", true, dropdownMenuCallback))),
-				make_pair(0,
-					shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(180, 0), "", true,
-						multimap<int, shared_ptr<drawing::TouchShape>>
-			{
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness))),
-					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness)))
-			},
-						nullptr))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, layerVisualizationMenu, dropdownMenuCallback))),
-					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
-					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
-=======
 		auto shapePickerMenu = createShapePickerMenu();
+		auto layerVisualizationMenu = createLayerVisualizationMenu();
 
 		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
 			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(0, 0), "Colors.png", true, colorPickerMenu, Menu::defaultDropdownCallback))),
@@ -128,10 +103,9 @@ namespace touchpoints { namespace ui
 						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), Menu::grey, ModeSelectorMenu::defaultBorderThickness)))
 					},
 					nullptr))),
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, Menu::defaultDropdownCallback))),
+			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, layerVisualizationMenu, Menu::defaultDropdownCallback))),
 			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
 			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
->>>>>>> fda41f0541872517c9fb02775a87f7cc30baf73f
 		}, nullptr));
 
 		menuLayer = MenuLayer(windowWidth, windowHeight);
@@ -154,13 +128,8 @@ namespace touchpoints { namespace ui
 
 			// adds color menu outline to be drawn
 			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-<<<<<<< HEAD
-				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
-
 			// moves the y axis of where the color squares will be drawn
-=======
 				(new drawing::TouchRectangle(x1, y1, x2, y2, Menu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
->>>>>>> fda41f0541872517c9fb02775a87f7cc30baf73f
 			y1 += 60;
 			y2 += 60;
 		}
@@ -178,12 +147,8 @@ namespace touchpoints { namespace ui
 		auto colorPickerMenu = shared_ptr<BrushModeSelectorMenu>
 			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, colorPickerHandler, colorPickerShapes));
 
-<<<<<<< HEAD
-		// assigns the shared_ptr to a multimap
-		auto colorPickerMap = multimap<int, shared_ptr<Menu>>
-=======
+
 		return multimap<int, shared_ptr<Menu>>
->>>>>>> fda41f0541872517c9fb02775a87f7cc30baf73f
 		{
 			make_pair(0, colorPickerMenu)
 		};
@@ -222,11 +187,11 @@ namespace touchpoints { namespace ui
 
 		int index = illustrator->GetNumberOfLayersInCanvas() - 1;
 		//int y = layerList->size();
-		index = index * 200 + 50;
+		index = index * 325 + 10;//* 200 + 50;
 		int layerNumber = 0;
-		auto x1 = 200;
+		auto x1 = 240;
 		auto y1 = index - 200;
-		auto x2 = 600;
+		auto x2 = 640;
 		auto y2 = index;
 
 		//inside for: assign where shapes will be drawn
@@ -236,7 +201,7 @@ namespace touchpoints { namespace ui
 			// Draws a white background in the layer dropdown so the real drawings dont show
 			// Draws outline grey square of layer box
 			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
+				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
 			// Draws the drawings in the current layer to the current layers menu
 			// Not sure but if removed causes shades of grey in alpha bar to disappear
 			// Draws gray bar to separate the layer alpha bar from the layer display
@@ -246,6 +211,8 @@ namespace touchpoints { namespace ui
 				(new drawing::TouchRectangle(x1, y1, x2, y2, frame, 0, true))));*/
 			
 			index = index - 200;
+			y1 = index - 200;
+			y2 = index;
 			//y1 += 60;
 			//y2 += 60;
 		}
