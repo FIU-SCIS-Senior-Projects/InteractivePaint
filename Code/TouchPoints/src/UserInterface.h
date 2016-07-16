@@ -50,6 +50,7 @@ namespace touchpoints { namespace ui
 		void initializeMenuLayer();
 		multimap<int, shared_ptr<Menu>> createColorPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createShapePickerMenu() const;
+		multimap<int, shared_ptr<Menu>> createLayerVisualizationMenu() const;
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;

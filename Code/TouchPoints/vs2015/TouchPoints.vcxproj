@@ -216,6 +216,7 @@
     <ClCompile Include="..\src\ImageHandler.cpp" />
     <ClCompile Include="..\src\KinectHandler.cpp" />
     <ClCompile Include="..\src\Layer.cpp" />
+    <ClCompile Include="..\src\LayerVisualizationMenu.cpp" />
     <ClCompile Include="..\src\LeapMotionHandler.cpp" />
     <ClCompile Include="..\src\Menu.cpp" />
     <ClCompile Include="..\src\MenuLayer.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="..\src\ImageHandler.h" />
     <ClInclude Include="..\src\KinectHandler.h" />
     <ClInclude Include="..\src\Layer.h" />
+    <ClInclude Include="..\src\LayerVisualizationMenu.h" />
     <ClInclude Include="..\src\LeapMotionHandler.h" />
     <ClInclude Include="..\src\Line.h" />
     <ClInclude Include="..\src\Menu.h" />

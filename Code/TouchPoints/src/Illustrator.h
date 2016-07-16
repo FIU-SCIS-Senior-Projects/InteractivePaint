@@ -48,6 +48,7 @@ namespace touchpoints { namespace drawing
 		void Update();
 		void AddMenu(shared_ptr<ui::Menu> menu);
 		void Undo();
+		vector<shared_ptr<gl::Fbo>>GetLayerList(); //Returns layerslist 
 		inline int GetNumberOfLayersInCanvas() const { return canvas.GetNumberOfLayers(); }
 		inline void MakeLayerActive(int index) { canvas.MakeLayerActive(index); }
 		//alpha of the top layer

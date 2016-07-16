@@ -83,6 +83,7 @@ namespace touchpoints { namespace ui
 	void UserInterface::initializeMenuLayer()
 	{
 		auto colorPickerMenu = createColorPickerMenu();
+		auto layerVisualizationMenu = createLayerVisualizationMenu();
 
 		function<void(vec2 point, Menu *self)> dropdownMenuCallback =
 			[](vec2 point, Menu *self) { self->ToggleContainingMenusVisibility(); };
@@ -103,7 +104,7 @@ namespace touchpoints { namespace ui
 					make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness)))
 			},
 						nullptr))),
-				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, dropdownMenuCallback))),
+				make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, layerVisualizationMenu, dropdownMenuCallback))),
 					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
 					make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
 		}, nullptr));
@@ -122,14 +123,20 @@ namespace touchpoints { namespace ui
 
 		for (auto color : mBrush->getColorList())
 		{
+			// adds color shapes to the menu to be drawn
 			colorPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
 				(new drawing::TouchRectangle(x1, y1, x2, y2, color, 0, true))));
+
+			// adds color menu outline to be drawn
 			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
 				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
+
+			// moves the y axis of where the color squares will be drawn
 			y1 += 60;
 			y2 += 60;
 		}
 
+		//handles which color is being touched and changes to that color
 		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> colorPickerHandler =
 			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
 		{
@@ -138,9 +145,11 @@ namespace touchpoints { namespace ui
 			brush->changeColor(index);
 		};
 
+		// passes these values to the brush handler which passes them to menu and assigns it as a shared_ptr
 		auto colorPickerMenu = shared_ptr<BrushModeSelectorMenu>
 			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, colorPickerHandler, colorPickerShapes));
 
+		// assigns the shared_ptr to a multimap
 		auto colorPickerMap = multimap<int, shared_ptr<Menu>>
 		{
 			make_pair(0, colorPickerMenu)
@@ -184,6 +193,100 @@ namespace touchpoints { namespace ui
 		};
 
 		return colorPickerMap;
+	}
+
+	multimap<int, shared_ptr<Menu>> UserInterface::createLayerVisualizationMenu() const
+	{
+		multimap<int, shared_ptr<drawing::TouchShape>> layerPickerShapes;
+
+		int index = illustrator->GetNumberOfLayersInCanvas() - 1;
+		//int y = layerList->size();
+		index = index * 200 + 50;
+		int layerNumber = 0;
+		auto x1 = 200;
+		auto y1 = index - 200;
+		auto x2 = 600;
+		auto y2 = index;
+
+		//inside for: assign where shapes will be drawn
+		for (auto frame : illustrator->GetLayerList())
+		{
+
+			// Draws a white background in the layer dropdown so the real drawings dont show
+			// Draws outline grey square of layer box
+			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::lineThickness, false))));
+			// Draws the drawings in the current layer to the current layers menu
+			// Not sure but if removed causes shades of grey in alpha bar to disappear
+			// Draws gray bar to separate the layer alpha bar from the layer display
+			// Draws indicator for alpha level
+
+			/*layerPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, frame, 0, true))));*/
+			
+			index = index - 200;
+			//y1 += 60;
+			//y2 += 60;
+		}
+
+		//handles which color is being touched and changes to that color
+		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> colorPickerHandler =
+			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
+		{
+			/*auto correctedY = point.y - 60;
+			int index = static_cast<int>(correctedY / 60);
+			brush->changeColor(index);*/
+		};
+
+		// passes these values to the brush handler which passes them to menu and assigns it as a shared_ptr
+		auto layerPickerMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, colorPickerHandler, layerPickerShapes));
+
+		// assigns the shared_ptr to a multimap
+		auto layerPickerMap = multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, layerPickerMenu)
+		};
+
+		return layerPickerMap;
+
+
+		//int index = illustrator->GetNumberOfLayersInCanvas() - 1;
+		////int y = layerList->size();
+		//index = index * 200 + 50;
+		//int layerNumber = 0;
+		////inside for: assign where shapes will be drawn
+		//for (auto frame : illustrator->GetLayerList())
+		//{
+		//	gl::color(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0);
+		//	gl::drawSolidRect(Rectf(200, (index - 200), 600, index));
+
+		//	gl::color(0.75, 0.75, .75, 1.0);
+		//	gl::drawStrokedRect(Rectf(200, index - 200, 600, index), uiOutlineSize);
+		//	//gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
+		//	gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
+		//	//gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
+		//	gl::draw(illustrator->GetLayerTexture(index), Rectf(200, (index - 200), 600, index));
+		//	gl::color(0.0, 0.0, 0.0, 1.0);
+		//	gl::drawSolidRect(Rectf(200, index - 200, 250, index));
+		//	gl::color(0.75, 0.75, .75, 1.0);
+		//	gl::drawStrokedRect(Rectf(200, index - 200, 250, index), uiOutlineSize);
+		//	gl::color(1.0, 1.0, 1.0, 1.0);
+
+		//	//Draws indicator for alpha level
+		//	gl::color(0.0, 1.0f, 0.0, 1.0f);
+		//	gl::drawSolidCircle(vec2(225, (index - 200) + (*layerAlpha)[layerNumber] * (index - (index - 200))), 5.0f);
+
+		//	for (int x = 0; x < 8; x++)
+		//	{
+		//		gl::color(1.0, 1.0, 1.0, 1.0 - .125 * x);
+		//		gl::drawSolidRect(Rectf(200, (index - 200) + x * 25, 250, (index - 200) + (x + 1) * 25));
+		//	}
+		//	index = index - 200;
+		//	layerNumber++;
+		//	index--;
+		//}
+
 	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)
@@ -886,7 +989,7 @@ namespace touchpoints { namespace ui
 	bool UserInterface::inInteractiveUi(float x, float y, uint32_t id)
 	{
 		menuLayer.OnTouch(vec2(x, y));
-		return true;
+		return false;
 
 		//ONLY ON IF MULTITOUCH IS DISABLED!
 		if (deviceHandler->multiTouchStatus() == false)

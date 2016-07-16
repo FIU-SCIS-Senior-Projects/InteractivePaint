@@ -817,4 +817,9 @@ namespace touchpoints { namespace drawing
 			}
 		}
 	}
+
+	vector<shared_ptr<gl::Fbo>>Illustrator::GetLayerList()
+	{
+		return *mLayerList;
+	}
 }}

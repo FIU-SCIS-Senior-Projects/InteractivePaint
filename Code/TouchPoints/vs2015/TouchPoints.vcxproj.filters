@@ -135,6 +135,9 @@
     <ClCompile Include="..\src\BrushModeSelectorMenu.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\LayerVisualizationMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -234,6 +237,9 @@
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="..\src\BrushModeSelectorMenu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LayerVisualizationMenu.h">
       <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
