@@ -40,6 +40,9 @@
     <Filter Include="misc">
       <UniqueIdentifier>{b3e3fa83-5d3f-4752-8502-dae21de6b334}</UniqueIdentifier>
     </Filter>
+    <Filter Include="devices\kinect">
+      <UniqueIdentifier>{57e7e5e3-4ddf-454e-a0f4-993ff0e8fe49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Brush.cpp">
@@ -99,9 +102,6 @@
     <ClCompile Include="..\src\GuidHash.h">
       <Filter>misc</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\KinectHandler.cpp">
-      <Filter>devices</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\VerticalTriangle.cpp">
       <Filter>math\geometry</Filter>
     </ClCompile>
@@ -137,6 +137,15 @@
     </ClCompile>
     <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\KinectHandler.cpp">
+      <Filter>devices\kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\KinectAudioHandler.cpp">
+      <Filter>devices\kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\KinectAudioStream.cpp">
+      <Filter>devices\kinect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +209,6 @@
     <ClInclude Include="..\src\DrawEvent.h">
       <Filter>drawing\events</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\KinectHandler.h">
-      <Filter>devices</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\VerticalTriangle.h">
       <Filter>math\geometry</Filter>
     </ClInclude>
@@ -241,6 +247,15 @@
     </ClInclude>
     <ClInclude Include="..\src\ShapeModeSelectorMenu.h">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\KinectHandler.h">
+      <Filter>devices\kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\KinectAudioHandler.h">
+      <Filter>devices\kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\KinectAudioStream.h">
+      <Filter>devices\kinect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

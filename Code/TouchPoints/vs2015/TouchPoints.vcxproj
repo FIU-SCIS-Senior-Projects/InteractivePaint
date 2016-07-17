@@ -214,6 +214,8 @@
     <ClCompile Include="..\src\GuidHash.h" />
     <ClCompile Include="..\src\Illustrator.cpp" />
     <ClCompile Include="..\src\ImageHandler.cpp" />
+    <ClCompile Include="..\src\KinectAudioHandler.cpp" />
+    <ClCompile Include="..\src\KinectAudioStream.cpp" />
     <ClCompile Include="..\src\KinectHandler.cpp" />
     <ClCompile Include="..\src\Layer.cpp" />
     <ClCompile Include="..\src\LeapMotionHandler.cpp" />
@@ -248,6 +250,8 @@
     <ClInclude Include="..\src\IDrawable.h" />
     <ClInclude Include="..\src\Illustrator.h" />
     <ClInclude Include="..\src\ImageHandler.h" />
+    <ClInclude Include="..\src\KinectAudioHandler.h" />
+    <ClInclude Include="..\src\KinectAudioStream.h" />
     <ClInclude Include="..\src\KinectHandler.h" />
     <ClInclude Include="..\src\Layer.h" />
     <ClInclude Include="..\src\LeapMotionHandler.h" />

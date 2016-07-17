@@ -5,6 +5,9 @@ namespace touchpoints {namespace devices
 	KinectHandler::KinectHandler()
 	{
 		InitializeDefaultSensor();
+		audioHandler = KinectAudioHandler();
+		audioHandler.StartKinect();
+		audioHandler.InitializeSpeech();
 	}
 
 	/*
@@ -24,21 +27,6 @@ namespace touchpoints {namespace devices
 		return D2D1::Point2F(screenPointX, screenPointY);
 	}
 
-	/*
-	bool SetStatusMessage(_In_z_ WCHAR* szMessage, DWORD nShowTimeMsec, bool bForce)
-	{
-	INT64 now = GetTickCount64();
-
-	if (m_hWnd && (bForce || (m_nNextStatusTime <= now)))
-	{
-	//SetDlgItemText(m_hWnd, IDC_STATUS, szMessage);
-	m_nNextStatusTime = now + nShowTimeMsec;
-
-	return true;
-	}
-
-	return false;
-	}*/
 
 	/* Initializes the Kinect */
 	HRESULT KinectHandler::InitializeDefaultSensor()
@@ -246,8 +234,6 @@ namespace touchpoints {namespace devices
 			}
 		}
 
-		//hr = m_pRenderTarget->EndDraw();
-
 		// Device lost, need to recreate the render target
 		// We'll dispose it now and retry drawing
 		if (hr == D2DERR_RECREATE_TARGET)
@@ -275,29 +261,7 @@ namespace touchpoints {namespace devices
 				}
 			}
 		}
-
-		//		WCHAR szStatusMessage[64];
-		//StringCchPrintf(szStatusMessage, _countof(szStatusMessage), L" FPS = %0.2f    Time = %I64d", fps, (nTime - m_nStartTime));
-
-		//if (SetStatusMessage(szStatusMessage, 1000, false))
-		//{
-		//m_nLastCounter = qpcNow.QuadPart;
-		//m_nFramesSinceUpdate = 0;
-		//}
 	}
-
-	//}
-
-	Guid KinectHandler::getGuid()
-	{
-		return guidGenerator.newGuid();
-	}
-
-	/*
-
-	Another function
-
-	*/
 
 	void KinectHandler::Update(drawing::Illustrator& illustrator)
 	{
@@ -328,7 +292,11 @@ namespace touchpoints {namespace devices
 			if (SUCCEEDED(hr))
 			{
 				ProcessBody(nTime, BODY_COUNT, ppBodies, illustrator);
-				//ProcessColor(nTime, )
+			}
+
+			if (SUCCEEDED(hr))
+			{
+				audioHandler.ProcessSpeech();
 			}
 
 			for (int i = 0; i < _countof(ppBodies); ++i)
@@ -338,5 +306,10 @@ namespace touchpoints {namespace devices
 		}
 
 		SafeRelease(pBodyFrame);
+	}
+
+	Guid KinectHandler::getGuid()
+	{
+		return guidGenerator.newGuid();
 	}
 }}
