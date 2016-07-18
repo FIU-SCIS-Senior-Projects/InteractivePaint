@@ -185,40 +185,78 @@ namespace touchpoints { namespace ui
 	{
 		multimap<int, shared_ptr<drawing::TouchShape>> layerPickerShapes;
 
+		//Needs Fixing: layers are being drawn in reverse still. (from the bottom up)
+			// layers should be drawn top down
 		int index = illustrator->GetNumberOfLayersInCanvas() - 1;
+		int layerIndex = illustrator->GetNumberOfLayersInCanvas() - 1;
 		//int y = layerList->size();
-		index = index * 325 + 10;//* 200 + 50;
+		index = index * 325 + 10;
 		int layerNumber = 0;
 		auto x1 = 240;
 		auto y1 = index - 200;
 		auto x2 = 640;
 		auto y2 = index;
 
+		//How to get current backgoundColor to work?
+		ColorA layerBackgroundColor = ColorA(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.00f);
+		ColorA white = ColorA(1.00f, 1.00f, 1.00f, 1.00f);
+		ColorA green = ColorA(0.0, 1.00f, 0.0, 1.00f);
+		auto radius = 5.00f;//25 / 2;// (Menu::defaultWidth - 10) / 2;
+		auto center = vec2(265, 255);//5.0f;//math::FindMidPoint(startPoint, endPoint);
+
 		//inside for: assign where shapes will be drawn
 		for (auto frame : illustrator->GetLayerList())
 		{
-
+			ColorA alphaBarGreys;
 			// Draws a white background in the layer dropdown so the real drawings dont show
+			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, x2, y2, white, 0, true))));
+
 			// Draws outline grey square of layer box
 			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
 				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
-			// Draws the drawings in the current layer to the current layers menu
-			// Not sure but if removed causes shades of grey in alpha bar to disappear
-			// Draws gray bar to separate the layer alpha bar from the layer display
-			// Draws indicator for alpha level
 
-			/*layerPickerShapes.insert(make_pair(0, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, frame, 0, true))));*/
+			// Draws the drawings in the current layer to the current layers menu
+			//gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
+				//gl::color(1.0, 1.0, 1.0, *illustrator->GetAlpha(layerIndex)[layerNumber]);
+			//layerPickerShapes.insert(make_pair(2, illustrator->GetLayerTexture(index)));
+			//gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
+				//gl::draw(illustrator->GetLayerTexture(layerIndex), Rectf(200, (index - 200), 600, index));
+
+			// Not sure but if removed causes shades of grey in alpha bar to disappear
+
+			// Draws gray bar to separate the layer alpha bar from the layer display
+			layerPickerShapes.insert(make_pair(2, shared_ptr<drawing::TouchRectangle>
+				(new drawing::TouchRectangle(x1, y1, 290, y2, ModeSelectorMenu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
+
+			// Draws indicator for alpha level
+			radius = 5.00f;//25 / 2;// (Menu::defaultWidth - 10) / 2;
+			//center = vec2(265, y1 + (*layerAlpha)[layerNumber] * (index - y1));//vec2(265, index);
+			center = vec2(265, index);//vec2(265, 255 + 200);//5.0f;//math::FindMidPoint(startPoint, endPoint);
+			layerPickerShapes.insert(make_pair(2, shared_ptr<drawing::TouchCircle>
+				(new drawing::TouchCircle(center, radius, green, 0, true))));
+					//(vec2(225, y1 + (*layerAlpha)[layerNumber] * (index - y1)), 5.0f))));
+			//gl::color(0.0, 1.0f, 0.0, 1.0f);
+			//gl::drawSolidCircle(vec2(225, (y - 200) + (*layerAlpha)[layerNumber] * (y - (y - 200))), 5.0f);
+
+			// Draws the different shades of grey for the layers alpha bar
+			for (int x = 0; x < 8; x++)
+			{
+				alphaBarGreys = ColorA(0.75f, 0.75f, 0.75f, 0.75f + .035 *x);
+				layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
+					(new drawing::TouchRectangle(x1, (index - 195) + x * 24, 290, (index - 197) + (x + 1) * 25, alphaBarGreys, 0, true))));
+				/*gl::color(1.0, 1.0, 1.0, 1.0 - .125 * x);
+				gl::drawSolidRect(Rectf(200, (index - 200) + x * 25, 250, (index - 200) + (x + 1) * 25));*/
+			}
 			
 			index = index - 200;
 			y1 = index - 200;
 			y2 = index;
-			//y1 += 60;
-			//y2 += 60;
+			layerNumber++;
 		}
 
 		//handles which color is being touched and changes to that color
-		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> colorPickerHandler =
+		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> layerPickerHandler =
 			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
 		{
 			/*auto correctedY = point.y - 60;
@@ -228,7 +266,7 @@ namespace touchpoints { namespace ui
 
 		// passes these values to the brush handler which passes them to menu and assigns it as a shared_ptr
 		auto layerPickerMenu = shared_ptr<BrushModeSelectorMenu>
-			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, colorPickerHandler, layerPickerShapes));
+			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, layerPickerHandler, layerPickerShapes));
 
 		// assigns the shared_ptr to a multimap
 		auto layerPickerMap = multimap<int, shared_ptr<Menu>>
@@ -237,43 +275,6 @@ namespace touchpoints { namespace ui
 		};
 
 		return layerPickerMap;
-
-
-		//int index = illustrator->GetNumberOfLayersInCanvas() - 1;
-		////int y = layerList->size();
-		//index = index * 200 + 50;
-		//int layerNumber = 0;
-		////inside for: assign where shapes will be drawn
-		//for (auto frame : illustrator->GetLayerList())
-		//{
-		//	gl::color(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.0);
-		//	gl::drawSolidRect(Rectf(200, (index - 200), 600, index));
-
-		//	gl::color(0.75, 0.75, .75, 1.0);
-		//	gl::drawStrokedRect(Rectf(200, index - 200, 600, index), uiOutlineSize);
-		//	//gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
-		//	gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
-		//	//gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
-		//	gl::draw(illustrator->GetLayerTexture(index), Rectf(200, (index - 200), 600, index));
-		//	gl::color(0.0, 0.0, 0.0, 1.0);
-		//	gl::drawSolidRect(Rectf(200, index - 200, 250, index));
-		//	gl::color(0.75, 0.75, .75, 1.0);
-		//	gl::drawStrokedRect(Rectf(200, index - 200, 250, index), uiOutlineSize);
-		//	gl::color(1.0, 1.0, 1.0, 1.0);
-
-		//	//Draws indicator for alpha level
-		//	gl::color(0.0, 1.0f, 0.0, 1.0f);
-		//	gl::drawSolidCircle(vec2(225, (index - 200) + (*layerAlpha)[layerNumber] * (index - (index - 200))), 5.0f);
-
-		//	for (int x = 0; x < 8; x++)
-		//	{
-		//		gl::color(1.0, 1.0, 1.0, 1.0 - .125 * x);
-		//		gl::drawSolidRect(Rectf(200, (index - 200) + x * 25, 250, (index - 200) + (x + 1) * 25));
-		//	}
-		//	index = index - 200;
-		//	layerNumber++;
-		//	index--;
-		//}
 
 	}
 
