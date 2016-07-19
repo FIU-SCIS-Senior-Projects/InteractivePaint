@@ -234,6 +234,7 @@
     <ClCompile Include="..\src\TouchPoint.cpp" />
     <ClCompile Include="..\src\TouchPointsApp.cpp" />
     <ClCompile Include="..\src\TouchRectangle.cpp" />
+    <ClCompile Include="..\src\TouchTexture.cpp" />
     <ClCompile Include="..\src\TouchVerticalTriangle.cpp" />
     <ClCompile Include="..\src\UserInterface.cpp" />
     <ClCompile Include="..\src\VerticalTriangle.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="..\src\TouchPointsApp.h" />
     <ClInclude Include="..\src\TouchRectangle.h" />
     <ClInclude Include="..\src\TouchShape.h" />
+    <ClInclude Include="..\src\TouchTexture.h" />
     <ClInclude Include="..\src\TouchVerticalTriangle.h" />
     <ClInclude Include="..\src\VerticalTriangle.h" />
     <ClInclude Include="..\src\UserInterface.h" />
