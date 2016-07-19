@@ -190,12 +190,12 @@ namespace touchpoints { namespace ui
 		int index = illustrator->GetNumberOfLayersInCanvas() - 1;
 		int layerIndex = illustrator->GetNumberOfLayersInCanvas() - 1;
 		//int y = layerList->size();
-		index = index * 325 + 10;
+		index = index * 130;//index * 325 + 10;
 		int layerNumber = 0;
 		auto x1 = 240;
-		auto y1 = index - 200;
+		auto y1 = index;// +200;//index - 200;
 		auto x2 = 640;
-		auto y2 = index;
+		auto y2 = index - 200;
 
 		//How to get current backgoundColor to work?
 		ColorA layerBackgroundColor = ColorA(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.00f);
@@ -206,6 +206,7 @@ namespace touchpoints { namespace ui
 
 		//inside for: assign where shapes will be drawn
 		for (auto frame : illustrator->GetLayerList())
+		//for (int i = 0; i <= layerIndex; i--)
 		{
 			ColorA alphaBarGreys;
 			// Draws a white background in the layer dropdown so the real drawings dont show
@@ -216,12 +217,21 @@ namespace touchpoints { namespace ui
 			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
 				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
 
-			// Draws the drawings in the current layer to the current layers menu
+		// Draws the drawings in the current layer to the current layers menu
 			//gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
-				//gl::color(1.0, 1.0, 1.0, *illustrator->GetAlpha(layerIndex)[layerNumber]);
+			gl::color(1.0, 1.0, 1.0, illustrator->GetAlpha(layerIndex));//[layerNumber]);
 			//layerPickerShapes.insert(make_pair(2, illustrator->GetLayerTexture(index)));
 			//gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
-				//gl::draw(illustrator->GetLayerTexture(layerIndex), Rectf(200, (index - 200), 600, index));
+			gl::draw(illustrator->GetLayerTexture(layerIndex), Rectf(200, (index - 200), 600, index));
+
+			// + button to add more layers
+			if (layerIndex == 0)//(illustrator->GetLayerList().capacity() == 0)
+			{
+				auto imageStartPoint = vec2(x2 + Menu::defaultImageOffsetX - 58, y2 + Menu::defaultImageOffsetY + 143);//-57);
+				layerPickerShapes.insert(make_pair(2, shared_ptr<drawing::TouchImage>
+					(new drawing::TouchImage(imageStartPoint, Menu::defaultImageWidth,
+						Menu::defaultImageHeight, "smallPlus.png"))));
+			}
 
 			// Not sure but if removed causes shades of grey in alpha bar to disappear
 
@@ -233,8 +243,9 @@ namespace touchpoints { namespace ui
 			radius = 5.00f;//25 / 2;// (Menu::defaultWidth - 10) / 2;
 			//center = vec2(265, y1 + (*layerAlpha)[layerNumber] * (index - y1));//vec2(265, index);
 			center = vec2(265, index);//vec2(265, 255 + 200);//5.0f;//math::FindMidPoint(startPoint, endPoint);
-			layerPickerShapes.insert(make_pair(2, shared_ptr<drawing::TouchCircle>
+			layerPickerShapes.insert(make_pair(3, shared_ptr<drawing::TouchCircle>
 				(new drawing::TouchCircle(center, radius, green, 0, true))));
+
 					//(vec2(225, y1 + (*layerAlpha)[layerNumber] * (index - y1)), 5.0f))));
 			//gl::color(0.0, 1.0f, 0.0, 1.0f);
 			//gl::drawSolidCircle(vec2(225, (y - 200) + (*layerAlpha)[layerNumber] * (y - (y - 200))), 5.0f);
@@ -249,10 +260,14 @@ namespace touchpoints { namespace ui
 				gl::drawSolidRect(Rectf(200, (index - 200) + x * 25, 250, (index - 200) + (x + 1) * 25));*/
 			}
 			
-			index = index - 200;
+			/*index = index - 200;
 			y1 = index - 200;
-			y2 = index;
+			y2 = index;*/
+			index = index + 200;
+			y1 = index;// +200;
+			y2 = index-200;
 			layerNumber++;
+			layerIndex--;
 		}
 
 		//handles which color is being touched and changes to that color
