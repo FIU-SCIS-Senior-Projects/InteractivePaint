@@ -3,24 +3,41 @@
 
 namespace touchpoints { namespace ui
 {
-	LayerVisualization::LayerVisualization() { }
+	const int LayerVisualizationMenu::defaultWidth = 450;
+	const int LayerVisualizationMenu::defaultHeight = 200;
 
-	LayerVisualization::LayerVisualization(vec2 startPoint, int width, int height, bool visible,
-		drawing::Brush* brush, function<void(vec2 point, LayerVisualization* self, drawing::Brush* brush)> touchEventHandler)
-		: Menu(startPoint, width, height, visible, nullptr), brush(brush), touchEventHandler(touchEventHandler) { }
+	LayerVisualizationMenu::LayerVisualizationMenu() { }
 
-	LayerVisualization::LayerVisualization(vec2 startPoint, int width, int height, bool visible,
-		drawing::Brush* brush, function<void(vec2 point, LayerVisualization* self, drawing::Brush* brush)> touchEventHandler,
-		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes)
-		: Menu(startPoint, width, height, visible, composingShapes, nullptr), brush(brush),
-		touchEventHandler(touchEventHandler) { }
-
-	void LayerVisualization::OnTouch(vec2 point)
+	LayerVisualizationMenu::LayerVisualizationMenu(vec2 startPoint, bool visible, drawing::Illustrator* illustrator, 
+		function<void(vec2 point, LayerModeSelectorMenu* self, drawing::Illustrator* illustrator)> touchEventHandler)
+		: LayerModeSelectorMenu(startPoint, defaultWidth, defaultHeight, visible, illustrator, touchEventHandler)
 	{
+		setupShapes();
+		setupMenus();
+	}
+
+	void LayerVisualizationMenu::OnTouch(vec2 point)
+	{
+		//make sure that the x menu is the first to respond to the event
+		//we might need to have the on touch return a boolean depending on whether 
+		//it responded to the touch event or not
+		//that way we can terminate the on touch for the whole menu if the x is touched
+
 		if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
 		{
-			touchEventHandler(point, this, brush);
+			touchEventHandler(point, this, illustrator);
 		}
 	}
 
+	void LayerVisualizationMenu::setupShapes()
+	{
+		//grey rectangle around(?)
+	}
+
+	void LayerVisualizationMenu::setupMenus()
+	{
+		//contains x menu
+		//createAlphaMenu
+		//contains layerTexture menu
+	}
 } }

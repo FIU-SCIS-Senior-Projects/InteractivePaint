@@ -6,3 +6,4 @@
 #include "TouchVerticalTriangle.h"
 #include "TouchEraserPoints.h"
 #include "TouchImage.h"
+#include "TouchTexture.h"

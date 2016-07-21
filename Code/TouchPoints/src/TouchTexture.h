@@ -11,6 +11,8 @@ namespace touchpoints { namespace drawing
 		TouchTexture();
 		TouchTexture(vec2 startPoint, int width, int height, gl::TextureRef texture, float alpha);
 		void Draw() override;
+		inline void SetTexture(gl::TextureRef value) { texture = value; }
+		inline void SetAlpha(float value) { alpha.SetValue(value); }
 	private:
 		vec2 startPoint;
 		int width;
