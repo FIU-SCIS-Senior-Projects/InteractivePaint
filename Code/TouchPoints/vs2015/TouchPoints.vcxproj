@@ -204,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Alpha.cpp" />
+    <ClCompile Include="..\src\AlphaChangerMenu.cpp" />
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\Brush.cpp" />
     <ClCompile Include="..\src\BrushModeSelectorMenu.cpp" />
@@ -218,6 +219,8 @@
     <ClCompile Include="..\src\KinectAudioStream.cpp" />
     <ClCompile Include="..\src\KinectHandler.cpp" />
     <ClCompile Include="..\src\Layer.cpp" />
+    <ClCompile Include="..\src\LayerModeSelectorMenu.cpp" />
+    <ClCompile Include="..\src\LayerTextureMenu.cpp" />
     <ClCompile Include="..\src\LayerVisualizationMenu.cpp" />
     <ClCompile Include="..\src\LeapMotionHandler.cpp" />
     <ClCompile Include="..\src\Menu.cpp" />
@@ -225,6 +228,7 @@
     <ClCompile Include="..\src\ModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\RealSenseHandler.cpp" />
     <ClCompile Include="..\src\Rect.cpp" />
+    <ClCompile Include="..\src\RemoveLayerMenu.cpp" />
     <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\SymmetryLine.cpp" />
     <ClCompile Include="..\src\TouchCircle.cpp" />
@@ -242,6 +246,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\AllShapes.h" />
     <ClInclude Include="..\src\Alpha.h" />
+    <ClInclude Include="..\src\AlphaChangerMenu.h" />
     <ClInclude Include="..\src\Brush.h" />
     <ClInclude Include="..\src\BrushModeSelectorMenu.h" />
     <ClInclude Include="..\src\Canvas.h" />
@@ -256,6 +261,8 @@
     <ClInclude Include="..\src\KinectAudioStream.h" />
     <ClInclude Include="..\src\KinectHandler.h" />
     <ClInclude Include="..\src\Layer.h" />
+    <ClInclude Include="..\src\LayerModeSelectorMenu.h" />
+    <ClInclude Include="..\src\LayerTextureMenu.h" />
     <ClInclude Include="..\src\LayerVisualizationMenu.h" />
     <ClInclude Include="..\src\LeapMotionHandler.h" />
     <ClInclude Include="..\src\Line.h" />
@@ -264,6 +271,7 @@
     <ClInclude Include="..\src\ModeSelectorMenu.h" />
     <ClInclude Include="..\src\RealSenseHandler.h" />
     <ClInclude Include="..\src\Rect.h" />
+    <ClInclude Include="..\src\RemoveLayerMenu.h" />
     <ClInclude Include="..\src\ShapeModeSelectorMenu.h" />
     <ClInclude Include="..\src\SymmetryLine.h" />
     <ClInclude Include="..\src\TouchCircle.h" />

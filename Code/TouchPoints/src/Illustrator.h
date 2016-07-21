@@ -48,6 +48,8 @@ namespace touchpoints { namespace drawing
 		void Update();
 		void AddMenu(shared_ptr<ui::Menu> menu);
 		void Undo();
+		inline void DeleteLayer(int index) { canvas.DeleteLayer(index); };
+		inline void AddLayer() { canvas.AddLayer(); };
 		vector<shared_ptr<gl::Fbo>>GetLayerList(); //Returns layerslist 
 		inline int GetNumberOfLayersInCanvas() const { return canvas.GetNumberOfLayers(); }
 		inline void MakeLayerActive(int index) { canvas.MakeLayerActive(index); }

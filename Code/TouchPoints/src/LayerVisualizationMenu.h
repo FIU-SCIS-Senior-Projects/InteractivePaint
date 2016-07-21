@@ -1,27 +1,20 @@
 #pragma once
-#include "Menu.h"
-#include "Brush.h"
-#include "BrushModeSelectorMenu.h"
+#include "LayerModeSelectorMenu.h"
+#include "Illustrator.h"
 
 namespace touchpoints { namespace ui
 {
-	class LayerVisualization : public Menu
+	class LayerVisualizationMenu : public LayerModeSelectorMenu
 	{
 	public:
-		LayerVisualization();
-		LayerVisualization(vec2 startPoint, int width, int height, bool visible, drawing::Brush* brush,
-			function<void(vec2 point, LayerVisualization* self, drawing::Brush* brush)> touchEventHandler);
-		LayerVisualization(vec2 startPoint, int width, int height, bool visible, drawing::Brush* brush,
-			function<void(vec2 point, LayerVisualization* self, drawing::Brush* brush)> touchEventHandler,
-			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes);
-		//LayerVisualization(vec2 startPoint, bool visible, drawing::Brush * brush, Shape::Shape shape);
-		/*LayerVisualization(vec2 startPoint, bool visible, drawing::Brush * brush, Shape::Shape shape);
-		void Draw();
+		LayerVisualizationMenu();
+		LayerVisualizationMenu(vec2 startPoint, bool visible, drawing::Illustrator* illustrator,
+			function<void(vec2 point, LayerModeSelectorMenu* self, drawing::Illustrator* illustrator)> touchEventHandler);
 		void OnTouch(vec2 point) override;
-		void setupShapes(Shape::Shape shape);*/
+		static const int defaultWidth;
+		static const int defaultHeight;
 	private:
-		drawing::Brush* brush;
-		//Shape::Shape shape;
-		function<void(vec2 point, LayerVisualization* self, drawing::Brush* brush)> touchEventHandler;
+		void setupShapes();
+		void setupMenus();
 	};
 } }

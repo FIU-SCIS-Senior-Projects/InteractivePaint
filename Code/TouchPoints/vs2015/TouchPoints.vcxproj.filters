@@ -153,6 +153,18 @@
     <ClCompile Include="..\src\TouchTexture.cpp">
       <Filter>drawing\shapes</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\LayerModeSelectorMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RemoveLayerMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LayerTextureMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AlphaChangerMenu.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -268,6 +280,18 @@
     </ClInclude>
     <ClInclude Include="..\src\TouchTexture.h">
       <Filter>drawing\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LayerModeSelectorMenu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RemoveLayerMenu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LayerTextureMenu.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AlphaChangerMenu.h">
+      <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
