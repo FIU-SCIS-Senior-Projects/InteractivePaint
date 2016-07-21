@@ -3,6 +3,7 @@
 #include "ModeSelectorMenu.h"
 #include "BrushModeSelectorMenu.h"
 #include "ShapeModeSelectorMenu.h"
+#include "LayerTextureMenu.h"
 
 using namespace cinder::app;
 
@@ -185,15 +186,12 @@ namespace touchpoints { namespace ui
 	{
 		multimap<int, shared_ptr<drawing::TouchShape>> layerPickerShapes;
 
-		//Needs Fixing: layers are being drawn in reverse still. (from the bottom up)
-			// layers should be drawn top down
 		int index = illustrator->GetNumberOfLayersInCanvas() - 1;
 		int layerIndex = illustrator->GetNumberOfLayersInCanvas() - 1;
-		//int y = layerList->size();
-		index = index * 130;//index * 325 + 10;
+		index = index * 130;
 		int layerNumber = 0;
 		auto x1 = 240;
-		auto y1 = index;// +200;//index - 200;
+		auto y1 = index;
 		auto x2 = 640;
 		auto y2 = index - 200;
 
@@ -201,70 +199,61 @@ namespace touchpoints { namespace ui
 		ColorA layerBackgroundColor = ColorA(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.00f);
 		ColorA white = ColorA(1.00f, 1.00f, 1.00f, 1.00f);
 		ColorA green = ColorA(0.0, 1.00f, 0.0, 1.00f);
-		auto radius = 5.00f;//25 / 2;// (Menu::defaultWidth - 10) / 2;
-		auto center = vec2(265, 255);//5.0f;//math::FindMidPoint(startPoint, endPoint);
+		auto radius = 5.00f;
+		auto center = vec2(265, 255);
+
+		shared_ptr<LayerTextureMenu> layerTexture;
 
 		//inside for: assign where shapes will be drawn
 		for (auto frame : illustrator->GetLayerList())
-		//for (int i = 0; i <= layerIndex; i--)
 		{
 			ColorA alphaBarGreys;
 			// Draws a white background in the layer dropdown so the real drawings dont show
-			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, white, 0, true))));
+			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, white, 0, true)));
 
 			// Draws outline grey square of layer box
-			layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, x2, y2, ModeSelectorMenu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
+			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, ModeSelectorMenu::grey, 
+				ModeSelectorMenu::defaultBorderThickness, false)));
 
-		// Draws the drawings in the current layer to the current layers menu
-			//gl::color(1.0, 1.0, 1.0, (*layerAlpha)[layerNumber]);
-			gl::color(1.0, 1.0, 1.0, illustrator->GetAlpha(layerIndex));//[layerNumber]);
-			//layerPickerShapes.insert(make_pair(2, illustrator->GetLayerTexture(index)));
-			//gl::draw(frame->getColorTexture(), Rectf(200, (y - 200), 600, y));
-			gl::draw(illustrator->GetLayerTexture(layerIndex), Rectf(200, (index - 200), 600, index));
+			// Draws the drawings in the current layer to the current layers menu
+			layerTexture = shared_ptr<LayerTextureMenu>
+				(new LayerTextureMenu(vec2(x2, y2), false, layerIndex, illustrator));
+			//LayerTextureMenu::LayerTextureMenu(vec2 startPoint, bool visible, int index, drawing::Illustrator* illustrator)
+
+			// x button to remove a layer
+			auto closeImageStartPoint = vec2(x2 + Menu::defaultImageOffsetX - 56, y2 + Menu::defaultImageOffsetY - 3);
+			layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchImage>(closeImageStartPoint, Menu::defaultImageWidth,
+				Menu::defaultImageHeight, "close.png")));
 
 			// + button to add more layers
-			if (layerIndex == 0)//(illustrator->GetLayerList().capacity() == 0)
+			if (layerIndex == 0)
 			{
-				auto imageStartPoint = vec2(x2 + Menu::defaultImageOffsetX - 58, y2 + Menu::defaultImageOffsetY + 143);//-57);
-				layerPickerShapes.insert(make_pair(2, shared_ptr<drawing::TouchImage>
-					(new drawing::TouchImage(imageStartPoint, Menu::defaultImageWidth,
-						Menu::defaultImageHeight, "smallPlus.png"))));
+				auto imageStartPoint = vec2(x2 + Menu::defaultImageOffsetX - 58, y2 + Menu::defaultImageOffsetY + 143);
+				layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchImage>(imageStartPoint, Menu::defaultImageWidth,
+				                                                                            Menu::defaultImageHeight, "smallPlus.png")));
 			}
 
 			// Not sure but if removed causes shades of grey in alpha bar to disappear
 
 			// Draws gray bar to separate the layer alpha bar from the layer display
-			layerPickerShapes.insert(make_pair(2, shared_ptr<drawing::TouchRectangle>
-				(new drawing::TouchRectangle(x1, y1, 290, y2, ModeSelectorMenu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
+			layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchRectangle>(x1, y1, 290, y2, ModeSelectorMenu::grey, 
+				ModeSelectorMenu::defaultBorderThickness, false)));
 
 			// Draws indicator for alpha level
-			radius = 5.00f;//25 / 2;// (Menu::defaultWidth - 10) / 2;
-			//center = vec2(265, y1 + (*layerAlpha)[layerNumber] * (index - y1));//vec2(265, index);
-			center = vec2(265, index);//vec2(265, 255 + 200);//5.0f;//math::FindMidPoint(startPoint, endPoint);
-			layerPickerShapes.insert(make_pair(3, shared_ptr<drawing::TouchCircle>
-				(new drawing::TouchCircle(center, radius, green, 0, true))));
-
-					//(vec2(225, y1 + (*layerAlpha)[layerNumber] * (index - y1)), 5.0f))));
-			//gl::color(0.0, 1.0f, 0.0, 1.0f);
-			//gl::drawSolidCircle(vec2(225, (y - 200) + (*layerAlpha)[layerNumber] * (y - (y - 200))), 5.0f);
+			radius = 5.00f;
+			center = vec2(265, index);
+			layerPickerShapes.insert(make_pair(3, std::make_shared<drawing::TouchCircle>(center, radius, green, 0, true)));
 
 			// Draws the different shades of grey for the layers alpha bar
 			for (int x = 0; x < 8; x++)
 			{
 				alphaBarGreys = ColorA(0.75f, 0.75f, 0.75f, 0.75f + .035 *x);
-				layerPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
-					(new drawing::TouchRectangle(x1, (index - 195) + x * 24, 290, (index - 197) + (x + 1) * 25, alphaBarGreys, 0, true))));
-				/*gl::color(1.0, 1.0, 1.0, 1.0 - .125 * x);
-				gl::drawSolidRect(Rectf(200, (index - 200) + x * 25, 250, (index - 200) + (x + 1) * 25));*/
+				layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, index - 195 + x * 24, 290, index - 197 + (x + 1) * 25, 
+					alphaBarGreys, 0, true)));
 			}
-			
-			/*index = index - 200;
-			y1 = index - 200;
-			y2 = index;*/
+
 			index = index + 200;
-			y1 = index;// +200;
+			y1 = index;
 			y2 = index-200;
 			layerNumber++;
 			layerIndex--;
@@ -280,13 +269,13 @@ namespace touchpoints { namespace ui
 		};
 
 		// passes these values to the brush handler which passes them to menu and assigns it as a shared_ptr
-		auto layerPickerMenu = shared_ptr<BrushModeSelectorMenu>
-			(new BrushModeSelectorMenu(vec2(0, 60), 60, 480, false, mBrush, layerPickerHandler, layerPickerShapes));
+		auto layerPickerMenu = std::make_shared<BrushModeSelectorMenu>(vec2(0, 60), 60, 480, false, mBrush, layerPickerHandler, layerPickerShapes);
 
 		// assigns the shared_ptr to a multimap
 		auto layerPickerMap = multimap<int, shared_ptr<Menu>>
 		{
-			make_pair(0, layerPickerMenu)
+			make_pair(0, layerPickerMenu),
+			make_pair(0, layerTexture)
 		};
 
 		return layerPickerMap;
