@@ -501,8 +501,11 @@ namespace touchpoints { namespace devices
 
 	Mode::DefaultModes DeviceHandler::set_ML_Mode()
 	{
-		leapDrawEnabled = false;
-		leapGestureEnabled = true;
+		//inverted default leap setting temporarily
+		leapDrawEnabled = true;
+		leapGestureEnabled = false;
+		/*leapDrawEnabled = false;
+		leapGestureEnabled = true;*/
 		return Mode::DefaultModes::ML;
 	}
 

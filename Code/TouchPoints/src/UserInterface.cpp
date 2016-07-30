@@ -4,6 +4,7 @@
 #include "BrushModeSelectorMenu.h"
 #include "ShapeModeSelectorMenu.h"
 #include "LayerTextureMenu.h"
+#include "LayerVisualizationMenu.h"
 
 using namespace cinder::app;
 
@@ -184,101 +185,42 @@ namespace touchpoints { namespace ui
 
 	multimap<int, shared_ptr<Menu>> UserInterface::createLayerVisualizationMenu() const
 	{
-		multimap<int, shared_ptr<drawing::TouchShape>> layerPickerShapes;
-
 		int index = illustrator->GetNumberOfLayersInCanvas() - 1;
 		int layerIndex = illustrator->GetNumberOfLayersInCanvas() - 1;
 		index = index * 130;
 		int layerNumber = 0;
-		auto x1 = 240;
+		auto x1 = 290;//240;
 		auto y1 = index;
 		auto x2 = 640;
 		auto y2 = index - 200;
+		multimap<int, shared_ptr<Menu>> layerPickerMenus;
 
-		//How to get current backgoundColor to work?
-		ColorA layerBackgroundColor = ColorA(backgroundColor.r, backgroundColor.g, backgroundColor.b, 1.00f);
-		ColorA white = ColorA(1.00f, 1.00f, 1.00f, 1.00f);
-		ColorA green = ColorA(0.0, 1.00f, 0.0, 1.00f);
-		auto radius = 5.00f;
-		auto center = vec2(265, 255);
-
-		shared_ptr<LayerTextureMenu> layerTexture;
-
-		//inside for: assign where shapes will be drawn
 		for (auto frame : illustrator->GetLayerList())
 		{
-			ColorA alphaBarGreys;
-			// Draws a white background in the layer dropdown so the real drawings dont show
-			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, white, 0, true)));
-
-			// Draws outline grey square of layer box
-			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, ModeSelectorMenu::grey, 
-				ModeSelectorMenu::defaultBorderThickness, false)));
-
-			// Draws the drawings in the current layer to the current layers menu
-			layerTexture = shared_ptr<LayerTextureMenu>
-				(new LayerTextureMenu(vec2(x2, y2), false, layerIndex, illustrator));
-			//LayerTextureMenu::LayerTextureMenu(vec2 startPoint, bool visible, int index, drawing::Illustrator* illustrator)
-
-			// x button to remove a layer
-			auto closeImageStartPoint = vec2(x2 + Menu::defaultImageOffsetX - 56, y2 + Menu::defaultImageOffsetY - 3);
-			layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchImage>(closeImageStartPoint, Menu::defaultImageWidth,
-				Menu::defaultImageHeight, "close.png")));
-
-			// + button to add more layers
-			if (layerIndex == 0)
+			if(layerNumber == 3)
 			{
-				auto imageStartPoint = vec2(x2 + Menu::defaultImageOffsetX - 58, y2 + Menu::defaultImageOffsetY + 143);
-				layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchImage>(imageStartPoint, Menu::defaultImageWidth,
-				                                                                            Menu::defaultImageHeight, "smallPlus.png")));
+				index = 260;
+				x1 = 640;
+				y1 = 260;
+				x2 = 1040;
+				y2 = 60;
 			}
+			
+			auto layerDropdown = std::make_shared<LayerVisualizationMenu>(vec2(x1, y1), x2, y2, layerNumber, false, illustrator, nullptr);
+			layerPickerMenus.insert(make_pair(0, layerDropdown));
 
-			// Not sure but if removed causes shades of grey in alpha bar to disappear
-
-			// Draws gray bar to separate the layer alpha bar from the layer display
-			layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchRectangle>(x1, y1, 290, y2, ModeSelectorMenu::grey, 
-				ModeSelectorMenu::defaultBorderThickness, false)));
-
-			// Draws indicator for alpha level
-			radius = 5.00f;
-			center = vec2(265, index);
-			layerPickerShapes.insert(make_pair(3, std::make_shared<drawing::TouchCircle>(center, radius, green, 0, true)));
-
-			// Draws the different shades of grey for the layers alpha bar
-			for (int x = 0; x < 8; x++)
-			{
-				alphaBarGreys = ColorA(0.75f, 0.75f, 0.75f, 0.75f + .035 *x);
-				layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, index - 195 + x * 24, 290, index - 197 + (x + 1) * 25, 
-					alphaBarGreys, 0, true)));
-			}
+			auto layerTexture = std::make_shared<LayerTextureMenu>(vec2(x1, y1-200), false, layerNumber, illustrator);
+			layerPickerMenus.insert(make_pair(1, layerTexture));
 
 			index = index + 200;
 			y1 = index;
-			y2 = index-200;
+			y2 = index - 200;
+
 			layerNumber++;
 			layerIndex--;
 		}
 
-		//handles which color is being touched and changes to that color
-		function<void(vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)> layerPickerHandler =
-			[](vec2 point, BrushModeSelectorMenu *self, drawing::Brush* brush)
-		{
-			/*auto correctedY = point.y - 60;
-			int index = static_cast<int>(correctedY / 60);
-			brush->changeColor(index);*/
-		};
-
-		// passes these values to the brush handler which passes them to menu and assigns it as a shared_ptr
-		auto layerPickerMenu = std::make_shared<BrushModeSelectorMenu>(vec2(0, 60), 60, 480, false, mBrush, layerPickerHandler, layerPickerShapes);
-
-		// assigns the shared_ptr to a multimap
-		auto layerPickerMap = multimap<int, shared_ptr<Menu>>
-		{
-			make_pair(0, layerPickerMenu),
-			make_pair(0, layerTexture)
-		};
-
-		return layerPickerMap;
+		return layerPickerMenus;
 
 	}
 

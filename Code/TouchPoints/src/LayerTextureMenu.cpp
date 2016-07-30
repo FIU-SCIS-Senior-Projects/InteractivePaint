@@ -3,7 +3,7 @@
 
 namespace touchpoints { namespace ui
 {
-	const int LayerTextureMenu::defaultWidth = 400;
+	const int LayerTextureMenu::defaultWidth = 400;//345; // 400;
 
 	LayerTextureMenu::LayerTextureMenu() {}
 
@@ -26,7 +26,28 @@ namespace touchpoints { namespace ui
 
 	void LayerTextureMenu::OnTouch(vec2 point)
 	{
-		illustrator->MakeLayerActive(index);
+		// switches the Active Layer Texture based on which layer was touched
+		//if(point.x >= 192 && point.x <= 637)
+		if (visible && boundingRect.Contains(point))
+		{
+			illustrator->MakeLayerActive(index);
+		}
+		/*if (point.x >= 290 && point.x <= 637)
+		{
+			if(point.y >=64 && point.y <= 258)
+			{
+				illustrator->MakeLayerActive(0);
+			}
+			else if(point.y >= 264 && point.y <= 458)
+			{
+				illustrator->MakeLayerActive(1);
+			}
+			else if (point.y >= 464 && point.y <= 658)
+			{
+				illustrator->MakeLayerActive(2);
+			}
+		}*/
+		//illustrator->MakeLayerActive(index);
 	}
 
 	void LayerTextureMenu::setupShapes()

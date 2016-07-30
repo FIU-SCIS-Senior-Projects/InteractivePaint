@@ -46,8 +46,9 @@ namespace touchpoints { namespace ui
 		float getLayerAlpha(int layerNumber);
 		void incrementBackground();
 		void endButtonPress(cinder::app::TouchEvent::Touch touch);
-	private:
 		void initializeMenuLayer();
+	private:
+		//void initializeMenuLayer();
 		multimap<int, shared_ptr<Menu>> createColorPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createShapePickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createLayerVisualizationMenu() const;
@@ -55,6 +56,8 @@ namespace touchpoints { namespace ui
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;
 		TouchKeyboard keyboard;
+
+		//Rectf boundingRect;
 
 		//Frame Buffers for the UI. Mostly Fbo's that held button Draw calls.
 		std::shared_ptr<gl::Fbo> uiFbo;

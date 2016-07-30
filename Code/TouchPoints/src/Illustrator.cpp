@@ -184,6 +184,7 @@ namespace touchpoints { namespace drawing
 	{
 		/*Should go here*/
 		saveCurrentFbo();
+		
 
 		switch (mBrush->getShape())
 			{
