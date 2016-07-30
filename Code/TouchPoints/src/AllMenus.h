@@ -1,0 +1,11 @@
+#pragma once
+#include "AlphaChangerMenu.h"
+#include "BrushModeSelectorMenu.h"
+#include "LabelMenu.h"
+#include "LayerModeSelectorMenu.h"
+#include "LayerTextureMenu.h"
+#include "LayerVisualizationMenu.h"
+#include "Menu.h"
+#include "RemoveLayerMenu.h"
+#include "ShapeModeSelectorMenu.h"
+#include "SwitchMenu.h"

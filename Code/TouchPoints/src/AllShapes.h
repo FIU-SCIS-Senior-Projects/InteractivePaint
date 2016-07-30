@@ -7,3 +7,4 @@
 #include "TouchEraserPoints.h"
 #include "TouchImage.h"
 #include "TouchTexture.h"
+#include "TouchTextLayout.h"

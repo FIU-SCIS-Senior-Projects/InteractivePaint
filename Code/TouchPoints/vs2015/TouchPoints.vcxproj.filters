@@ -43,6 +43,9 @@
     <Filter Include="devices\kinect">
       <UniqueIdentifier>{57e7e5e3-4ddf-454e-a0f4-993ff0e8fe49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui\menus">
+      <UniqueIdentifier>{3e47dbe4-db91-4a94-b7ac-4a351e9a0732}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Brush.cpp">
@@ -117,9 +120,6 @@
     <ClCompile Include="..\src\Canvas.cpp">
       <Filter>drawing</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Menu.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Alpha.cpp">
       <Filter>drawing</Filter>
     </ClCompile>
@@ -128,18 +128,6 @@
     </ClCompile>
     <ClCompile Include="..\src\TouchImage.cpp">
       <Filter>drawing\shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ModeSelectorMenu.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\BrushModeSelectorMenu.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\LayerVisualizationMenu.cpp">
-      <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="..\src\KinectHandler.cpp">
       <Filter>devices\kinect</Filter>
@@ -153,17 +141,38 @@
     <ClCompile Include="..\src\TouchTexture.cpp">
       <Filter>drawing\shapes</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\LayerModeSelectorMenu.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\RemoveLayerMenu.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\LayerTextureMenu.cpp">
-      <Filter>ui</Filter>
+    <ClCompile Include="..\src\TouchTextLayout.cpp">
+      <Filter>drawing\shapes</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AlphaChangerMenu.cpp">
-      <Filter>ui</Filter>
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\BrushModeSelectorMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LabelMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LayerModeSelectorMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LayerTextureMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LayerVisualizationMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Menu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RemoveLayerMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SwitchMenu.cpp">
+      <Filter>ui\menus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,9 +251,6 @@
     <ClInclude Include="..\src\Canvas.h">
       <Filter>drawing</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Menu.h">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\IDrawable.h">
       <Filter>drawing</Filter>
     </ClInclude>
@@ -256,18 +262,6 @@
     </ClInclude>
     <ClInclude Include="..\src\TouchImage.h">
       <Filter>drawing\shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ModeSelectorMenu.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\BrushModeSelectorMenu.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ShapeModeSelectorMenu.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\LayerVisualizationMenu.h">
-      <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="..\src\KinectHandler.h">
       <Filter>devices\kinect</Filter>
@@ -281,17 +275,41 @@
     <ClInclude Include="..\src\TouchTexture.h">
       <Filter>drawing\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\LayerModeSelectorMenu.h">
-      <Filter>ui</Filter>
+    <ClInclude Include="..\src\TouchTextLayout.h">
+      <Filter>drawing\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\RemoveLayerMenu.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\LayerTextureMenu.h">
-      <Filter>ui</Filter>
+    <ClInclude Include="..\src\AllMenus.h">
+      <Filter>ui\menus</Filter>
     </ClInclude>
     <ClInclude Include="..\src\AlphaChangerMenu.h">
-      <Filter>ui</Filter>
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\BrushModeSelectorMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LabelMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LayerModeSelectorMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LayerTextureMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LayerVisualizationMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Menu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RemoveLayerMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ShapeModeSelectorMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\SwitchMenu.h">
+      <Filter>ui\menus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

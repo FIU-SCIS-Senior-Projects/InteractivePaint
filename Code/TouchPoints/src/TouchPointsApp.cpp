@@ -28,12 +28,6 @@ namespace touchpoints { namespace app
 		CI_LOG_I("MT: " << System::hasMultiTouch() << " Max points: " << System::getMaxMultiTouchPoints());
 		glEnable(GL_LINE_SMOOTH);
 		
-		//myResize(windowWidth, windowHeight);
-
-		//resize();
-
-		//		Sets window size and initializes framebuffers (layers).
-//		setWindowSize(windowWidth, windowHeight);
 		gl::Fbo::Format format;
 		firstFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		secondFbo = gl::Fbo::create(windowWidth, windowHeight, format);
@@ -95,7 +89,6 @@ namespace touchpoints { namespace app
 		TX_CONNECTIONSTATE eyeXConnectedState = deviceHandler.GetEyeXConnected() ? TX_CONNECTIONSTATE_CONNECTED : TX_CONNECTIONSTATE_DISCONNECTED;
 		eyeXHandler = devices::EyeXHandler(0.0f, 0.0f, eyeXConnectedState);
 		eyeXHandler.InitEyeX();
-
 	}
 
 	void TouchPointsApp::drawRadial()
