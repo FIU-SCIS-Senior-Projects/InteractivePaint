@@ -14,7 +14,6 @@ namespace touchpoints { namespace drawing
 		ColorA getColor();
 		int getLineSize();
 		inline Shape::Shape getShape() const { return mShape; }
-		bool getFilledShapes();
 		SymmetryLine* getSymmetry();
 		bool getRandColor();
 		bool IsEraserActive() const;
@@ -25,7 +24,9 @@ namespace touchpoints { namespace drawing
 		void increaseLineSize();
 		void decreaseLineSize();
 		void changeShape(Shape::Shape shape);
-		void changeFilledShapes(bool filledShapes);
+		inline bool getFilledShapes() const { return mFilledShapes; }
+		inline void changeFilledShapes(bool filledShapes) { mFilledShapes = filledShapes; }
+		inline void toggleFilledShapes() { mFilledShapes = !mFilledShapes; }
 		void incrementShape();
 		void changeRandColor(bool randColor);
 		void changeAlphaColor(float alphaColor);

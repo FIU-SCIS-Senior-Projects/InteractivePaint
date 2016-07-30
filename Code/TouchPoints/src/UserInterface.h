@@ -48,8 +48,10 @@ namespace touchpoints { namespace ui
 		void endButtonPress(cinder::app::TouchEvent::Touch touch);
 	private:
 		void initializeMenuLayer();
+		void initializeTopLeftMenu();
 		multimap<int, shared_ptr<Menu>> createColorPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createShapePickerMenu() const;
+		multimap<int, shared_ptr<Menu>> createBrushPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createLayerVisualizationMenu() const;
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;

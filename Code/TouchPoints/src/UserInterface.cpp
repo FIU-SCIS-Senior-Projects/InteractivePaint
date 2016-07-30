@@ -1,9 +1,6 @@
 #include "UserInterface.h"
 #include <cinder/Rand.h>
-#include "ModeSelectorMenu.h"
-#include "BrushModeSelectorMenu.h"
-#include "ShapeModeSelectorMenu.h"
-#include "LayerTextureMenu.h"
+#include "AllMenus.h"
 
 using namespace cinder::app;
 
@@ -84,33 +81,49 @@ namespace touchpoints { namespace ui
 
 	void UserInterface::initializeMenuLayer()
 	{
+		menuLayer = MenuLayer(windowWidth, windowHeight);
+		initializeTopLeftMenu();
+		menuLayer.AddMenu(topLeftMenu);
+	}
+
+	void UserInterface::initializeTopLeftMenu()
+	{
 		auto colorPickerMenu = createColorPickerMenu();
 		auto shapePickerMenu = createShapePickerMenu();
+		auto brushPickerMenu = createBrushPickerMenu();
 		auto layerVisualizationMenu = createLayerVisualizationMenu();
 
-		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(0, 0), "Colors.png", true, colorPickerMenu, Menu::defaultDropdownCallback))),
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(60, 0), "Shapes.png", true, shapePickerMenu, Menu::defaultDropdownCallback))),
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(120, 0), "Brush.png", true, Menu::defaultDropdownCallback))),
-			make_pair(0,
-				shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(180, 0), "", true,
-					multimap<int, shared_ptr<drawing::TouchShape>>
-					{
-						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
-						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
-						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
-						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
-						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), Menu::grey, ModeSelectorMenu::defaultBorderThickness))),
-						make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), Menu::grey, ModeSelectorMenu::defaultBorderThickness)))
-					},
-					nullptr))),
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(240, 0), "Layers.png", true, layerVisualizationMenu, Menu::defaultDropdownCallback))),
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(300, 0), "Letter.png", true, nullptr))),
-			make_pair(0, shared_ptr<ModeSelectorMenu>(new ModeSelectorMenu(vec2(360, 0), "Undo.png", true, nullptr)))
-		}, nullptr));
+		auto colorPickerDropdown = shared_ptr<Menu>(new Menu(vec2(0, 0), true, Menu::purple, "Colors.png",
+			colorPickerMenu, Menu::defaultDropdownCallback));
+		auto shapePickerDropdown = shared_ptr<Menu>(new Menu(vec2(60, 0), true, Menu::purple, "Shapes.png",
+			shapePickerMenu, Menu::defaultDropdownCallback));
+		auto brushPickerDropdown = shared_ptr<Menu>(new Menu(vec2(120, 0), true, Menu::purple, "Brush.png",
+			brushPickerMenu, Menu::recursiveDropdownCallback));
+		auto symmetryLineButton = shared_ptr<Menu>(new Menu(vec2(180, 0), true, Menu::purple, "",
+			multimap<int, shared_ptr<drawing::TouchShape>>
+			{
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), Menu::grey, Menu::defaultBorderThickness))),
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), Menu::grey, Menu::defaultBorderThickness))),
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), Menu::grey, Menu::defaultBorderThickness))),
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), Menu::grey, Menu::defaultBorderThickness))),
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), Menu::grey, Menu::defaultBorderThickness))),
+				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), Menu::grey, Menu::defaultBorderThickness)))
+			},
+			nullptr));
+		auto layerPickerMenu = shared_ptr<Menu>(new Menu(vec2(240, 0), true, Menu::purple, "Layers.png",
+			layerVisualizationMenu, Menu::defaultDropdownCallback));
+		auto keyboardMenu = shared_ptr<Menu>(new Menu(vec2(300, 0), true, Menu::purple, "Letter.png", nullptr));
+		auto undoButton = shared_ptr<Menu>(new Menu(vec2(360, 0), true, Menu::purple, "Undo.png", nullptr));
 
-		menuLayer = MenuLayer(windowWidth, windowHeight);
-		menuLayer.AddMenu(topLeftMenu);
+		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
+			make_pair(0, colorPickerDropdown),
+				make_pair(0, shapePickerDropdown),
+				make_pair(0, brushPickerDropdown),
+				make_pair(0, symmetryLineButton),
+				make_pair(0, layerPickerMenu),
+				make_pair(0, keyboardMenu),
+				make_pair(0, undoButton)
+		}, nullptr));
 	}
 
 	multimap<int, shared_ptr<Menu>> UserInterface::createColorPickerMenu() const
@@ -130,7 +143,7 @@ namespace touchpoints { namespace ui
 			// adds color menu outline to be drawn
 			colorPickerShapes.insert(make_pair(1, shared_ptr<drawing::TouchRectangle>
 			// moves the y axis of where the color squares will be drawn
-				(new drawing::TouchRectangle(x1, y1, x2, y2, Menu::grey, ModeSelectorMenu::defaultBorderThickness, false))));
+				(new drawing::TouchRectangle(x1, y1, x2, y2, Menu::grey, Menu::defaultBorderThickness, false))));
 			y1 += 60;
 			y2 += 60;
 		}
@@ -182,6 +195,60 @@ namespace touchpoints { namespace ui
 		};
 	}
 
+	multimap<int, shared_ptr<Menu>> UserInterface::createBrushPickerMenu() const
+	{
+		auto sizeLabel = shared_ptr<LabelMenu>(new LabelMenu(vec2(120, 60), 90, 60, false, "Size"));
+
+		auto sizeMinusMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(210, 60), false,
+				Menu::black, "BlueMinus.png", mBrush,
+				[](vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)
+				{ brush->decreaseLineSize(); }));
+
+		auto sizePlusMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(270, 60), false,
+				Menu::black, "BluePlus.png", mBrush,
+				[](vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)
+				{ brush->increaseLineSize(); }));
+
+		auto alphaLabel = shared_ptr<LabelMenu>(new LabelMenu(vec2(120, 120), 90, 60, false, "Alpha"));
+
+		auto alphaMinusMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(210, 120), false,
+				Menu::black, "BlueMinus.png", mBrush,
+				[](vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)
+				{ brush->decreaseAlpha(); }));
+
+		auto alphaPlusMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(270, 120), false,
+				Menu::black, "BluePlus.png", mBrush,
+				[](vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)
+				{ brush->increaseAlpha(); }));
+
+		auto filledLabel = shared_ptr<LabelMenu>(new LabelMenu(vec2(120, 180), 90, 60, false, "Filled"));
+
+		auto filledShapesMenu = shared_ptr<BrushModeSelectorMenu>
+			(new BrushModeSelectorMenu(vec2(210, 180), false, mBrush,
+				[](vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)
+				{ brush->toggleFilledShapes(); },
+				multimap<int, shared_ptr<Menu>>
+				{
+					make_pair(0, shared_ptr<SwitchMenu>(new SwitchMenu(vec2(210, 180))))
+				}));
+
+		return multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, sizeLabel),
+			make_pair(0, sizePlusMenu),
+			make_pair(0, sizeMinusMenu),
+			make_pair(0, alphaLabel),
+			make_pair(0, alphaPlusMenu),
+			make_pair(0, alphaMinusMenu),
+			make_pair(0, filledLabel),
+			make_pair(0, filledShapesMenu)
+		};
+	}
+
 	multimap<int, shared_ptr<Menu>> UserInterface::createLayerVisualizationMenu() const
 	{
 		multimap<int, shared_ptr<drawing::TouchShape>> layerPickerShapes;
@@ -212,8 +279,8 @@ namespace touchpoints { namespace ui
 			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, white, 0, true)));
 
 			// Draws outline grey square of layer box
-			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, ModeSelectorMenu::grey, 
-				ModeSelectorMenu::defaultBorderThickness, false)));
+			layerPickerShapes.insert(make_pair(1, std::make_shared<drawing::TouchRectangle>(x1, y1, x2, y2, Menu::grey, 
+				Menu::defaultBorderThickness, false)));
 
 			// Draws the drawings in the current layer to the current layers menu
 			layerTexture = shared_ptr<LayerTextureMenu>
@@ -236,8 +303,8 @@ namespace touchpoints { namespace ui
 			// Not sure but if removed causes shades of grey in alpha bar to disappear
 
 			// Draws gray bar to separate the layer alpha bar from the layer display
-			layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchRectangle>(x1, y1, 290, y2, ModeSelectorMenu::grey, 
-				ModeSelectorMenu::defaultBorderThickness, false)));
+			layerPickerShapes.insert(make_pair(2, std::make_shared<drawing::TouchRectangle>(x1, y1, 290, y2, Menu::grey, 
+				Menu::defaultBorderThickness, false)));
 
 			// Draws indicator for alpha level
 			radius = 5.00f;
@@ -1507,7 +1574,6 @@ namespace touchpoints { namespace ui
 	void UserInterface::drawUi()
 	{
 		menuLayer.Draw();
-		//		brm::BRMenuHandler::drawUiBRM();
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 

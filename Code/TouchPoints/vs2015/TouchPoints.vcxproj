@@ -218,6 +218,7 @@
     <ClCompile Include="..\src\KinectAudioHandler.cpp" />
     <ClCompile Include="..\src\KinectAudioStream.cpp" />
     <ClCompile Include="..\src\KinectHandler.cpp" />
+    <ClCompile Include="..\src\LabelMenu.cpp" />
     <ClCompile Include="..\src\Layer.cpp" />
     <ClCompile Include="..\src\LayerModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\LayerTextureMenu.cpp" />
@@ -225,11 +226,11 @@
     <ClCompile Include="..\src\LeapMotionHandler.cpp" />
     <ClCompile Include="..\src\Menu.cpp" />
     <ClCompile Include="..\src\MenuLayer.cpp" />
-    <ClCompile Include="..\src\ModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\RealSenseHandler.cpp" />
     <ClCompile Include="..\src\Rect.cpp" />
     <ClCompile Include="..\src\RemoveLayerMenu.cpp" />
     <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp" />
+    <ClCompile Include="..\src\SwitchMenu.cpp" />
     <ClCompile Include="..\src\SymmetryLine.cpp" />
     <ClCompile Include="..\src\TouchCircle.cpp" />
     <ClCompile Include="..\src\TouchEraserPoints.cpp" />
@@ -238,12 +239,14 @@
     <ClCompile Include="..\src\TouchPoint.cpp" />
     <ClCompile Include="..\src\TouchPointsApp.cpp" />
     <ClCompile Include="..\src\TouchRectangle.cpp" />
+    <ClCompile Include="..\src\TouchTextLayout.cpp" />
     <ClCompile Include="..\src\TouchTexture.cpp" />
     <ClCompile Include="..\src\TouchVerticalTriangle.cpp" />
     <ClCompile Include="..\src\UserInterface.cpp" />
     <ClCompile Include="..\src\VerticalTriangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\AllMenus.h" />
     <ClInclude Include="..\src\AllShapes.h" />
     <ClInclude Include="..\src\Alpha.h" />
     <ClInclude Include="..\src\AlphaChangerMenu.h" />
@@ -260,6 +263,7 @@
     <ClInclude Include="..\src\KinectAudioHandler.h" />
     <ClInclude Include="..\src\KinectAudioStream.h" />
     <ClInclude Include="..\src\KinectHandler.h" />
+    <ClInclude Include="..\src\LabelMenu.h" />
     <ClInclude Include="..\src\Layer.h" />
     <ClInclude Include="..\src\LayerModeSelectorMenu.h" />
     <ClInclude Include="..\src\LayerTextureMenu.h" />
@@ -268,11 +272,11 @@
     <ClInclude Include="..\src\Line.h" />
     <ClInclude Include="..\src\Menu.h" />
     <ClInclude Include="..\src\MenuLayer.h" />
-    <ClInclude Include="..\src\ModeSelectorMenu.h" />
     <ClInclude Include="..\src\RealSenseHandler.h" />
     <ClInclude Include="..\src\Rect.h" />
     <ClInclude Include="..\src\RemoveLayerMenu.h" />
     <ClInclude Include="..\src\ShapeModeSelectorMenu.h" />
+    <ClInclude Include="..\src\SwitchMenu.h" />
     <ClInclude Include="..\src\SymmetryLine.h" />
     <ClInclude Include="..\src\TouchCircle.h" />
     <ClInclude Include="..\src\TouchEraserPoints.h" />
@@ -282,6 +286,7 @@
     <ClInclude Include="..\src\TouchPointsApp.h" />
     <ClInclude Include="..\src\TouchRectangle.h" />
     <ClInclude Include="..\src\TouchShape.h" />
+    <ClInclude Include="..\src\TouchTextLayout.h" />
     <ClInclude Include="..\src\TouchTexture.h" />
     <ClInclude Include="..\src\TouchVerticalTriangle.h" />
     <ClInclude Include="..\src\VerticalTriangle.h" />
