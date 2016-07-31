@@ -96,15 +96,19 @@ namespace touchpoints { namespace ui
 		auto shapePickerMenu = createShapePickerMenu();
 		auto brushPickerMenu = createBrushPickerMenu();
 		auto layerVisualizationMenu = createLayerVisualizationMenu();
-
 		auto symmetryDropdownShapes = createSymmetryDropdownShapes();
 		auto symmetryMenuShapes = createSymmetryMenuShapes();
-
 		auto symmetryLineMenu = multimap<int, shared_ptr<Menu>>
 		{
 			make_pair(0, shared_ptr<SymmetryToggleMenu>(new SymmetryToggleMenu(
 				vec2(180, 0), Menu::defaultWidth, Menu::defaultHeight, false, 
 				symmetryLine, symmetryMenuShapes)))
+		};
+		auto undoButtonMenu = multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, shared_ptr<UndoButton>(new UndoButton(
+				vec2(360, 0), Menu::defaultWidth, Menu::defaultHeight, false,
+				illustrator)))
 		};
 
 		auto colorPickerDropdown = shared_ptr<Menu>(new Menu(vec2(0, 0), true, Menu::purple, "Colors.png",
@@ -118,7 +122,8 @@ namespace touchpoints { namespace ui
 		auto layerPickerMenu = shared_ptr<Menu>(new Menu(vec2(240, 0), true, Menu::purple, "Layers.png",
 			layerVisualizationMenu, Menu::defaultDropdownCallback));
 		auto keyboardMenu = shared_ptr<Menu>(new Menu(vec2(300, 0), true, Menu::purple, "Letter.png", nullptr));
-		auto undoButton = shared_ptr<Menu>(new Menu(vec2(360, 0), true, Menu::purple, "Undo.png", nullptr));
+		auto undoButton = shared_ptr<Menu>(new Menu(vec2(360, 0), true, Menu::purple, "Undo.png", undoButtonMenu,
+			nullptr));
 
 		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
 			make_pair(0, colorPickerDropdown),

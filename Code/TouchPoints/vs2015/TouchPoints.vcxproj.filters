@@ -180,6 +180,9 @@
     <ClCompile Include="..\src\SymmetryToggleMenu.cpp">
       <Filter>ui\menus</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\UndoButton.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -321,6 +324,9 @@
       <Filter>ui\menus</Filter>
     </ClInclude>
     <ClInclude Include="..\src\SymmetryToggleMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\UndoButton.h">
       <Filter>ui\menus</Filter>
     </ClInclude>
   </ItemGroup>

@@ -244,6 +244,7 @@
     <ClCompile Include="..\src\TouchTextLayout.cpp" />
     <ClCompile Include="..\src\TouchTexture.cpp" />
     <ClCompile Include="..\src\TouchVerticalTriangle.cpp" />
+    <ClCompile Include="..\src\UndoButton.cpp" />
     <ClCompile Include="..\src\UserInterface.cpp" />
     <ClCompile Include="..\src\VerticalTriangle.cpp" />
   </ItemGroup>
@@ -293,6 +294,7 @@
     <ClInclude Include="..\src\TouchTextLayout.h" />
     <ClInclude Include="..\src\TouchTexture.h" />
     <ClInclude Include="..\src\TouchVerticalTriangle.h" />
+    <ClInclude Include="..\src\UndoButton.h" />
     <ClInclude Include="..\src\VerticalTriangle.h" />
     <ClInclude Include="..\src\UserInterface.h" />
   </ItemGroup>
