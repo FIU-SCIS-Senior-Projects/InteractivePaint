@@ -9,3 +9,5 @@
 #include "RemoveLayerMenu.h"
 #include "ShapeModeSelectorMenu.h"
 #include "SwitchMenu.h"
+#include "SymmetryModeSelectorMenu.h"
+#include "SymmetryToggleMenu.h"

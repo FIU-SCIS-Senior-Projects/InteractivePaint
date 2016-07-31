@@ -30,8 +30,10 @@ namespace touchpoints { namespace ui
 			multimap<int, shared_ptr<Menu>> composingMenus,
 			function<void(vec2 point, Menu* self)> touchEventHandler);
 		Menu(vec2 startPoint, bool visible, ColorA backgroundColor, string imagePath, 
-			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
-			function<void(vec2 point, Menu* self)> touchEventHandler);
+			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes = 
+			multimap<int, shared_ptr<drawing::TouchShape>>(),
+			multimap<int, shared_ptr<Menu>> composingMenus = multimap<int, shared_ptr<Menu>>(),
+			function<void(vec2 point, Menu* self)> touchEventHandler = nullptr);
 		Menu(vec2 startPoint, int width, int height, bool visible,
 			multimap<int, shared_ptr<Menu>> composingMenus,
 			function<void(vec2 point, Menu* self)> touchEventHandler);

@@ -18,7 +18,7 @@ namespace touchpoints { namespace drawing
 	{
 	public:
 		Canvas();
-		Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers = 3);//6);
+		Canvas(int windowWidth, int windowHeight, int numberOfLayers, int maxNumberOfLayers = 3);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);
@@ -26,6 +26,7 @@ namespace touchpoints { namespace drawing
 		void Draw();
 		void Undo();
 		void AddShape(shared_ptr<TouchShape> shape);
+		void AddSymmetricShapes(pair<shared_ptr<TouchShape>, shared_ptr<TouchShape>> symmetricShapes);
 		void DeleteLayer(int index);
 		void AddLayer();
 		inline int GetNumberOfLayers() const { return numberOfLayers; }

@@ -232,6 +232,8 @@
     <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\SwitchMenu.cpp" />
     <ClCompile Include="..\src\SymmetryLine.cpp" />
+    <ClCompile Include="..\src\SymmetryModeSelectorMenu.cpp" />
+    <ClCompile Include="..\src\SymmetryToggleMenu.cpp" />
     <ClCompile Include="..\src\TouchCircle.cpp" />
     <ClCompile Include="..\src\TouchEraserPoints.cpp" />
     <ClCompile Include="..\src\TouchImage.cpp" />
@@ -278,6 +280,8 @@
     <ClInclude Include="..\src\ShapeModeSelectorMenu.h" />
     <ClInclude Include="..\src\SwitchMenu.h" />
     <ClInclude Include="..\src\SymmetryLine.h" />
+    <ClInclude Include="..\src\SymmetryModeSelectorMenu.h" />
+    <ClInclude Include="..\src\SymmetryToggleMenu.h" />
     <ClInclude Include="..\src\TouchCircle.h" />
     <ClInclude Include="..\src\TouchEraserPoints.h" />
     <ClInclude Include="..\src\TouchImage.h" />

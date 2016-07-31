@@ -8,7 +8,10 @@ namespace touchpoints { namespace ui
 {
 	UserInterface::UserInterface() {}
 
-	UserInterface::UserInterface(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, drawing::Illustrator* mIllustrator, devices::DeviceHandler* mDeviceHandler, std::shared_ptr<gl::Fbo> fbo, std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList, std::vector<float>* fboLayerAlpha)
+	UserInterface::UserInterface(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, 
+		drawing::Illustrator* mIllustrator, devices::DeviceHandler* mDeviceHandler, 
+		drawing::SymmetryLine* symmetryLine, std::shared_ptr<gl::Fbo> fbo, 
+		std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList, std::vector<float>* fboLayerAlpha)
 	{
 		modeChangeFlag = true;
 		windowWidth = mWindowWidth;
@@ -16,6 +19,7 @@ namespace touchpoints { namespace ui
 		mBrush = brush;
 		illustrator = mIllustrator;
 		deviceHandler = mDeviceHandler;
+		this->symmetryLine = symmetryLine;
 		uiFbo = fbo;
 		uiFboFlag = true;
 		modeButtons = true;
@@ -93,6 +97,16 @@ namespace touchpoints { namespace ui
 		auto brushPickerMenu = createBrushPickerMenu();
 		auto layerVisualizationMenu = createLayerVisualizationMenu();
 
+		auto symmetryDropdownShapes = createSymmetryDropdownShapes();
+		auto symmetryMenuShapes = createSymmetryMenuShapes();
+
+		auto symmetryLineMenu = multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, shared_ptr<SymmetryToggleMenu>(new SymmetryToggleMenu(
+				vec2(180, 0), Menu::defaultWidth, Menu::defaultHeight, false, 
+				symmetryLine, symmetryMenuShapes)))
+		};
+
 		auto colorPickerDropdown = shared_ptr<Menu>(new Menu(vec2(0, 0), true, Menu::purple, "Colors.png",
 			colorPickerMenu, Menu::defaultDropdownCallback));
 		auto shapePickerDropdown = shared_ptr<Menu>(new Menu(vec2(60, 0), true, Menu::purple, "Shapes.png",
@@ -100,16 +114,7 @@ namespace touchpoints { namespace ui
 		auto brushPickerDropdown = shared_ptr<Menu>(new Menu(vec2(120, 0), true, Menu::purple, "Brush.png",
 			brushPickerMenu, Menu::recursiveDropdownCallback));
 		auto symmetryLineButton = shared_ptr<Menu>(new Menu(vec2(180, 0), true, Menu::purple, "",
-			multimap<int, shared_ptr<drawing::TouchShape>>
-			{
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), Menu::grey, Menu::defaultBorderThickness))),
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), Menu::grey, Menu::defaultBorderThickness))),
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), Menu::grey, Menu::defaultBorderThickness))),
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), Menu::grey, Menu::defaultBorderThickness))),
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), Menu::grey, Menu::defaultBorderThickness))),
-				make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), Menu::grey, Menu::defaultBorderThickness)))
-			},
-			nullptr));
+			symmetryDropdownShapes, symmetryLineMenu, Menu::defaultDropdownCallback));
 		auto layerPickerMenu = shared_ptr<Menu>(new Menu(vec2(240, 0), true, Menu::purple, "Layers.png",
 			layerVisualizationMenu, Menu::defaultDropdownCallback));
 		auto keyboardMenu = shared_ptr<Menu>(new Menu(vec2(300, 0), true, Menu::purple, "Letter.png", nullptr));
@@ -117,12 +122,12 @@ namespace touchpoints { namespace ui
 
 		topLeftMenu = shared_ptr<Menu>(new Menu(vec2(0, 0), 420, 60, true, multimap<int, shared_ptr<Menu>>{
 			make_pair(0, colorPickerDropdown),
-				make_pair(0, shapePickerDropdown),
-				make_pair(0, brushPickerDropdown),
-				make_pair(0, symmetryLineButton),
-				make_pair(0, layerPickerMenu),
-				make_pair(0, keyboardMenu),
-				make_pair(0, undoButton)
+			make_pair(0, shapePickerDropdown),
+			make_pair(0, brushPickerDropdown),
+			make_pair(0, symmetryLineButton),
+			make_pair(0, layerPickerMenu),
+			make_pair(0, keyboardMenu),
+			make_pair(0, undoButton)
 		}, nullptr));
 	}
 
@@ -287,6 +292,31 @@ namespace touchpoints { namespace ui
 		}
 
 		return layerPickerMenus;
+	}
+
+	multimap<int, shared_ptr<drawing::TouchShape>> UserInterface::createSymmetryMenuShapes() const
+	{
+		auto shapes = multimap<int, shared_ptr<drawing::TouchShape>>();
+		for (int i = 0; i < 50; i = i + 2)
+		{
+			shapes.insert(make_pair(0, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(
+				vec2(windowWidth / 2, windowHeight - i * 50), vec2(windowWidth / 2, windowHeight - (i + 1) * 50),
+				Menu::grey, 4))));
+		}
+		return shapes;
+	}
+	
+	multimap<int, shared_ptr<drawing::TouchShape>> UserInterface::createSymmetryDropdownShapes() const
+	{
+		return multimap<int, shared_ptr<drawing::TouchShape>>
+		{
+			make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 5), vec2(210, 10), Menu::grey, Menu::defaultBorderThickness))),
+			make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 15), vec2(210, 20), Menu::grey, Menu::defaultBorderThickness))),
+			make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 25), vec2(210, 30), Menu::grey, Menu::defaultBorderThickness))),
+			make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 35), vec2(210, 40), Menu::grey, Menu::defaultBorderThickness))),
+			make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 45), vec2(210, 50), Menu::grey, Menu::defaultBorderThickness))),
+			make_pair(1, shared_ptr<drawing::TouchPoint>(new drawing::TouchPoint(vec2(210, 55), vec2(210, 60), Menu::grey, Menu::defaultBorderThickness)))
+		};
 	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)

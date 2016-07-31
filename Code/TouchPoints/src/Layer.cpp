@@ -44,7 +44,15 @@ namespace touchpoints { namespace drawing
 
 	void Layer::AddDrawable(shared_ptr<IDrawable> drawable)
 	{
-		drawablesStack.push_back(drawable);
+		auto guid = guidGenerator.newGuid();
+		drawablesStack.push_back(make_pair(drawable, guid));
+	}
+
+	void Layer::AddSymmetricDrawables(pair<shared_ptr<IDrawable>, shared_ptr<IDrawable>> symmetricDrawables)
+	{
+		auto guid = guidGenerator.newGuid();
+		drawablesStack.push_back(make_pair(symmetricDrawables.first, guid));
+		drawablesStack.push_back(make_pair(symmetricDrawables.second, guid));
 	}
 
 	void Layer::Draw()
@@ -53,7 +61,7 @@ namespace touchpoints { namespace drawing
 
 		for(auto drawable: drawablesStack)
 		{
-			drawable->Draw();
+			drawable.first->Draw();
 		}
 
 		drawTearDown();
@@ -86,7 +94,17 @@ namespace touchpoints { namespace drawing
 	{
 		if (drawablesStack.size() > 0)
 		{
+			auto firstGuid = drawablesStack.back().second;
 			drawablesStack.pop_back();
+			if(drawablesStack.size() > 0)
+			{
+				auto secondGuid = drawablesStack.back().second;
+				if (firstGuid == secondGuid)
+				{
+					//only remove this shape if it is a symmetric pair of the last shape
+					drawablesStack.pop_back();
+				}
+			}
 		}
 	}
 

@@ -13,6 +13,7 @@
 #include "Canvas.h"
 #include "Menu.h"
 #include "MenuLayer.h"
+#include "SymmetryLine.h"
 
 using namespace std;
 
@@ -22,8 +23,10 @@ namespace touchpoints { namespace drawing
 	{
 	public:
 		Illustrator();
-		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight);
-		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, ui::MenuLayer menuLayer);
+		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, SymmetryLine* symmetryLine, 
+			int windowWidth, int windowHeight);
+		Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, SymmetryLine* symmetryLine, 
+			int windowWidth, int windowHeight, ui::MenuLayer menuLayer);
 		void beginTouchShapes(uint32_t myId, vec2 myPos);
 		void movingTouchShapes(uint32_t myId, vec2 myPos, vec2 prevPos);
 		void endTouchShapes(uint32_t myId);
@@ -72,6 +75,7 @@ namespace touchpoints { namespace drawing
 
 		vector<shared_ptr<gl::Fbo>>* mLayerList;
 		Brush* mBrush;
+		SymmetryLine* symmetryLine;
 		int numberOfActiveDrawings;
 
 		Canvas canvas;
