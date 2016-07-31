@@ -16,7 +16,6 @@ namespace touchpoints { namespace ui
 		float startY1;
 		float startY2;
 		float startY3;
-		//static int initIndicator;
 		const int lWidth;
 		const int lHeight;
 		const int index;

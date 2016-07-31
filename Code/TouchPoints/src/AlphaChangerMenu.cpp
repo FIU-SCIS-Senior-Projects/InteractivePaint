@@ -11,21 +11,24 @@ namespace touchpoints { namespace ui
 
 	AlphaChangerMenu::AlphaChangerMenu(vec2 startPoint, bool visible, int index, drawing::Illustrator* illustrator)
 		: LayerModeSelectorMenu(startPoint, defaultWidth, LayerVisualizationMenu::defaultHeight, visible,
-		illustrator, nullptr), index(index), alphaCircleXPosition((startPoint.x + defaultWidth) / 2)
+		illustrator, nullptr), index(index), alphaCircleXPosition(startPoint.x+25)//((startPoint.x + defaultWidth) / 2)
 	{
 		setupShapes();
 	}
 
 	void AlphaChangerMenu::Draw()
 	{
-		Menu::Draw();
+		if(visible)
+		{
+			Menu::Draw();
 
-		auto currentAlpha = illustrator->GetAlpha(index);
-		auto alphaCircleYPosition = startPoint.y + (currentAlpha * height);
-		auto newCirclePosition = vec2(alphaCircleXPosition, alphaCircleYPosition);
-		currentAlphaCircle.changePosition(newCirclePosition);
+			auto currentAlpha = illustrator->GetAlpha(index);
+			auto alphaCircleYPosition = startPoint.y + (currentAlpha * height);
+			auto newCirclePosition = vec2(alphaCircleXPosition, alphaCircleYPosition);
+			currentAlphaCircle.changePosition(newCirclePosition);
 
-		currentAlphaCircle.Draw();
+			currentAlphaCircle.Draw();
+		}
 	}
 
 	void AlphaChangerMenu::OnTouch(vec2 point)
@@ -43,7 +46,7 @@ namespace touchpoints { namespace ui
 		auto startX = startPoint.x;
 		auto startY = startPoint.y;
 		auto endX = startX + width;
-		auto endY = startY + height;
+		auto endY = startY + 10;
 		auto yIncrement = height / numberOfRectangles;
 		auto colorDecrement = 1.0 / numberOfRectangles;
 		auto color = ColorA(1.0f, 1.0f, 1.0f, 1.0f);
@@ -57,6 +60,10 @@ namespace touchpoints { namespace ui
 			endY += yIncrement;
 			color = ColorA(color.r - colorDecrement, color.g - colorDecrement, color.b - colorDecrement, 1.0f);
 		}
+
+		//outline of alpha menu
+		composingShapes.insert(make_pair(0, std::make_shared<drawing::TouchRectangle>(startX, startY-3, defaultWidth+240, defaultHeight, Menu::grey,
+			Menu::defaultBorderThickness, false)));
 		
 		auto green = ColorA(0.0f, 1.0f, 0.0f, 1.0f);
 		currentAlphaCircle = drawing::TouchCircle(vec2(alphaCircleXPosition, startPoint.y + height), 

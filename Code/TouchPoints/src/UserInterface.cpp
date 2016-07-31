@@ -5,6 +5,7 @@
 #include "ShapeModeSelectorMenu.h"
 #include "LayerTextureMenu.h"
 #include "LayerVisualizationMenu.h"
+#include "AlphaChangerMenu.h"
 
 using namespace cinder::app;
 
@@ -211,6 +212,9 @@ namespace touchpoints { namespace ui
 
 			auto layerTexture = std::make_shared<LayerTextureMenu>(vec2(x1, y1-200), false, layerNumber, illustrator);
 			layerPickerMenus.insert(make_pair(1, layerTexture));
+
+			auto alphaMenu = std::make_shared<AlphaChangerMenu>(vec2(x1-48, y1-197), false, layerNumber, illustrator);
+			layerPickerMenus.insert(make_pair(2, alphaMenu));
 
 			index = index + 200;
 			y1 = index;
