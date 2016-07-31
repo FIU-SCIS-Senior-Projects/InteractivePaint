@@ -12,11 +12,26 @@ namespace touchpoints { namespace ui
 	{
 	public:
 		Menu();
+		Menu(vec2 startPoint, bool visible,
+			function<void(vec2 point, Menu* self)> touchEventHandler);
+		Menu(vec2 startPoint, bool visible, ColorA backgroundColor, string imagePath,
+			function<void(vec2 point, Menu* self)> touchEventHandler);
 		Menu(vec2 startPoint, int width, int height, bool visible,
 			function<void(vec2 point, Menu* self)> touchEventHandler);
+		Menu(vec2 startPoint, bool visible,
+			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes);
 		Menu(vec2 startPoint, int width, int height, bool visible, 
 			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
 			function<void(vec2 point, Menu* self)> touchEventHandler);
+		Menu(vec2 startPoint, bool visible,
+			multimap<int, shared_ptr<Menu>> composingMenus,
+			function<void(vec2 point, Menu* self)> touchEventHandler);
+		Menu(vec2 startPoint, bool visible, ColorA backgroundColor, string imagePath,
+			multimap<int, shared_ptr<Menu>> composingMenus,
+			function<void(vec2 point, Menu* self)> touchEventHandler);
+		Menu(vec2 startPoint, bool visible, ColorA backgroundColor, string imagePath, 
+			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
+			function<void(vec2 point, Menu* self)> touchEventHandler);
 		Menu(vec2 startPoint, int width, int height, bool visible,
 			multimap<int, shared_ptr<Menu>> composingMenus,
 			function<void(vec2 point, Menu* self)> touchEventHandler);
@@ -24,9 +39,9 @@ namespace touchpoints { namespace ui
 			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
 			multimap<int, shared_ptr<Menu>> composingMenus,
 			function<void(vec2 point, Menu* self)> touchEventHandler);
-		virtual void SetWidth(int width) {};
-		virtual void SetHeight(int height) {};
-		virtual void SetDimensions(int width, int height) {};
+		inline virtual void SetWidth(int width) { this->width = width; }
+		inline virtual void SetHeight(int height) { this->height = height; }
+		inline virtual void SetDimensions(int width, int height) { SetWidth(width); SetHeight(height); }
 		void Draw() override;
 		void AddShape(int zIndex, shared_ptr<drawing::TouchShape> shape);
 		void AddMenu(int zIndex, shared_ptr<Menu> menu);
@@ -35,11 +50,14 @@ namespace touchpoints { namespace ui
 		inline void ToggleVisiblibility() { visible = !visible; }
 		inline bool IsVisible() const { return visible; }
 		void ToggleContainingMenusVisibility();
+		void ToggleContainingMenusVisibilityRecursively();
 		virtual void Update() {};
 		virtual void OnTouch(vec2 point);
 		static const ColorA grey;
 		static const ColorA purple;
 		static const ColorA white;
+		static const ColorA black;
+		static const ColorA green;
 		static const int defaultBorderThickness = 5;
 		static const int defaultLineThickness = 1;
 		static const int defaultWidth = 60;
@@ -49,6 +67,7 @@ namespace touchpoints { namespace ui
 		static const int defaultImageOffsetX = 5;
 		static const int defaultImageOffsetY = 5;
 		static const function<void(vec2 point, Menu *self)> defaultDropdownCallback;
+		static const function<void(vec2 point, Menu *self)> recursiveDropdownCallback;
 	protected:
 		bool visible;
 		vec2 startPoint;
@@ -62,5 +81,6 @@ namespace touchpoints { namespace ui
 		function<void(vec2 point, Menu* self)> touchEventHandler;
 	private:
 		void initilizeBoundingRect();
+		void populateDefaultShapes(ColorA backgroundColor, string imagePath);
 	};
 }}

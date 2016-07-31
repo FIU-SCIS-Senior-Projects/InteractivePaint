@@ -113,11 +113,6 @@ namespace touchpoints { namespace drawing
 		return mLineSize;
 	}
 
-	bool Brush::getFilledShapes()
-	{
-		return mFilledShapes;
-	}
-
 	SymmetryLine* Brush::getSymmetry()
 	{
 		return mMySymmetry;
@@ -177,11 +172,6 @@ namespace touchpoints { namespace drawing
 	void Brush::changeShape(Shape::Shape shape)
 	{
 		mShape = shape;
-	}
-
-	void Brush::changeFilledShapes(bool filledShapes)
-	{
-		mFilledShapes = filledShapes;
 	}
 
 	void Brush::changeRandColor(bool randColor)
