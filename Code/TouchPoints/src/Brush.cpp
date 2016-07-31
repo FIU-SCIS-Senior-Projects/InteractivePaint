@@ -113,6 +113,7 @@ namespace touchpoints { namespace drawing
 		return mLineSize;
 	}
 
+	//todo get rid of this, the other object should just have its own pointer to the symmetry line
 	SymmetryLine* Brush::getSymmetry()
 	{
 		return mMySymmetry;

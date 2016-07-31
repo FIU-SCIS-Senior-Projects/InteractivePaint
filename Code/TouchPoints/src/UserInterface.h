@@ -11,7 +11,10 @@ namespace touchpoints { namespace ui
 	{
 	public:
 		UserInterface();
-		UserInterface(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, drawing::Illustrator* mIllustrator, devices::DeviceHandler* mDeviceHandler, std::shared_ptr<gl::Fbo> fbo, std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList, std::vector<float>* fboLayerAlpha);
+		UserInterface(int mWindowWidth, int mWindowHeight, drawing::Brush* brush, 
+			drawing::Illustrator* mIllustrator, devices::DeviceHandler* mDeviceHandler, 
+			drawing::SymmetryLine* symmetryLine, std::shared_ptr<gl::Fbo> fbo,
+			std::vector<std::shared_ptr<gl::Fbo>>* fboLayerList, std::vector<float>* fboLayerAlpha);
 		void modeRectangle();
 		void modeCircle();
 		void modeTriangle();
@@ -53,9 +56,12 @@ namespace touchpoints { namespace ui
 		multimap<int, shared_ptr<Menu>> createShapePickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createBrushPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createLayerVisualizationMenu() const;
+		multimap<int, shared_ptr<drawing::TouchShape>> createSymmetryMenuShapes() const;
+		multimap<int, shared_ptr<drawing::TouchShape>> createSymmetryDropdownShapes() const;
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;
+		drawing::SymmetryLine* symmetryLine;
 		TouchKeyboard keyboard;
 
 		//Rectf boundingRect;

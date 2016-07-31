@@ -2,6 +2,7 @@
 #include "Brush.h"
 #include <cinder/gl/Fbo.h>
 #include "Alpha.h"
+#include <guid.h>
 
 namespace touchpoints { namespace drawing
 {
@@ -14,6 +15,7 @@ namespace touchpoints { namespace drawing
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);
 		void AddDrawable(shared_ptr<IDrawable> drawable);
+		void AddSymmetricDrawables(pair<shared_ptr<IDrawable>, shared_ptr<IDrawable>> symmetricDrawables);
 		void Draw();
 		void Undo();
 		void ClearLayer();
@@ -27,7 +29,9 @@ namespace touchpoints { namespace drawing
 		shared_ptr<gl::Fbo> framebuffer;
 		Alpha alpha;
 		gl::Fbo::Format format;
-		vector<shared_ptr<IDrawable>> drawablesStack;
+		GuidGenerator guidGenerator;
+		typedef pair<shared_ptr<IDrawable>, Guid> DrawableGuidPair;
+		vector<DrawableGuidPair> drawablesStack;
 		void drawSetup() const;
 		void drawTearDown() const;
 	private:

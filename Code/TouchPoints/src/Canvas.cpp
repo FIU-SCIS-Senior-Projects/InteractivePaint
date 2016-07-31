@@ -79,6 +79,11 @@ namespace touchpoints { namespace drawing
 		layers[activeLayerIndex].AddDrawable(shape);
 	}
 
+	void Canvas::AddSymmetricShapes(pair<shared_ptr<TouchShape>, shared_ptr<TouchShape>> symmetricShapes)
+	{
+		layers[activeLayerIndex].AddSymmetricDrawables(symmetricShapes);
+	}
+
 	void Canvas::DeleteLayer(int index)
 	{
 		assert(index >= 0 && index < numberOfLayers, "Cannot delete layer, index out of range");

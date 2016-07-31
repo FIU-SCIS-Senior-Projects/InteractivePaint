@@ -62,7 +62,7 @@ namespace touchpoints { namespace app
 		int tempInt = 1;
 		Shape::Shape myShape = Shape::Shape::Line;
 		brush = drawing::Brush(myShape, newColor, tempFloat, tempInt, false, false, false, &mySymmetry);
-		illustrator = drawing::Illustrator(&brush, &layerList, windowWidth, windowHeight);
+		illustrator = drawing::Illustrator(&brush, &layerList, &mySymmetry, windowWidth, windowHeight);
 		deviceHandler = devices::DeviceHandler();
 		getHomeDirectory();
 		imageHandler = drawing::ImageHandler(&layerList, &layerAlpha);
@@ -74,7 +74,8 @@ namespace touchpoints { namespace app
 		deviceHandler.deviceConnection();
 		lastDeviceCheck = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
 
-		gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, uiFbo, &layerList, &layerAlpha);
+		gui = ui::UserInterface(windowWidth, windowHeight, &brush, &illustrator, &deviceHandler, 
+			&mySymmetry, uiFbo, &layerList, &layerAlpha);
 
 		leapMotionHandler = devices::LeapMotionHandler(windowWidth, windowHeight, &illustrator, &brush, &imageHandler, &gui);
 		leapMotionHandler.InitLeapMotion();

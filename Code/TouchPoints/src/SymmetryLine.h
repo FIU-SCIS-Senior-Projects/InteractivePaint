@@ -13,6 +13,11 @@ namespace touchpoints { namespace drawing
 		TouchCircle symmetricCircle(TouchCircle circle);
 		TouchRectangle symmetricRectangle(TouchRectangle rectangle);
 		TouchVerticalTriangle symmetricTriangle(TouchVerticalTriangle triangle);
+		shared_ptr<TouchPoint> symmetricLineRef(shared_ptr<TouchPoint> line);
+		shared_ptr<TouchCircle> symmetricCircleRef(shared_ptr<TouchCircle> circle);
+		shared_ptr<TouchRectangle> symmetricRectangleRef(shared_ptr<TouchRectangle> rectangle);
+		shared_ptr<TouchVerticalTriangle> symmetricTriangleRef(shared_ptr<TouchVerticalTriangle> triangle);
+		shared_ptr<TouchEraserPoints> symmetricEraserRef(shared_ptr<TouchEraserPoints> eraser);
 		vec2 symmetricPoint(vec2 point);
 		void toggleSymmetry();
 		bool getSymmetryOn();

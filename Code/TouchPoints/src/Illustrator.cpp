@@ -9,8 +9,10 @@ namespace touchpoints { namespace drawing
 {
 	Illustrator::Illustrator() {}
 
-	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight) 
-		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(windowWidth, windowHeight)
+	Illustrator::Illustrator(Brush* brush, std::vector<std::shared_ptr<gl::Fbo>>* layerList, SymmetryLine* symmetryLine, 
+		int windowWidth, int windowHeight)
+		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(windowWidth, windowHeight),
+		symmetryLine(symmetryLine)
 	{
 		mLayerList = layerList;
 		numberOfActiveDrawings = 0;
@@ -23,8 +25,10 @@ namespace touchpoints { namespace drawing
 		}
 	}
 
-	Illustrator::Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, int windowWidth, int windowHeight, ui::MenuLayer menuLayer)
-		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(menuLayer)
+	Illustrator::Illustrator(Brush* brush, vector<shared_ptr<gl::Fbo>>* layerList, SymmetryLine* symmetryLine, 
+		int windowWidth, int windowHeight, ui::MenuLayer menuLayer)
+		: mBrush(brush), canvas(windowWidth, windowHeight, 3), menuLayer(menuLayer),
+		symmetryLine(symmetryLine)
 	{
 		mLayerList = layerList;
 		numberOfActiveDrawings = 0;
@@ -665,9 +669,17 @@ namespace touchpoints { namespace drawing
 
 		if (event.ShouldFinalizeShape())
 		{
-			//addToActiveCircles(circle, event.GetShapeGuid());
-			auto sharedCircle = shared_ptr<TouchCircle>(new TouchCircle(midPoint, radius, mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
-			canvas.AddShape(sharedCircle);
+			auto circle = shared_ptr<TouchCircle>(new TouchCircle(midPoint, radius, mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
+			
+			if (symmetryLine->getSymmetryOn())
+			{
+				auto symmetricCircle = symmetryLine->symmetricCircleRef(circle);
+				canvas.AddSymmetricShapes(make_pair(circle, symmetricCircle));
+			}
+			else
+			{
+				canvas.AddShape(circle);
+			}
 		}
 		else
 		{
@@ -690,11 +702,18 @@ namespace touchpoints { namespace drawing
 
 		if (event.ShouldFinalizeShape())
 		{
-			//addToActiveTriangles(triangle, event.GetShapeGuid());
-			auto sharedTriangle = shared_ptr<TouchVerticalTriangle>(new TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
+			auto triangle = shared_ptr<TouchVerticalTriangle>(new TouchVerticalTriangle(geomTriangle.GetBaseVertexLeft(), geomTriangle.GetBaseVertexRight(),
 				geomTriangle.GetOppositeBaseVertex(), geomTriangle.GetBaseCenter(),
 				mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
-			canvas.AddShape(sharedTriangle);
+			if(symmetryLine->getSymmetryOn())
+			{
+				auto symmetricTriangle = symmetryLine->symmetricTriangleRef(triangle);
+				canvas.AddSymmetricShapes(make_pair(triangle, symmetricTriangle));
+			}
+			else
+			{
+				canvas.AddShape(triangle);
+			}
 		}
 		else
 		{
@@ -714,10 +733,18 @@ namespace touchpoints { namespace drawing
 
 		if (event.ShouldFinalizeShape())
 		{
-			//addToActiveRectangles(rectangle, event.GetShapeGuid());
-			auto sharedRectangle = shared_ptr<TouchRectangle>(new TouchRectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
+			auto rectangle = shared_ptr<TouchRectangle>(new TouchRectangle(startPoint.x, startPoint.y, endPoint.x, endPoint.y,
 				mBrush->getColor(), mBrush->getLineSize(), mBrush->getFilledShapes(), 3));
-			canvas.AddShape(sharedRectangle);
+			
+			if(symmetryLine->getSymmetryOn())
+			{
+				auto symmetricRectangle = symmetryLine->symmetricRectangleRef(rectangle);
+				canvas.AddSymmetricShapes(make_pair(rectangle, symmetricRectangle));
+			}
+			else 
+			{
+				canvas.AddShape(rectangle);
+			}
 		}
 		else
 		{
@@ -746,9 +773,17 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				//finalizedActivePointsMap.insert_or_assign(lineId, parentLine);
 				auto sharedLine = make_shared<TouchPoint>(parentLine);
-				canvas.AddShape(sharedLine);
+				
+				if(symmetryLine->getSymmetryOn())
+				{
+					auto symmetricLine = symmetryLine->symmetricLineRef(sharedLine);
+					canvas.AddSymmetricShapes(make_pair(sharedLine, symmetricLine));
+				}
+				else
+				{
+					canvas.AddShape(sharedLine);
+				}
 				unfinalizedActivePointsMap.erase(lineId);
 			}
 			else
@@ -762,9 +797,17 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				//finalizedActivePointsMap.insert_or_assign(lineId, line);
 				auto sharedLine = make_shared<TouchPoint>(line);
-				canvas.AddShape(sharedLine);
+
+				if (symmetryLine->getSymmetryOn())
+				{
+					auto symmetricLine = symmetryLine->symmetricLineRef(sharedLine);
+					canvas.AddSymmetricShapes(make_pair(sharedLine, symmetricLine));
+				}
+				else
+				{
+					canvas.AddShape(sharedLine);
+				}
 			}
 			else
 			{
@@ -792,9 +835,17 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				//finalizedActiveEraserMap.insert_or_assign(lineId, parentLine);
 				auto sharedLine = make_shared<TouchEraserPoints>(parentLine);
-				canvas.AddShape(sharedLine);
+
+				if (symmetryLine->getSymmetryOn())
+				{
+					auto symmetricLine = symmetryLine->symmetricLineRef(sharedLine);
+					canvas.AddSymmetricShapes(make_pair(sharedLine, symmetricLine));
+				}
+				else
+				{
+					canvas.AddShape(sharedLine);
+				}
 				unfinalizedActiveEraserMap.erase(lineId);
 			}
 			else
@@ -808,9 +859,17 @@ namespace touchpoints { namespace drawing
 
 			if (isFinalizableLine)
 			{
-				//finalizedActiveEraserMap.insert_or_assign(lineId, line);
 				auto sharedLine = make_shared<TouchPoint>(line);
-				canvas.AddShape(sharedLine);
+
+				if (symmetryLine->getSymmetryOn())
+				{
+					auto symmetricLine = symmetryLine->symmetricLineRef(sharedLine);
+					canvas.AddSymmetricShapes(make_pair(sharedLine, symmetricLine));
+				}
+				else
+				{
+					canvas.AddShape(sharedLine);
+				}
 			}
 			else
 			{

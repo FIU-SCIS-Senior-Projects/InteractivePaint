@@ -42,17 +42,16 @@ namespace touchpoints { namespace drawing
 			point1 = vec2(0, x);
 			point2 = vec2(1, x);
 		}
-//		symmetryOn = false;
 	}
 
 	TouchPoint SymmetryLine::symmetricLine(TouchPoint line)
 	{
 		auto points = line.getPointList();
-		vec2 firstPoint = SymmetryLine::symmetricPoint(points.front());
+		vec2 firstPoint = symmetricPoint(points.front());
 		TouchPoint symmetricTouch(firstPoint, line.getColor(), line.getSize());
 		for (auto touches : points)
 		{
-			symmetricTouch.addPoint(SymmetryLine::symmetricPoint(touches));
+			symmetricTouch.addPoint(symmetricPoint(touches));
 		}
 
 		return symmetricTouch;
@@ -107,5 +106,67 @@ namespace touchpoints { namespace drawing
 
 		TouchVerticalTriangle symmetricTriangle(symPoint1, symPoint2, symPoint3, symBaseCenter, triangle.getColor(), triangle.getSize(), symBool);
 		return symmetricTriangle;
+	}
+
+	shared_ptr<TouchPoint> SymmetryLine::symmetricLineRef(shared_ptr<TouchPoint> line)
+	{
+		auto points = line->getPointList();
+		vec2 firstPoint = symmetricPoint(points.front());
+		auto symmetricLine = shared_ptr<TouchPoint>(new TouchPoint(firstPoint, line->getColor(), line->getSize()));
+		for (auto touches : points)
+		{
+			symmetricLine->addPoint(symmetricPoint(touches));
+		}
+
+		return symmetricLine;
+	}
+
+	shared_ptr<TouchCircle> SymmetryLine::symmetricCircleRef(shared_ptr<TouchCircle> circle)
+	{
+		vec2 symCenter = SymmetryLine::symmetricPoint(circle->getCenter());
+		bool x = circle->getFilledShape();
+		return shared_ptr<TouchCircle>(new TouchCircle(symCenter, 
+			circle->getRadius(), circle->getColor(), circle->getSize(), x));
+	}
+
+	shared_ptr<TouchRectangle> SymmetryLine::symmetricRectangleRef(shared_ptr<TouchRectangle> rectangle)
+	{
+		vec2 symUpperLeft = SymmetryLine::symmetricPoint(vec2(rectangle->upperLeftX(), rectangle->upperLeftY()));
+		vec2 symLowerRight = SymmetryLine::symmetricPoint(vec2(rectangle->lowerRightX(), rectangle->lowerRightY()));
+
+		int x1 = symUpperLeft.x;
+		int y1 = symUpperLeft.y;
+		int x2 = symLowerRight.x;
+		int y2 = symLowerRight.y;
+
+		bool symBool = rectangle->getFilledShape();
+
+		return shared_ptr<TouchRectangle>(new TouchRectangle(x1, y1, x2, y2, 
+			rectangle->getColor(), rectangle->getSize(), symBool));
+	}
+
+	shared_ptr<TouchVerticalTriangle> SymmetryLine::symmetricTriangleRef(shared_ptr<TouchVerticalTriangle> triangle)
+	{
+		vec2 symPoint1 = symmetricPoint(triangle->GetBaseVertexLeft());
+		vec2 symPoint2 = symmetricPoint(triangle->GetBaseVertexRight());
+		vec2 symPoint3 = symmetricPoint(triangle->GetOppositeBaseVertex());
+		vec2 symBaseCenter = symmetricPoint(triangle->GetBaseCenter());
+		bool symBool = triangle->getFilledShape();
+
+		return shared_ptr<TouchVerticalTriangle>(new TouchVerticalTriangle(symPoint1, symPoint2, symPoint3, 
+			symBaseCenter, triangle->getColor(), triangle->getSize(), symBool));
+	}
+
+	shared_ptr<TouchEraserPoints> SymmetryLine::symmetricEraserRef(shared_ptr<TouchEraserPoints> eraser)
+	{
+		auto points = eraser->getPointList();
+		vec2 firstPoint = symmetricPoint(points.front());
+		auto symmetricEraser = shared_ptr<TouchEraserPoints>(new TouchEraserPoints(firstPoint, eraser->getColor(), eraser->getSize()));
+		for (auto touches : points)
+		{
+			symmetricEraser->addPoint(symmetricPoint(touches));
+		}
+
+		return symmetricEraser;
 	}
 }}

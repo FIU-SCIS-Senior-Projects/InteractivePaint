@@ -65,9 +65,10 @@ namespace touchpoints { namespace ui
 
 	Menu::Menu(vec2 startPoint, bool visible, ColorA backgroundColor, string imagePath,
 		multimap<int, shared_ptr<drawing::TouchShape>> composingShapes,
+		multimap<int, shared_ptr<Menu>> composingMenus,
 		function<void(vec2 point, Menu* self)> touchEventHandler)
 		: Menu(startPoint, defaultWidth, defaultHeight, visible,
-			composingShapes, multimap<int, shared_ptr<Menu>>(), touchEventHandler)
+			composingShapes, composingMenus, touchEventHandler)
 	{
 		populateDefaultShapes(backgroundColor, imagePath);
 	}
