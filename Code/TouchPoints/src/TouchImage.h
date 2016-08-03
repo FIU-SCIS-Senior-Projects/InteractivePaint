@@ -9,6 +9,7 @@ namespace touchpoints { namespace drawing
 	public:
 		TouchImage();
 		TouchImage(vec2 startPoint, int width, int height, std::string filePath);
+		inline void Resize(unsigned int width, unsigned int height) { this->width = width; this->height = height; }
 		void Draw() override;
 	private:
 		vec2 startPoint;

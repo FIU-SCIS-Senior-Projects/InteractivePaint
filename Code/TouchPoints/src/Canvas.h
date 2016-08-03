@@ -34,6 +34,7 @@ namespace touchpoints { namespace drawing
 		inline void SetTopAlpha(float value) { layers[activeLayerIndex].SetAlpha(value); }
 		float GetAlpha(int index) const;
 		void SetAlpha(int index, float value);
+		inline void IncrementBackgroundColor() { layers[activeLayerIndex].IncrementBackgroundColor(); }
 		inline gl::Texture2dRef GetTopLayerTexture() const { return layers[activeLayerIndex].GetFrameBufferTexture(); }
 		gl::Texture2dRef GetLayerTexture(int index) const;
 	private:

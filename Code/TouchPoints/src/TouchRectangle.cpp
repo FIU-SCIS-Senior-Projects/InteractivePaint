@@ -32,6 +32,12 @@ namespace touchpoints { namespace drawing
 		this->framesDrawn = framesDrawn;
 	}
 
+	void TouchRectangle::Resize(unsigned int width, unsigned int height)
+	{
+		mLowerRightX = mUpperLeftX + width;
+		mLowerRightY = mUpperLeftY + height;
+	}
+
 	void TouchRectangle::Draw()
 	{
 		gl::color(mColor);

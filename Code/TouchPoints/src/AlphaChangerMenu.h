@@ -1,5 +1,6 @@
 #pragma once
 #include "LayerModeSelectorMenu.h"
+#include "LayerVisualizationMenu.h"
 
 namespace touchpoints { namespace ui
 {

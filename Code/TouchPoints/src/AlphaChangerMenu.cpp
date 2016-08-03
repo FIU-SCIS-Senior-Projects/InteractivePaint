@@ -1,5 +1,5 @@
 #include "AlphaChangerMenu.h"
-#include "LayerVisualizationMenu.h"
+
 
 namespace touchpoints { namespace ui
 {
@@ -11,7 +11,7 @@ namespace touchpoints { namespace ui
 
 	AlphaChangerMenu::AlphaChangerMenu(vec2 startPoint, bool visible, int index, drawing::Illustrator* illustrator)
 		: LayerModeSelectorMenu(startPoint, defaultWidth, LayerVisualizationMenu::defaultHeight, visible,
-		illustrator, nullptr), index(index), alphaCircleXPosition(startPoint.x+25)//((startPoint.x + defaultWidth) / 2)
+		illustrator, nullptr), index(index), alphaCircleXPosition(startPoint.x+25)
 	{
 		setupShapes();
 	}

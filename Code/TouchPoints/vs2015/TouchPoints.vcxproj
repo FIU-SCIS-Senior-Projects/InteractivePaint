@@ -214,6 +214,7 @@
     <ClCompile Include="..\src\EyeXHandler.cpp" />
     <ClCompile Include="..\src\GuidHash.h" />
     <ClCompile Include="..\src\Illustrator.cpp" />
+    <ClCompile Include="..\src\IllustratorModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\ImageHandler.cpp" />
     <ClCompile Include="..\src\KinectAudioHandler.cpp" />
     <ClCompile Include="..\src\KinectAudioStream.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="..\src\RealSenseHandler.cpp" />
     <ClCompile Include="..\src\Rect.cpp" />
     <ClCompile Include="..\src\RemoveLayerMenu.cpp" />
+    <ClCompile Include="..\src\ShapeDisplayMenu.cpp" />
     <ClCompile Include="..\src\ShapeModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\SwitchMenu.cpp" />
     <ClCompile Include="..\src\SymmetryLine.cpp" />
@@ -246,6 +248,7 @@
     <ClCompile Include="..\src\TouchVerticalTriangle.cpp" />
     <ClCompile Include="..\src\UndoButton.cpp" />
     <ClCompile Include="..\src\UserInterface.cpp" />
+    <ClCompile Include="..\src\UserInterfaceModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\VerticalTriangle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -256,12 +259,14 @@
     <ClInclude Include="..\src\Brush.h" />
     <ClInclude Include="..\src\BrushModeSelectorMenu.h" />
     <ClInclude Include="..\src\Canvas.h" />
+    <ClInclude Include="..\src\Color.h" />
     <ClInclude Include="..\src\DeviceHandler.h" />
     <ClInclude Include="..\src\DrawEvent.h" />
     <ClInclude Include="..\src\Enums.h" />
     <ClInclude Include="..\src\EyeXHandler.h" />
     <ClInclude Include="..\src\IDrawable.h" />
     <ClInclude Include="..\src\Illustrator.h" />
+    <ClInclude Include="..\src\IllustratorModeSelectorMenu.h" />
     <ClInclude Include="..\src\ImageHandler.h" />
     <ClInclude Include="..\src\KinectAudioHandler.h" />
     <ClInclude Include="..\src\KinectAudioStream.h" />
@@ -278,6 +283,7 @@
     <ClInclude Include="..\src\RealSenseHandler.h" />
     <ClInclude Include="..\src\Rect.h" />
     <ClInclude Include="..\src\RemoveLayerMenu.h" />
+    <ClInclude Include="..\src\ShapeDisplayMenu.h" />
     <ClInclude Include="..\src\ShapeModeSelectorMenu.h" />
     <ClInclude Include="..\src\SwitchMenu.h" />
     <ClInclude Include="..\src\SymmetryLine.h" />
@@ -295,6 +301,7 @@
     <ClInclude Include="..\src\TouchTexture.h" />
     <ClInclude Include="..\src\TouchVerticalTriangle.h" />
     <ClInclude Include="..\src\UndoButton.h" />
+    <ClInclude Include="..\src\UserInterfaceModeSelectorMenu.h" />
     <ClInclude Include="..\src\VerticalTriangle.h" />
     <ClInclude Include="..\src\UserInterface.h" />
   </ItemGroup>

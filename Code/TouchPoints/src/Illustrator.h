@@ -62,6 +62,7 @@ namespace touchpoints { namespace drawing
 		//alpha of i-th layer
 		inline float GetAlpha(int index) const { return canvas.GetAlpha(index); }
 		inline void SetAlpha(int index, float value) { canvas.SetAlpha(index, value); }
+		inline void IncrementBackgroundColor() { canvas.IncrementBackgroundColor(); }
 		inline gl::Texture2dRef GetTopLayerTexture() const { return canvas.GetTopLayerTexture(); }
 		inline gl::Texture2dRef GetLayerTexture(int index) const { return canvas.GetLayerTexture(index); }
 		//setters for resize() in TouchPointsApp

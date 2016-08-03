@@ -1,6 +1,7 @@
 #include "LeapMotionHandler.h"
 #include "Enums.h"
 #include "cinder/gl/gl.h"
+#include "Color.h"
 
 namespace touchpoints { namespace devices
 {
@@ -301,49 +302,49 @@ namespace touchpoints { namespace devices
 		brush->incrementColor();
 		gui->setModeChangeFlag();
 		//Provides correct image to provide feedback
-		switch (brush->ColorToColorEnumMapper(brush->getColor()))
+		switch (drawing::ColorAToColorEnumMapper(brush->getColor()))
 		{
-			case ourColors::Black:
+			case drawing::ourColors::Black:
 			{
 				imageHandler->loadIcon(COLOR_ZERO);
 
 				break;
 			}
-			case ourColors::Red:
+			case drawing::ourColors::Red:
 			{
 				imageHandler->loadIcon(COLOR_ONE);
 
 				break;
 			}
-			case ourColors::Yellow:
+			case drawing::ourColors::Yellow:
 			{
 				imageHandler->loadIcon(COLOR_TWO);
 
 				break;
 			}
-			case ourColors::Green:
+			case drawing::ourColors::Green:
 			{
 				imageHandler->loadIcon(COLOR_THREE);
 
 				break;
 			}
-			case ourColors::Aqua:
+			case drawing::ourColors::Aqua:
 			{
 				imageHandler->loadIcon(COLOR_FOUR);
 				break;
 			}
-			case ourColors::Blue:
+			case drawing::ourColors::Blue:
 			{
 				imageHandler->loadIcon(COLOR_FIVE);
 
 				break;
 			}
-			case ourColors::Purple:
+			case drawing::ourColors::Purple:
 			{
 				imageHandler->loadIcon(COLOR_SIX);
 				break;
 			}
-			case ourColors::Orange:
+			case drawing::ourColors::Orange:
 			{
 				imageHandler->loadIcon(COLOR_SEVEN);
 				break;

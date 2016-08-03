@@ -31,22 +31,6 @@ namespace touchpoints
 		};
 	}
 
-	namespace ourColors
-	{
-		enum ourColors
-		{
-			Black,
-			Red,
-			Yellow,
-			Green,
-			Aqua,
-			Blue,
-			Purple,
-			Orange,
-			White
-		};
-	}
-
 	namespace Mode
 	{
 		enum DefaultModes

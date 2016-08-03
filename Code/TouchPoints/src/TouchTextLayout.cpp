@@ -33,7 +33,6 @@ namespace touchpoints { namespace drawing
 		auto x2 = x1 + width;
 		auto y2 = y1 + height;
 
-		gl::color(textColor);//IS THIS NECCESARY?
 		gl::draw(texture, Rectf(Rectf(x1, y1, x2, y2)));
 	}
 }}

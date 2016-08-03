@@ -3,6 +3,7 @@
 #include <vector>
 #include "SymmetryLine.h"
 #include "Enums.h"
+#include "Color.h"
 
 namespace touchpoints { namespace drawing
 {
@@ -33,8 +34,7 @@ namespace touchpoints { namespace drawing
 		void increaseAlpha();
 		void decreaseAlpha();
 		void incrementColor();
-		void changeStaticColor(ourColors::ourColors staticColor);
-		ourColors::ourColors ColorToColorEnumMapper(Color color);
+		void changeStaticColor(ourColors staticColor);
 		void Brush::decrementColor();
 		std::vector<Color> getColorList();
 		void Brush::setSymmetry(SymmetryLine* mySymmetry);
@@ -46,7 +46,7 @@ namespace touchpoints { namespace drawing
 		SymmetryLine* mMySymmetry;
 		bool mRandColor;
 		float mAlphaColor;
-		ourColors::ourColors mStaticColor;
+		ourColors mStaticColor;
 		std::vector<Color> colorList;
 		int currShape = 0;
 		int currColor = 0;

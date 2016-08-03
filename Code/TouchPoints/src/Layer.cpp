@@ -6,21 +6,24 @@ namespace touchpoints { namespace drawing
 {
 	Layer::Layer() {}
 
-	Layer::Layer(int windowWidth, int windowHeight) 
-		: windowWidth(windowWidth), windowHeight(windowHeight)
+	Layer::Layer(int windowWidth, int windowHeight, ourColors backgroundColor)
+		: windowWidth(windowWidth), windowHeight(windowHeight), backgroundColor(backgroundColor)
 	{
 		framebuffer = gl::Fbo::create(windowWidth, windowHeight, format);
+		initializeBackground();
 	}
 
 	void Layer::SetWindowWidth(int width)
 	{
 		windowWidth = width;
+		resizeBackground(width, 0);
 		resetFramebuffer();
 	}
 
 	void Layer::SetWindowHeight(int height)
 	{
 		windowHeight = height;
+		resizeBackground(0, height);
 		resetFramebuffer();
 	}
 
@@ -28,6 +31,7 @@ namespace touchpoints { namespace drawing
 	{
 		windowWidth = width;
 		windowHeight = height;
+		resizeBackground(width, height);
 		resetFramebuffer();
 	}
 
@@ -58,6 +62,15 @@ namespace touchpoints { namespace drawing
 	void Layer::Draw()
 	{
 		drawSetup();
+
+		if(backgroundColor == ourColors::Transparent)
+		{
+			transparentBackground.Draw();
+		}
+		else
+		{
+			background.Draw();
+		}
 
 		for(auto drawable: drawablesStack)
 		{
@@ -112,5 +125,35 @@ namespace touchpoints { namespace drawing
 	{
 		drawablesStack.clear();
 		resetFramebuffer();
+	}
+
+	void Layer::setBackgroundColor(ourColors value)
+	{
+		backgroundColor = value; 
+		if(backgroundColor != ourColors::Transparent)
+		{
+			background.setColor(ColorEnumToColorAMapper(value));
+		}
+	}
+
+	void Layer::IncrementBackgroundColor()
+	{
+		setBackgroundColor(IncrementColorEnum(backgroundColor));
+	}
+
+	void Layer::initializeBackground()
+	{
+		auto x1 = 0;
+		auto y1 = 0;
+		auto x2 = windowWidth;
+		auto y2 = windowHeight;
+		background = TouchRectangle(x1, y1, x2, y2, ColorEnumToColorAMapper(backgroundColor), 0, true);
+		transparentBackground = TouchImage(vec2(x1, y1), windowWidth, windowHeight, "TransparentBackground.png");
+	}
+
+	void Layer::resizeBackground(unsigned int width, unsigned int height)
+	{
+		background.Resize(width, height);
+		transparentBackground.Resize(width, height);
 	}
 }}

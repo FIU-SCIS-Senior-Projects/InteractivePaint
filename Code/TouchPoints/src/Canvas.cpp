@@ -17,7 +17,7 @@ namespace touchpoints { namespace drawing
 		for (int i = 0; i < numberOfLayers; i++)
 		{
 			layerIndexActive[i] = IndexActive(i, true);
-			layers[i] = Layer(windowWidth, windowHeight);
+			layers[i] = Layer(windowWidth, windowHeight, ourColors::White);
 		}
 	}
 

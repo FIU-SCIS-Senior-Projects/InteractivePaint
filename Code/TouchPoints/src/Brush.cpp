@@ -14,7 +14,7 @@ namespace touchpoints { namespace drawing
 		mMySymmetry = mySymmetry;
 		isEraserActive = isEraserActive;
 		mAlphaColor = alphaColor;
-		mStaticColor = ourColors::ourColors::Black;
+		mStaticColor = ourColors::Black;
 		//Fills our colorList with all our colors
 		Color newColor1(0.0f, 0.0f, 0.0f);
 		colorList.emplace_back(newColor1);
@@ -32,46 +32,6 @@ namespace touchpoints { namespace drawing
 		colorList.emplace_back(newColor7);
 		Color newColor8(1.0f, 0.3f, 0.0);
 		colorList.emplace_back(newColor8);
-	}
-
-	ourColors::ourColors Brush::ColorToColorEnumMapper(Color color)
-	{
-		if (color == Color(0.0f, 0.0f, 0.0f))
-		{
-			return ourColors::Black;
-		}
-		else if (color == Color(256.0f, 0.0f, 0.0f))
-		{
-			return ourColors::Red;
-		}
-		else if (color == Color(256.0f, 256.0f, 0.0f))
-		{
-			return ourColors::Yellow;
-		}
-		else if (color == Color(0.0f, 256.0f, 0.0f))
-		{
-			return ourColors::Green;
-		}
-		else if (color == Color(0.0f, 256.0f, 256.0f))
-		{
-			return ourColors::Aqua;
-		}
-		else if (color == Color(0.0f, 0.0f, 256.0f))
-		{
-			return ourColors::Blue;
-		}
-		else if (color == Color(256.0f, 0.0f, 256.0f))
-		{
-			return ourColors::Purple;
-		}
-		else if (color == Color(1.0f, 0.3f, 0.0f))
-		{
-			return ourColors::Orange;
-		}
-		else if (color == Color(1.0f, 1.0f, 1.0f))
-		{
-			return ourColors::White;
-		}
 	}
 
 	void Brush::incrementShape()
@@ -223,51 +183,51 @@ namespace touchpoints { namespace drawing
 		mColor = ColorA(colorList[currColor], mAlphaColor);
 	}
 
-	void Brush::changeStaticColor(ourColors::ourColors staticColor)
+	void Brush::changeStaticColor(ourColors staticColor)
 	{
-		if (staticColor == ourColors::ourColors::White)
+		if (staticColor == ourColors::White)
 		{
-			mStaticColor = ourColors::ourColors::White;
+			mStaticColor = ourColors::White;
 			mColor = ColorA(1.0, 1.0, 1.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Red)
+		if (staticColor == ourColors::Red)
 		{
-			mStaticColor = ourColors::ourColors::Red;
+			mStaticColor = ourColors::Red;
 			mColor = ColorA(1.0, 0.0, 0.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Yellow)
+		if (staticColor == ourColors::Yellow)
 		{
-			mStaticColor = ourColors::ourColors::Yellow;
+			mStaticColor = ourColors::Yellow;
 			mColor = ColorA(1.0, 1.0, 0.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Green)
+		if (staticColor == ourColors::Green)
 		{
-			mStaticColor = ourColors::ourColors::Green;
+			mStaticColor = ourColors::Green;
 			mColor = ColorA(0.0, 256.0, 0.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Aqua)
+		if (staticColor == ourColors::Aqua)
 		{
-			mStaticColor = ourColors::ourColors::Aqua;
+			mStaticColor = ourColors::Aqua;
 			mColor = ColorA(0.0, 1.0, 1.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Blue)
+		if (staticColor == ourColors::Blue)
 		{
-			mStaticColor = ourColors::ourColors::Blue;
+			mStaticColor = ourColors::Blue;
 			mColor = ColorA(0.0, 0.0, 1.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Purple)
+		if (staticColor == ourColors::Purple)
 		{
-			mStaticColor = ourColors::ourColors::Purple;
+			mStaticColor = ourColors::Purple;
 			mColor = ColorA(1.0, 0.0, 1.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Orange)
+		if (staticColor == ourColors::Orange)
 		{
-			mStaticColor = ourColors::ourColors::Orange;
+			mStaticColor = ourColors::Orange;
 			mColor = ColorA(1.0, 0.3, 0.0, mAlphaColor);
 		}
-		if (staticColor == ourColors::ourColors::Black)
+		if (staticColor == ourColors::Black)
 		{
-			mStaticColor = ourColors::ourColors::Black;
+			mStaticColor = ourColors::Black;
 			mColor = ColorA(0.0, 0.0, 0.0, mAlphaColor);
 		}
 	}

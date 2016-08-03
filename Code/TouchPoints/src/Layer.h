@@ -10,7 +10,7 @@ namespace touchpoints { namespace drawing
 	{
 	public:
 		Layer();
-		Layer(int windowWidth, int windowHeight);
+		Layer(int windowWidth, int windowHeight, ourColors backgroundColor);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);
 		void SetWindowDimensions(int width, int height);
@@ -21,6 +21,8 @@ namespace touchpoints { namespace drawing
 		void ClearLayer();
 		inline float GetAlpha() const { return alpha.GetValue(); }
 		inline void SetAlpha(float value) { alpha.SetValue(value); }
+		inline ourColors GetBackgroundColor() const { return backgroundColor; }
+		void IncrementBackgroundColor(); 
 		inline gl::Texture2dRef GetFrameBufferTexture() const { return framebuffer->getColorTexture(); }
 	protected:
 		int windowWidth;
@@ -32,9 +34,15 @@ namespace touchpoints { namespace drawing
 		GuidGenerator guidGenerator;
 		typedef pair<shared_ptr<IDrawable>, Guid> DrawableGuidPair;
 		vector<DrawableGuidPair> drawablesStack;
+		ourColors backgroundColor;
+		TouchRectangle background;
+		TouchImage transparentBackground;
 		void drawSetup() const;
 		void drawTearDown() const;
 	private:
 		void resetFramebuffer();
+		void setBackgroundColor(ourColors value);
+		void initializeBackground();
+		void resizeBackground(unsigned int width, unsigned int height);
 	};
 }}

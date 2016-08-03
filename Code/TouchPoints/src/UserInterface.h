@@ -32,6 +32,7 @@ namespace touchpoints { namespace ui
 		bool isBackgroundTransparent();
 		std::shared_ptr<gl::Fbo> getTransparentBackground();
 		bool getFps();
+		inline void ToggleFps() { FPS = !FPS; }
 		//UI Setup does all the drawing that cannot be done inside a libcinder 'setup' call, such as drawing to Framebuffers.
 		void uiSetup();
 		void drawDeviceButtonsFbo();
@@ -52,12 +53,20 @@ namespace touchpoints { namespace ui
 	private:
 		void initializeMenuLayer();
 		void initializeTopLeftMenu();
+		void initializeBottomRightMenu();
 		multimap<int, shared_ptr<Menu>> createColorPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createShapePickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createBrushPickerMenu() const;
 		multimap<int, shared_ptr<Menu>> createLayerVisualizationMenu() const;
 		multimap<int, shared_ptr<drawing::TouchShape>> createSymmetryMenuShapes() const;
 		multimap<int, shared_ptr<drawing::TouchShape>> createSymmetryDropdownShapes() const;
+		multimap<int, shared_ptr<drawing::TouchShape>> createBottomRightMenuShapes() const;
+		multimap<int, shared_ptr<Menu>> createBottomRightComposingMenus() const;
+		shared_ptr<Menu> createDeviceModeButtonMenu() const;
+		shared_ptr<Menu> createSettingsButtonMenu() const;
+		shared_ptr<Menu> createShapeDisplayMenu() const;
+		multimap<int, shared_ptr<Menu>> UserInterface::createSettingsButtonComposingMenus() const;
+		//multimap<int, shared_ptr<Menu>> create
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;
 		devices::DeviceHandler* deviceHandler;
@@ -79,6 +88,7 @@ namespace touchpoints { namespace ui
 
 		MenuLayer menuLayer;
 		shared_ptr<Menu> topLeftMenu;
+		shared_ptr<Menu> bottomRightMenu;
 
 		int windowWidth;
 		int windowHeight;

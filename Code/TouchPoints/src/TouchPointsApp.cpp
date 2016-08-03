@@ -717,6 +717,8 @@ namespace touchpoints { namespace app
 		imageHandler.displayIcon();
 		imageHandler.displayStartIcon();
 		
+		illustrator.Draw();
+
 		//Draws all the UI elements (Currently only updated the uiFbo which stores data for the mode box), drawing is done below.
 		gui.drawUi();
 		
@@ -775,8 +777,6 @@ namespace touchpoints { namespace app
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(fingerLocationFbo->getColorTexture());
 		}
-
-		illustrator.Draw();
 	}
 
 	void TouchPointsApp::resize()

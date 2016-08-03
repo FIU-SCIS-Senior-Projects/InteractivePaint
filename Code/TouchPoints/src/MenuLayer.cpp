@@ -4,7 +4,7 @@ namespace touchpoints { namespace ui
 {
 	MenuLayer::MenuLayer() {}
 
-	MenuLayer::MenuLayer(int windowWidth, int windowHeight) : Layer(windowWidth, windowHeight) {}
+	MenuLayer::MenuLayer(int windowWidth, int windowHeight) : Layer(windowWidth, windowHeight, drawing::ourColors::Transparent) {}
 
 	void MenuLayer::OnTouch(vec2 point) const
 	{
@@ -36,6 +36,8 @@ namespace touchpoints { namespace ui
 	void MenuLayer::Draw()
 	{
 		drawSetup();
+
+		//background not drawn for MenuLayer
 
 		for (auto drawable : drawablesStack)
 		{

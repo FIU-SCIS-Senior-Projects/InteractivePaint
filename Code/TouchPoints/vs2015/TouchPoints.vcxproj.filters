@@ -46,6 +46,9 @@
     <Filter Include="ui\menus">
       <UniqueIdentifier>{3e47dbe4-db91-4a94-b7ac-4a351e9a0732}</UniqueIdentifier>
     </Filter>
+    <Filter Include="drawing\color">
+      <UniqueIdentifier>{3b51f698-bc00-42f9-a004-ed7f21afc329}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Brush.cpp">
@@ -181,6 +184,15 @@
       <Filter>ui\menus</Filter>
     </ClCompile>
     <ClCompile Include="..\src\UndoButton.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShapeDisplayMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\UserInterfaceModeSelectorMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\IllustratorModeSelectorMenu.cpp">
       <Filter>ui\menus</Filter>
     </ClCompile>
   </ItemGroup>
@@ -327,6 +339,18 @@
       <Filter>ui\menus</Filter>
     </ClInclude>
     <ClInclude Include="..\src\UndoButton.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ShapeDisplayMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\UserInterfaceModeSelectorMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Color.h">
+      <Filter>drawing\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\IllustratorModeSelectorMenu.h">
       <Filter>ui\menus</Filter>
     </ClInclude>
   </ItemGroup>

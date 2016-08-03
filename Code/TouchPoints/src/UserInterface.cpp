@@ -87,7 +87,9 @@ namespace touchpoints { namespace ui
 	{
 		menuLayer = MenuLayer(windowWidth, windowHeight);
 		initializeTopLeftMenu();
+		initializeBottomRightMenu();
 		menuLayer.AddMenu(topLeftMenu);
+		menuLayer.AddMenu(bottomRightMenu);
 	}
 
 	void UserInterface::initializeTopLeftMenu()
@@ -134,6 +136,18 @@ namespace touchpoints { namespace ui
 			make_pair(0, keyboardMenu),
 			make_pair(0, undoButton)
 		}, nullptr));
+	}
+
+	void UserInterface::initializeBottomRightMenu()
+	{
+		auto bottomRightMenuShapes = createBottomRightMenuShapes();
+		auto bottomRightMenuComposingMenus = createBottomRightComposingMenus();
+
+		auto startPoint = vec2(windowWidth * 0.8, windowHeight * 0.8);
+		auto width = windowWidth - (windowWidth * 0.8);
+		auto height = windowHeight - (windowHeight * 0.8);
+		bottomRightMenu = shared_ptr<Menu>(new Menu(startPoint, width, height, true, 
+			bottomRightMenuShapes, bottomRightMenuComposingMenus, nullptr));
 	}
 
 	multimap<int, shared_ptr<Menu>> UserInterface::createColorPickerMenu() const
@@ -327,6 +341,153 @@ namespace touchpoints { namespace ui
 		};
 	}
 
+	multimap<int, shared_ptr<drawing::TouchShape>> UserInterface::createBottomRightMenuShapes() const
+	{
+		auto backgroundRectangle = shared_ptr<drawing::TouchRectangle>
+			(new drawing::TouchRectangle(windowWidth * .8, windowHeight * .8, windowWidth, windowHeight, 
+				ColorA(0.82f, 0.82f, 0.82f, 1.0f), 0, true));
+		auto outlineRectangle = shared_ptr<drawing::TouchRectangle>
+			(new drawing::TouchRectangle(windowWidth * .8, windowHeight * .8, windowWidth, windowHeight,
+				ColorA(0.75f, 0.75f, 0.75f, 1.0f), Menu::defaultBorderThickness, false));
+
+		return multimap<int, shared_ptr<drawing::TouchShape>>
+		{
+			make_pair(0, backgroundRectangle),
+			make_pair(1, outlineRectangle)
+		};
+	}
+
+	multimap<int, shared_ptr<Menu>> UserInterface::createBottomRightComposingMenus() const
+	{
+		auto deviceModeButtonMenu = createDeviceModeButtonMenu();
+		auto settingsButton = createSettingsButtonMenu();
+		auto shapeDisplayMenu = createShapeDisplayMenu();
+		
+		return multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, deviceModeButtonMenu),
+			make_pair(0, settingsButton),
+			make_pair(0, shapeDisplayMenu)
+		};
+	}
+
+	shared_ptr<Menu> UserInterface::createDeviceModeButtonMenu() const
+	{
+		auto deviceModeButtonX1 = windowWidth * .92;
+		auto deviceModeButtonY1 = windowHeight * .8;
+		auto deviceModeButtonX2 = windowWidth;
+		auto deviceModeButtonY2 = windowHeight * .83;
+		auto deviceModeButtonStartPoint = vec2(deviceModeButtonX1, deviceModeButtonY1);
+		auto deviceModeButtonWidth = windowWidth - windowWidth * .92;
+		auto deviceModeButtonHeight = windowHeight * .83 - windowHeight * .8;
+
+		auto deviceModeButtonBackgroundRectangle = shared_ptr<drawing::TouchRectangle>
+			(new drawing::TouchRectangle(deviceModeButtonX1, deviceModeButtonY1, deviceModeButtonX2,
+				deviceModeButtonY2, ColorA(0.1f, 0.1f, 0.1f, 1.0f), 0, true));
+		auto deviceModeButtonText = shared_ptr<drawing::TouchTextLayout>(new drawing::TouchTextLayout(
+			deviceModeButtonStartPoint, deviceModeButtonWidth, deviceModeButtonHeight,
+			"Device Modes", "Arial", ColorA(0.2f, 0.2f, 0.2f, 0.2f), 50));
+		auto deviceModeButtonBorder = shared_ptr<drawing::TouchRectangle>
+			(new drawing::TouchRectangle(deviceModeButtonX1, deviceModeButtonY1, deviceModeButtonX2,
+				deviceModeButtonY2, ColorA(0.75f, 0.75f, 0.75f, 1.0f), Menu::defaultBorderThickness, false));
+
+		auto deviceModeButtonComposingShapes = multimap<int, shared_ptr<drawing::TouchShape>>
+		{
+			make_pair(0, deviceModeButtonBackgroundRectangle),
+			make_pair(1, deviceModeButtonText),
+			make_pair(1, deviceModeButtonBorder),
+		};
+
+		auto deviceModeButtonComposingMenus = multimap<int, shared_ptr<Menu>>();
+
+		return shared_ptr<Menu>(new Menu(deviceModeButtonStartPoint,
+			deviceModeButtonWidth, deviceModeButtonHeight, true, deviceModeButtonComposingShapes,
+			deviceModeButtonComposingMenus, Menu::defaultDropdownCallback));
+
+	}
+
+	shared_ptr<Menu> UserInterface::createSettingsButtonMenu() const
+	{
+		auto settingsButtonX1 = windowWidth * .8;
+		auto settingsButtonY1 = windowHeight * .95;
+		auto settingsButtonWidth = (windowWidth * .83) - (windowWidth * .8);
+		auto settingsButtonHeight = windowHeight - (windowHeight * .95);
+		auto settingsButtonStartPoint = vec2(settingsButtonX1, settingsButtonY1);
+		auto settingsButtonImage = shared_ptr<drawing::TouchImage>
+			(new drawing::TouchImage(settingsButtonStartPoint, settingsButtonWidth, settingsButtonHeight,
+				"Settings.png"));
+		auto settingsButtonShapes = multimap<int, shared_ptr<drawing::TouchShape>>
+		{
+			make_pair(0, settingsButtonImage)
+		};
+
+		auto settingsButtonMenus = createSettingsButtonComposingMenus();
+
+		return shared_ptr<Menu>(new Menu(settingsButtonStartPoint,
+			settingsButtonWidth, settingsButtonHeight, true, settingsButtonShapes,
+			settingsButtonMenus, Menu::defaultDropdownCallback));
+	}
+
+	shared_ptr<Menu> UserInterface::createShapeDisplayMenu() const
+	{
+		auto startPoint = vec2(windowWidth * .88, windowHeight * .875);
+		auto width = 65;
+		auto height = 65;
+		return shared_ptr<Menu>(new ShapeDisplayMenu(startPoint, width, height, true, mBrush));
+	}
+
+	multimap<int, shared_ptr<Menu>> UserInterface::createSettingsButtonComposingMenus() const
+	{
+		auto fpsX1 = windowWidth * .65;
+		auto fpsY1 = windowHeight * .95;
+		auto fpsX2 = windowWidth * .8;
+		auto fpsY2 = windowHeight;
+		auto fpsStartPoint = vec2(fpsX1, fpsY1);
+		int fpsWidth = fpsX2 - fpsX1;
+		int fpsHeight = fpsY2 - fpsY1;
+		auto sharedUiPtr = make_shared<UserInterface>(*this);
+		auto framesPerSecondBackgroundRectangle = shared_ptr<drawing::TouchRectangle>(new drawing::TouchRectangle(
+			fpsX1, fpsY1, fpsX2, fpsY2, ColorA(0.0f, 0.0f, 0.0f, 1.0f), 0, true));
+		auto framesPerSecondText = shared_ptr<drawing::TouchTextLayout>(new drawing::TouchTextLayout(fpsStartPoint, fpsWidth, fpsHeight, 
+			"Frames Per Second", "Arial", ColorA(1.0f, 1.0f, 1.0f, 1.0f), 200));
+		auto framesPerSecondShapes = multimap<int, shared_ptr<drawing::TouchShape>>
+		{
+			make_pair(0, framesPerSecondBackgroundRectangle),
+			make_pair(1, framesPerSecondText)
+		};
+		auto framesPersecondMenu = shared_ptr<UserInterfaceModeSelectorMenu>(new UserInterfaceModeSelectorMenu(fpsStartPoint, fpsWidth, 
+			fpsHeight, false, sharedUiPtr, framesPerSecondShapes,
+			[](vec2 point, UserInterfaceModeSelectorMenu *self, shared_ptr<UserInterface> ui) { ui->ToggleFps(); }));
+
+		auto bgX1 = windowWidth * .65;
+		auto bgY1 = windowHeight * .9;
+		auto bgX2 = windowWidth * .8;
+		auto bgY2 = windowHeight * 0.95;
+		auto bgStartPoint = vec2(bgX1, bgY1);
+		int bgWidth = bgX2 - bgX1;
+		int bgHeight = bgY2 - bgY1;
+		auto backgroundColorBackgroundRectangle = shared_ptr<drawing::TouchRectangle>(new drawing::TouchRectangle(
+			bgX1, bgY1, bgX2, bgY2, ColorA(0.0f, 0.0f, 0.0f, 1.0f), 0, true));
+		auto backgroundColorText = shared_ptr<drawing::TouchTextLayout>(new drawing::TouchTextLayout(bgStartPoint, bgWidth, bgHeight,
+			"Background Color", "Arial", ColorA(1.0f, 1.0f, 1.0f, 1.0f), 200));
+		auto backgroundColorShapes = multimap<int, shared_ptr<drawing::TouchShape>>
+		{
+			make_pair(0, backgroundColorBackgroundRectangle),
+			make_pair(1, backgroundColorText)
+		};
+		auto backgroundColorMenu = shared_ptr<IllustratorModeSelectorMenu>(new IllustratorModeSelectorMenu(bgStartPoint, bgWidth,
+			bgHeight, false, illustrator, backgroundColorShapes, multimap<int, shared_ptr<Menu>> (),
+			[](vec2 point, IllustratorModeSelectorMenu *self, drawing::Illustrator* illustrator) 
+			{ illustrator->IncrementBackgroundColor(); }));
+		
+		return multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, framesPersecondMenu),
+			make_pair(0, backgroundColorMenu)
+		};
+	}
+
+
 	void UserInterface::setModeButtons(bool sModeButtons)
 	{
 		modeButtons = sModeButtons;
@@ -337,6 +498,7 @@ namespace touchpoints { namespace ui
 		return modeButtons;
 	}
 
+	//todo remove
 	//draws the shapes dropdown menu on the top left of application
 	void UserInterface::drawShapesButtonsFbo()
 	{
@@ -545,6 +707,7 @@ namespace touchpoints { namespace ui
 		deviceButtonsFbo->unbindFramebuffer();
 	}
 
+	//todo remove this
 	//draws device button for top left menu,aka. size + -, Alpha(Transparency) + -, filled shapes
 	void UserInterface::drawBrushButtonsFbo()
 	{
@@ -747,126 +910,11 @@ namespace touchpoints { namespace ui
 
 		drawDeviceButtonsFbo();
 
-		//Draws Mode Buttons FBO.
-		//		modeButtonsFbo.reset();
 		modeButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		modeButtonsFbo->bindFramebuffer();
 
-		//glClearColor(1.0, 1.0, 1.0, 0.0);
-		//glClear(GL_COLOR_BUFFER_BIT);
-
-		//gl::color(0.3, 0.2, 0.5, 1.0);
-		//gl::drawSolidRect(Rectf(0, 0, 350, 50));
-
-		////Color Button
-
-		//gl::TextureRef texture = gl::Texture::create(loadImage(loadAsset("Colors.png")));
-
-		//gl::color(1.0, 1.0, 1.0, 1.0);
-		//gl::draw(texture, Rectf(5, 5, 45, 45));
-
-		//gl::color(0.75, 0.75, .75, 1.0);
-		//gl::drawStrokedRect(Rectf(0, 2, 100, 50), uiOutlineSize);
-
-		////Shapes button
-		///*gl::color(0.3, 0.2, 0.5, 1.0);
-		//gl::drawSolidRect(Rectf(50, 2, 100, 50));*/
-		//gl::color(0.75, 0.75, .75, 1.0);
-		//gl::drawStrokedRect(Rectf(50, 2, 100, 50), uiOutlineSize);
-
-		//texture = gl::Texture::create(loadImage(loadAsset("Shapes.png")));
-
-		//gl::color(1.0, 1.0, 1.0, 1.0);
-		//gl::draw(texture, Rectf(58, 8, 92, 42));
-
-		////Brush button
-		//gl::color(0.3, 0.2, 0.5, 1.0);
-		//gl::drawSolidRect(Rectf(100, 2, 150, 50));
-
-		//texture = gl::Texture::create(loadImage(loadAsset("Brush.png")));
-
-		//gl::color(1.0, 1.0, 1.0, 1.0);
-		//gl::draw(texture, Rectf(100, 0, 150, 50));
-
-		//gl::color(0.75, 0.75, .75, 1.0);
-		//gl::drawStrokedRect(Rectf(100, 2, 150, 50), uiOutlineSize);
-
-		////Symmetry Button
-
-		//gl::color(0.3, 0.2, 0.5, 1.0);
-		//gl::drawSolidRect(Rectf(150, 2, 200, 50));
-
-		//gl::color(0.75, 0.75, .75, 1.0);
-
-		//gl::drawLine(vec2(175, 2), vec2(175, 15));
-		//gl::drawLine(vec2(175, 20), vec2(175, 25));
-		//gl::drawLine(vec2(175, 30), vec2(175, 35));
-		//gl::drawLine(vec2(175, 40), vec2(175, 45));
-
-		//gl::drawStrokedRect(Rectf(150, 2, 200, 50), uiOutlineSize);
-
-		////Layer Visualization Button
-		//texture = gl::Texture::create(loadImage(loadAsset("Layers.png")));
-
-		//gl::color(1.0, 1.0, 1.0, 1.0);
-		//gl::draw(texture, Rectf(205, 5, 245, 45));
-
-		//gl::color(0.75, 0.75, .75, 1.0);
-		//gl::drawStrokedRect(Rectf(200, 0, 250, 50), uiOutlineSize);
-
-		////Text Button
-		//texture = gl::Texture::create(loadImage(loadAsset("Letter.png")));
-
-		//gl::color(1.0, 1.0, 1.0, 1.0);
-		//gl::draw(texture, Rectf(255, 5, 295, 45));
-
-		//gl::color(0.75, 0.75, .75, 1.0);
-		//gl::drawStrokedRect(Rectf(250, 2, 300, 50), uiOutlineSize);
-
-		////Undo Button
-		//texture = gl::Texture::create(loadImage(loadAsset("Undo.png")));
-
-		//gl::color(1.0, 1.0, 1.0, 1.0);
-		//gl::draw(texture, Rectf(305, 5, 345, 45));
-
-		//gl::color(0.75, 0.75, .75, 1.0);
-		//gl::drawStrokedRect(Rectf(300, 2, 350, 50), uiOutlineSize);
-
 		modeButtonsFbo->unbindFramebuffer();
-
-		//Sets Up Brush Buttons
-		//		brushButtonsFbo.reset();
-		brushButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-
-		drawBrushButtonsFbo();
-
-		//Sets up the Draw calls for color buttons and writes them to an FBO.
-		//		colorButtonsFbo.reset();
-		colorButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-
-		colorButtonsFbo->bindFramebuffer();
-		glClearColor(1.0, 1.0, 1.0, 0.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		int i = 0;
-		for (auto myColor : mBrush->getColorList())
-		{
-			gl::color(myColor);
-			gl::drawSolidRect(Rectf(0, 50 * (i) + 50, 50, 50 * (i) + 100));
-			gl::color(0.75, 0.75, .75, 1.0);
-			gl::drawStrokedRect(Rectf(0, 50 * (i) + 50, 50, 50 * i + 100), uiOutlineSize);
-			i++;
-		}
-		colorButtonsFbo->unbindFramebuffer();
-
-		//Draws Shapes Buttons FBO.
-		gl::color(1.0, 1.0, 1.0, 1.0);
-
-		//		shapeButtonsFbo.reset();
-		shapeButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
-
-		drawShapesButtonsFbo();
 
 		gl::color(1.0, 1.0, 1.0, 1.0);
 		//Loads the asset for transparent Background and writes it to the FBO.
@@ -1251,7 +1299,7 @@ namespace touchpoints { namespace ui
 				if (x < 50 && y < (50 * i + 100))
 				{
 					//currColor = i;
-					mBrush->changeStaticColor(static_cast<ourColors::ourColors>(i));
+					mBrush->changeStaticColor(static_cast<drawing::ourColors>(i));
 					colorButtons = false;
 					drawShapesButtonsFbo();
 					modeChangeFlag = true;
@@ -1444,110 +1492,6 @@ namespace touchpoints { namespace ui
 		return false;
 	}
 
-	//Mode Shapes are called to be drawn in the botton right menu
-	void UserInterface::modeRectangle()
-	{
-		if (mBrush->getRandColor())
-		{
-			ColorA newColor(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
-
-			gl::color(newColor);
-			if (!mBrush->getFilledShapes()) gl::drawStrokedRect(Rectf(windowWidth * .85, windowHeight * .85, windowWidth * .95, windowHeight * .95), mBrush->getLineSize());
-			else gl::drawSolidRect(Rectf(windowWidth * .85, windowHeight * .85, windowWidth * .95, windowHeight * .95));
-		}
-
-		else
-		{
-			ColorA newColor(mBrush->getColor(), mBrush->getAlphaColor());
-			gl::color(newColor);
-			if (!mBrush->getFilledShapes()) gl::drawStrokedRect(Rectf(windowWidth * .85, windowHeight * .85, windowWidth * .95, windowHeight * .95), mBrush->getLineSize());
-			else gl::drawSolidRect(Rectf(windowWidth * .85, windowHeight * .85, windowWidth * .95, windowHeight * .95));
-		}
-	}
-
-	void UserInterface::modeCircle()
-	{
-		if (mBrush->getRandColor())
-		{
-			ColorA newColor(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
-			gl::color(newColor);
-			if (!mBrush->getFilledShapes()) gl::drawStrokedCircle(vec2(windowWidth * .9, windowHeight * .9), windowHeight * .05, mBrush->getLineSize() * 2.0f);
-			else gl::drawSolidCircle(vec2(windowWidth * .9, windowHeight * .9), windowHeight * .05);
-		}
-		else
-		{
-			ColorA newColor(mBrush->getColor(), mBrush->getAlphaColor());
-			gl::color(newColor);
-			if (!mBrush->getFilledShapes()) gl::drawStrokedCircle(vec2(windowWidth * .9, windowHeight * .9), windowHeight * .05, mBrush->getLineSize() * 2.0f);
-			else gl::drawSolidCircle(vec2(windowWidth * .9, windowHeight * .9), windowHeight * .05);
-		}
-	}
-
-	void UserInterface::modeTriangle()
-	{
-		if (mBrush->getRandColor())
-		{
-			ColorA newColor(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
-			gl::color(newColor);
-			if (!mBrush->getFilledShapes())
-			{
-				gl::lineWidth(mBrush->getLineSize());
-				gl::drawLine(vec2(windowWidth * .85, windowHeight * .95), vec2(windowWidth * .95, windowHeight * .95));
-				gl::drawLine(vec2(windowWidth * .95, windowHeight * .95), vec2(windowWidth * .9, windowHeight * .85));
-				gl::drawLine(vec2(windowWidth * .9, windowHeight * .85), vec2(windowWidth * .85, windowHeight * .95));
-			}
-			else gl::drawSolidTriangle(vec2(windowWidth * .85, windowHeight * .95), vec2(windowWidth * .95, windowHeight * .95), vec2(windowWidth * .9, windowHeight * .85));
-		}
-		else
-		{
-			ColorA newColor(mBrush->getColor(), mBrush->getAlphaColor());
-			gl::color(newColor);
-			if (!mBrush->getFilledShapes())
-			{
-				gl::lineWidth(mBrush->getLineSize());
-				gl::drawLine(vec2(windowWidth * .85, windowHeight * .95), vec2(windowWidth * .95, windowHeight * .95));
-				gl::drawLine(vec2(windowWidth * .95, windowHeight * .95), vec2(windowWidth * .9, windowHeight * .85));
-				gl::drawLine(vec2(windowWidth * .9, windowHeight * .85), vec2(windowWidth * .85, windowHeight * .95));
-			}
-			else gl::drawSolidTriangle(vec2(windowWidth * .85, windowHeight * .95), vec2(windowWidth * .95, windowHeight * .95), vec2(windowWidth * .9, windowHeight * .85));
-		}
-	}
-
-	void UserInterface::modeLine()
-	{
-		if (mBrush->getRandColor())
-		{
-			//Performance Issues with drawing these 3 lines every frame!
-			ColorA newColor1(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
-			ColorA newColor2(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
-			ColorA newColor3(CM_HSV, Rand::randFloat(), 0.5f, 1.0f, mBrush->getAlphaColor());
-			//gl::color(newColor1);
-			drawing::TouchPoint newTouchPoints1(vec2(windowWidth * .85, windowHeight * .95), newColor1, mBrush->getLineSize());
-			illustrator->missedPoints(windowWidth * .85, windowHeight * .95, windowWidth * .95, windowHeight * .85, newTouchPoints1);
-			drawing::TouchPoint newTouchPoints2(vec2(windowWidth * .86, windowHeight * .90), newColor2, mBrush->getLineSize());
-			illustrator->missedPoints(windowWidth * .86, windowHeight * .90, windowWidth * .92, windowHeight * .84, newTouchPoints2);
-			drawing::TouchPoint newTouchPoints3(vec2(windowWidth * .88, windowHeight * .97), newColor3, mBrush->getLineSize());
-			illustrator->missedPoints(windowWidth * .88, windowHeight * .97, windowWidth * .94, windowHeight * .90, newTouchPoints3);
-			newTouchPoints1.Draw();
-			newTouchPoints2.Draw();
-			newTouchPoints3.Draw();
-		}
-		else
-		{
-			ColorA newColor(mBrush->getColor(), mBrush->getAlphaColor());
-			gl::color(newColor);
-			drawing::TouchPoint newTouchPoints1(vec2(windowWidth * .85, windowHeight * .95), newColor, mBrush->getLineSize());
-			illustrator->missedPoints(windowWidth * .85, windowHeight * .95, windowWidth * .95, windowHeight * .85, newTouchPoints1);
-			drawing::TouchPoint newTouchPoints2(vec2(windowWidth * .86, windowHeight * .90), newColor, mBrush->getLineSize());
-			illustrator->missedPoints(windowWidth * .86, windowHeight * .90, windowWidth * .92, windowHeight * .84, newTouchPoints2);
-			drawing::TouchPoint newTouchPoints3(vec2(windowWidth * .88, windowHeight * .97), newColor, mBrush->getLineSize());
-			illustrator->missedPoints(windowWidth * .88, windowHeight * .97, windowWidth * .94, windowHeight * .90, newTouchPoints3);
-			newTouchPoints1.Draw();
-			newTouchPoints2.Draw();
-			newTouchPoints3.Draw();
-		}
-	}
-
 	//draws the top left and bottom right menus
 	void UserInterface::drawUi()
 	{
@@ -1565,87 +1509,6 @@ namespace touchpoints { namespace ui
 			glClearColor(1.0, 1.0, 1.0, 0.0);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			gl::lineWidth(5);
-			//Clears the framebuffer to redraw
-			gl::clear(ColorA(0.0, 0.0, 0.0, 0.0));
-
-			gl::color(.82, .82, .82, 1.0);
-			gl::drawSolidRect(Rectf(windowWidth * .8, windowHeight * .8, windowWidth, windowHeight));
-			gl::color(0.0, 0.0, 0.0);
-
-			//Draw Device Mode button
-			gl::color(0.1, 0.1, 0.1, 1.0);
-			gl::drawSolidRect(Rectf(windowWidth * .92, windowHeight * .8, windowWidth, windowHeight * .83));
-
-			TextLayout layout1;
-			layout1.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
-			layout1.setFont(Font("Arial", 50));
-			layout1.setColor(Color(1, 1, 1));
-			layout1.addLine(std::string("Device Modes"));
-			Surface8u rendered = layout1.render(true, false);
-			gl::Texture2dRef mTexture = gl::Texture2d::create(rendered);
-			gl::color(Color::white());
-			gl::draw(mTexture, Rectf(windowWidth * .92, windowHeight * .8, windowWidth, windowHeight * .83));
-			gl::color(0.75, 0.75, .75, 1.0);
-			gl::drawStrokedRect(Rectf(windowWidth * .92, windowHeight * .8, windowWidth, windowHeight * .83));
-
-			//Draw outline of modeBox
-			gl::color(0.75, 0.75, 0.75);
-			gl::drawStrokedRect(Rectf(windowWidth * .8, windowHeight * .8, windowWidth, windowHeight), uiOutlineSize);
-
-			//Draw 'Settings' box
-			gl::TextureRef texture = gl::Texture::create(loadImage(loadAsset("Settings.png")));
-
-			gl::color(1.0, 1.0, 1.0, 1.0);
-			gl::draw(texture, Rectf(windowWidth * .8, windowHeight * .95, windowWidth * .83, windowHeight));
-
-			gl::color(0.0, 0.0, 0.0);
-
-			//Switch to Draw which shape is represented in the mode box.
-			if (mBrush->IsEraserActive())
-			{
-				bool tempBool = false;
-				drawing::TouchCircle(vec2(windowWidth * .9, windowHeight * .9), mBrush->getLineSize() * 2, Color(1.0, 1.0, 1.0), 1, tempBool).Draw();
-			}
-			else
-				switch (mBrush->getShape())
-				{
-					case Shape::Shape::Rectangle:
-						modeRectangle();
-						break;
-					case Shape::Shape::Circle:
-						modeCircle();
-						break;
-					case Shape::Shape::Triangle:
-						modeTriangle();
-						break;
-					case Shape::Shape::Line:
-						modeLine();
-						break;
-				}
-
-			//auto maxTouches = System::getMaxMultiTouchPoints();
-			//draws the color indicators in the bottom right menu which indicate which devices are active
-			if (deviceHandler->multiTouchStatus())
-			{
-				gl::color(0.0, 0.0, 1.0);
-				gl::drawSolidRect(Rectf(windowWidth * .81, windowHeight * .81, windowWidth * .83, windowHeight * .83));
-			}
-			if (deviceHandler->leapStatus())
-			{
-				gl::color(0.0, 1.0, 0.0);
-				gl::drawSolidRect(Rectf(windowWidth * .84, windowHeight * .81, windowWidth * .86, windowHeight * .83));
-			}
-			if (deviceHandler->eyeXStatus())
-			{
-				gl::color(1.0, 0.0, 0.0);
-				gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .81, windowWidth * .89, windowHeight * .83));
-			}
-			if (deviceHandler->realSenseStatus())
-			{
-				gl::color(1.0, 1.0, 0.0);
-				gl::drawSolidRect(Rectf(windowWidth * .90, windowHeight * .81, windowWidth * .92, windowHeight * .83));
-			}
 			uiFbo->unbindFramebuffer();
 			//uiFboFlag = false;
 		}
