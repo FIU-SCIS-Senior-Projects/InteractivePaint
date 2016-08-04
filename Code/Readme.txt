@@ -1,5 +1,12 @@
 Directory Structure
 
+InteractivePaint-AR/Assets
+	Contains all C# scripts, scenes, shaders, and materials for unity project
+	
+InteractivePaint-AR/ProjectSettings
+	Unity Project settings	
+
+
 TouchPoints/assets 
 	Contains any icons you may want to load inside the application.
 
