@@ -405,17 +405,31 @@ namespace touchpoints { namespace devices
 
 	void RealSenseHandler::realSenseDraw(std::shared_ptr<gl::Fbo>& fingerLocation)
 	{
+		vector<drawing::DrawEvent> sendToIllustrator;
+		auto currentPosition = vec2(xPosition, yPosition);
 		if (hoverZoneFlag)
 		{
 			fingerLocation->bindFramebuffer();
-			glClearColor(0.0, 0.0, 0.0, 0.0);
+			/*glClearColor(0.0, 0.0, 0.0, 0.0);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			gl::color(1, 0.75, 0, 1);
 			gl::drawSolidCircle(vec2(xPosition, yPosition), 40);
 			gl::color(1.0, 0.9, 0.5, 1);
-			gl::drawStrokedCircle(vec2(xPosition, yPosition), 40.0f, 10.0f);
+			gl::drawStrokedCircle(vec2(xPosition, yPosition), 40.0f, 10.0f);*/
 			fingerLocation->unbindFramebuffer();
+
+			auto green = ColorA(0.0f, 1.0f, 0.0f, 1);
+			myIllustrator->addToTemporaryCircles(drawing::TouchCircle(vec2(xPosition, yPosition), 40.0f, green, 50.0f, true, 1));
+
+			if (finalizeableDrawEvent.HasStartPoint())
+			{
+				finalizeableDrawEvent.SetEndPoint(currentPosition);
+
+				sendToIllustrator.push_back(finalizeableDrawEvent);
+
+				finalizeableDrawEvent = drawing::DrawEvent();
+			}
 		}
 		else if (realDrawFlag)
 		{
@@ -435,7 +449,32 @@ namespace touchpoints { namespace devices
 				realActivePointsMap[currentId] = true;
 				realPointsMap[currentId] = vec2(xPosition, yPosition);
 			}
+
+			if (finalizeableDrawEvent.HasStartPoint())
+			{
+				if (temporaryDrawEvent.HasStartPoint()) //continuation of series of Draw events
+				{
+					temporaryDrawEvent.SetEndPoint(currentPosition);
+
+					sendToIllustrator.push_back(temporaryDrawEvent);
+
+					temporaryDrawEvent = drawing::DrawEvent();
+				}
+				else
+				{
+					auto guid = getGuid();
+					temporaryDrawEvent = drawing::DrawEvent(currentPosition, finalizeableDrawEvent.GetStartPoint(), guid, false, 0);
+				}
+			}
+			else
+			{
+				auto guid = getGuid();
+
+				finalizeableDrawEvent = drawing::DrawEvent(currentPosition, guid, true, 0);
+			}
 		}
+
+		myIllustrator->addDrawEventsToQueue(sendToIllustrator);
 
 		std::vector<uint32_t> list;
 		for (auto& points : realActivePointsMap)
@@ -470,5 +509,10 @@ namespace touchpoints { namespace devices
 	bool RealSenseHandler::getRealSenseDrawEnabled()
 	{
 		return realSenseDrawEnabled;
+	}
+
+	Guid RealSenseHandler::getGuid()
+	{
+		return guidGenerator.newGuid();
 	}
 }}

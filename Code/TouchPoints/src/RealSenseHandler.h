@@ -98,5 +98,10 @@ namespace touchpoints { namespace devices
 		map<uint32_t, bool> realActivePointsMap;
 
 		drawing::Illustrator* myIllustrator;
+
+		drawing::DrawEvent finalizeableDrawEvent;
+		drawing::DrawEvent temporaryDrawEvent;
+		GuidGenerator guidGenerator;
+		Guid getGuid();
 	};
 }}
