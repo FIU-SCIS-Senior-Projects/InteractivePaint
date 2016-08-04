@@ -398,11 +398,11 @@ namespace touchpoints { namespace ui
 			make_pair(1, deviceModeButtonBorder),
 		};
 
-		auto deviceModeButtonComposingMenus = multimap<int, shared_ptr<Menu>>();
+		auto deviceModeButtonComposingMenus = createDevicesModeButtonComposingMenus();
 
 		return shared_ptr<Menu>(new Menu(deviceModeButtonStartPoint,
 			deviceModeButtonWidth, deviceModeButtonHeight, true, deviceModeButtonComposingShapes,
-			deviceModeButtonComposingMenus, Menu::defaultDropdownCallback));
+			deviceModeButtonComposingMenus, Menu::recursiveDropdownCallback));
 
 	}
 
@@ -487,6 +487,62 @@ namespace touchpoints { namespace ui
 		};
 	}
 
+	multimap<int, shared_ptr<Menu>> UserInterface::createDevicesModeButtonComposingMenus() const
+	{
+		auto deviceToggleMenusX = windowWidth * .87;
+		auto deviceToggleMenusY = windowHeight * .49;
+
+		auto multiTouchToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto multiTouchToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			multiTouchToggleStartPoint, false, "Multi Touch", deviceHandler, devices::Devices::MultiTouch));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto eyeXToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto eyeXToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			eyeXToggleStartPoint, false, "EyeX", deviceHandler, devices::Devices::EyeX));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto leapMotionToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto leapMotionToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			leapMotionToggleStartPoint, false, "Leap Motion", deviceHandler, devices::Devices::LeapMotion));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto leapDrawToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto leapDrawToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			leapDrawToggleStartPoint, false, "Leap Draw", deviceHandler, devices::Devices::LeapDraw));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto leapGesturesToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto leapGesturesToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			leapGesturesToggleStartPoint, false, "Leap Gestures", deviceHandler, devices::Devices::LeapGesture));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto realSenseToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto realSenseToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			realSenseToggleStartPoint, false, "Real Sense", deviceHandler, devices::Devices::RealSense));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto realSenseDrawToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto realSenseDrawToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			realSenseDrawToggleStartPoint, false, "Real Sense Draw", deviceHandler, devices::Devices::RealSenseDraw));
+		deviceToggleMenusY += DeviceHandlerModeSelectorMenu::defaultHeight;
+
+		auto realSenseExpressionsToggleStartPoint = vec2(deviceToggleMenusX, deviceToggleMenusY);
+		auto realSenseExpressionsToggleMenu = shared_ptr<DeviceHandlerModeSelectorMenu>(new DeviceHandlerModeSelectorMenu(
+			realSenseExpressionsToggleStartPoint, false, "Real Sense Expressions", deviceHandler, devices::Devices::RealSenseExpressions));
+
+		return multimap<int, shared_ptr<Menu>>
+		{
+			make_pair(0, multiTouchToggleMenu),
+			make_pair(0, eyeXToggleMenu),
+			make_pair(0, leapMotionToggleMenu),
+			make_pair(0, leapDrawToggleMenu),
+			make_pair(0, leapGesturesToggleMenu),
+			make_pair(0, realSenseToggleMenu),
+			make_pair(0, realSenseDrawToggleMenu),
+			make_pair(0, realSenseExpressionsToggleMenu)
+		};
+	}
 
 	void UserInterface::setModeButtons(bool sModeButtons)
 	{
@@ -500,6 +556,7 @@ namespace touchpoints { namespace ui
 
 	//todo remove
 	//draws the shapes dropdown menu on the top left of application
+	//todo get rid of this
 	void UserInterface::drawShapesButtonsFbo()
 	{
 		shapeButtonsFbo->bindFramebuffer();
@@ -544,6 +601,8 @@ namespace touchpoints { namespace ui
 		shapeButtonsFbo->unbindFramebuffer();
 	}
 
+
+	//todo get rid of this
 	//draws the menu for device modes on the bottom right
 	void UserInterface::drawDeviceButtonsFbo()
 	{
@@ -655,12 +714,12 @@ namespace touchpoints { namespace ui
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .56, windowWidth * .89, windowHeight * .59));
 
 		//draws the black/green squares for the Real Sense Draw, does not set the toggle touchpoints
-		if (deviceHandler->realSenseDraw()) gl::color(0.0, 1.0, 0.0);
+		if (deviceHandler->realSenseDrawStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .59, windowWidth * .89, windowHeight * .62));
 
 		//draws the black/green squares for the Real Sense Expressions, does not set the toggle touchpoints
-		if (deviceHandler->realSenseExpressions()) gl::color(0.0, 1.0, 0.0);
+		if (deviceHandler->realSenseExpressionsStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .62, windowWidth * .89, windowHeight * .65));
 
@@ -670,12 +729,12 @@ namespace touchpoints { namespace ui
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .65, windowWidth * .89, windowHeight * .68));
 
 		//draws the black/green squares for the Leap Draw, does not set the toggle touchpoints
-		if (deviceHandler->leapDraw()) gl::color(0.0, 1.0, 0.0);
+		if (deviceHandler->leapDrawStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .68, windowWidth * .89, windowHeight * .71));
 
 		//draws the black/green squares for the Leap Gesture, does not set the toggle touchpoints
-		if (deviceHandler->leapGesture()) gl::color(0.0, 1.0, 0.0);
+		if (deviceHandler->leapGestureStatus()) gl::color(0.0, 1.0, 0.0);
 		else gl::color(0.0, 0.0, 0.0);
 		gl::drawSolidRect(Rectf(windowWidth * .87, windowHeight * .71, windowWidth * .89, windowHeight * .74));
 
@@ -859,46 +918,13 @@ namespace touchpoints { namespace ui
 		//Draws Settings menu FBO
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
+		//todo get rid of this
 		//settingsButtonsFbo.reset();
 		settingsButtonsFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 
 		settingsButtonsFbo->bindFramebuffer();
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		gl::lineWidth(3);
-
-		//Frames Per Second Button
-		gl::color(0.0, 0.0, 0.0, 1.0);
-		gl::drawSolidRect(Rectf(windowWidth * .65, windowHeight * .95, windowWidth * .8, windowHeight));
-		TextLayout layout1;
-		layout1.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
-		layout1.setFont(Font("Arial", 200));
-		layout1.setColor(Color(1, 1, 1));
-		layout1.addLine(std::string("Frames Per Second"));
-		Surface8u rendered = layout1.render(true, false);
-		gl::Texture2dRef mTexture = gl::Texture2d::create(rendered);
-		gl::color(Color::white());
-		gl::draw(mTexture, Rectf(windowWidth * .65, windowHeight * .95, windowWidth * .8, windowHeight));
-
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(windowWidth * .65, windowHeight * .95, windowWidth * .8, windowHeight), uiOutlineSize);
-
-		//Cycle Background button
-		gl::color(0.0, 0.0, 0.0, 1.0);
-		gl::drawSolidRect(Rectf(windowWidth * .65, windowHeight * .9, windowWidth * .8, windowHeight * .95));
-		TextLayout layout2;
-		layout2.clear(ColorA(0.2f, 0.2f, 0.2f, 0.2f));
-		layout2.setFont(Font("Arial", 200));
-		layout2.setColor(Color(1, 1, 1));
-		layout2.addLine(std::string("Cycle Background"));
-		rendered = layout2.render(true, false);
-		mTexture = gl::Texture2d::create(rendered);
-		gl::color(Color::white());
-		gl::draw(mTexture, Rectf(windowWidth * .65, windowHeight * .9, windowWidth * .8, windowHeight * .95));
-
-		gl::color(0.75, 0.75, .75, 1.0);
-		gl::drawStrokedRect(Rectf(windowWidth * .65, windowHeight * .9, windowWidth * .8, windowHeight * .95), uiOutlineSize);
 
 		settingsButtonsFbo->unbindFramebuffer();
 
@@ -919,6 +945,7 @@ namespace touchpoints { namespace ui
 		gl::color(1.0, 1.0, 1.0, 1.0);
 		//Loads the asset for transparent Background and writes it to the FBO.
 		//		transparentBackgroundFbo.reset();
+		//todo get rid of this
 		transparentBackgroundFbo = gl::Fbo::create(windowWidth, windowHeight, format);
 		transparentBackgroundFbo->bindFramebuffer();
 		glClearColor(1.0, 1.0, 1.0, 0.0);
@@ -932,16 +959,19 @@ namespace touchpoints { namespace ui
 		keyboard.createKeyboard();
 	}
 
+	//todo get rid of this
 	std::shared_ptr<gl::Fbo> UserInterface::getTransparentBackground()
 	{
 		return transparentBackgroundFbo;
 	}
 
+	//todo get rid of this
 	bool UserInterface::isBackgroundTransparent()
 	{
 		return transparentBackground;
 	}
 
+	//todo get rid of this
 	void UserInterface::incrementBackground()
 	{
 		//Checks the current color
@@ -970,7 +1000,8 @@ namespace touchpoints { namespace ui
 		//Place the old background color back into the list
 		backgroundList.emplace_back(tempColor);
 	}
-
+	
+	//todo get rid of this
 	float UserInterface::getLayerAlpha(int layerNumber)
 	{
 		return (*layerAlpha)[layerNumber];
@@ -1025,11 +1056,13 @@ namespace touchpoints { namespace ui
 		modeChangeFlag = true;
 	}
 
+	//todo refactor to use illustrator
 	Color UserInterface::getBackgroundColor()
 	{
 		return backgroundColor;
 	}
 
+	//todo refactor to use illustrator
 	void UserInterface::changeBackgroundColor(Color background)
 	{
 		backgroundColor = background;
@@ -1039,6 +1072,7 @@ namespace touchpoints { namespace ui
 	{
 		int x = touch.getX();
 		int y = touch.getY();
+		//todo get rid of this
 		if (layerVisualization)
 		{
 			int yDist = (*layerList).size() * 200 + 50;
@@ -1244,6 +1278,7 @@ namespace touchpoints { namespace ui
 				}
 			}
 
+			//todo remove this
 			if (modeButtons)
 			{
 				if (uiFboFlag)
@@ -1291,6 +1326,7 @@ namespace touchpoints { namespace ui
 				}
 			}
 		}
+		//todo remove this
 		//Color buttons UI
 		if (colorButtons)
 		{
@@ -1308,6 +1344,7 @@ namespace touchpoints { namespace ui
 			}
 		}
 
+		//todo remove this
 		if (layerVisualization)
 		{
 			int yDist = (*layerList).size() * 200 + 50;
@@ -1344,6 +1381,7 @@ namespace touchpoints { namespace ui
 			}
 		}
 
+		//todo remove this
 		if (brushButtons)
 		{
 			//Line Size Plus button
@@ -1385,6 +1423,7 @@ namespace touchpoints { namespace ui
 			}
 		}
 
+		//todo remove this
 		if (shapeButtons)
 		{
 			if (x > 50 && x < 100 && y < 100)
@@ -1500,7 +1539,7 @@ namespace touchpoints { namespace ui
 		gl::color(1.0, 1.0, 1.0, 1.0);
 
 		modeChangeFlag = true;
-
+		//todo get rid of this
 		//Draws to the UI FBO. Currently only houses 'modebox' in the fbo.
 		if (modeChangeFlag)
 		{
@@ -1516,7 +1555,7 @@ namespace touchpoints { namespace ui
 		{//Constantly drawn Ui buttons. If ui flag is off, we shut down the ui
 			//Currently shuts down nothing because it needs to be developed in parralel to inInteractiveUi
 		}
-
+		//todo get rid of this
 		//draws the settings menu, aka frames per sec and cycle background
 		if (settingsButtons)
 		{
@@ -1524,12 +1563,14 @@ namespace touchpoints { namespace ui
 			gl::draw(settingsButtonsFbo->getColorTexture());
 		}
 
+		//todo get rid of this
 		//draws the top left menu of different modes
 		if (modeButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(modeButtonsFbo->getColorTexture());
 		}
+		//todo get rid of this
 		//draws the drop down menu of brush size, alpha and solid shapes
 		if (brushButtons)
 		{
@@ -1537,12 +1578,15 @@ namespace touchpoints { namespace ui
 			gl::draw(brushButtonsFbo->getColorTexture());
 		}
 
+		//todo get rid of this
 		//draws the color selection drop down menu
 		if (colorButtons)
 		{
 			gl::color(1.0, 1.0, 1.0, 1.0);
 			gl::draw(colorButtonsFbo->getColorTexture());
 		}
+		
+		//todo get rid of this
 		//draws the drop down menu of shapes
 		if (shapeButtons)
 		{
@@ -1550,6 +1594,7 @@ namespace touchpoints { namespace ui
 			gl::draw(shapeButtonsFbo->getColorTexture());
 		}
 
+		//todo get rid of this
 		if (mBrush->getSymmetry()->getSymmetryOn())
 		{
 			for (int i = 0; i < 50; i = i + 2)
@@ -1559,6 +1604,8 @@ namespace touchpoints { namespace ui
 				gl::drawLine(vec2(windowWidth / 2, windowHeight - i * 50), vec2(windowWidth / 2, windowHeight - (i + 1) * 50));
 			}
 		}
+		
+		//todo get rid of this
 		if (layerVisualization)
 		{
 			int y = layerList->size();

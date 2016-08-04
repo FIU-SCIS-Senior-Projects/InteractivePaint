@@ -210,6 +210,8 @@
     <ClCompile Include="..\src\BrushModeSelectorMenu.cpp" />
     <ClCompile Include="..\src\Canvas.cpp" />
     <ClCompile Include="..\src\DeviceHandler.cpp" />
+    <ClCompile Include="..\src\DeviceHandlerModeSelectorMenu.cpp" />
+    <ClCompile Include="..\src\DeviceHandlerSwitchMenu.cpp" />
     <ClCompile Include="..\src\DrawEvent.cpp" />
     <ClCompile Include="..\src\EyeXHandler.cpp" />
     <ClCompile Include="..\src\GuidHash.h" />
@@ -261,6 +263,9 @@
     <ClInclude Include="..\src\Canvas.h" />
     <ClInclude Include="..\src\Color.h" />
     <ClInclude Include="..\src\DeviceHandler.h" />
+    <ClInclude Include="..\src\DeviceHandlerModeSelectorMenu.h" />
+    <ClInclude Include="..\src\DeviceHandlerSwitchMenu.h" />
+    <ClInclude Include="..\src\Devices.h" />
     <ClInclude Include="..\src\DrawEvent.h" />
     <ClInclude Include="..\src\Enums.h" />
     <ClInclude Include="..\src\EyeXHandler.h" />

@@ -5,7 +5,7 @@
 namespace touchpoints { namespace ui
 {
 	LabelMenu::LabelMenu(vec2 startPoint, int width, int height, bool visible, std::string text,
-		std::string font, ColorA textColor, int fontSize, ColorA backgroundColor)
+		int fontSize, std::string font, ColorA textColor, ColorA backgroundColor)
 		: Menu(startPoint, width, height, visible,
 			multimap<int, shared_ptr<drawing::TouchShape>>(),
 			multimap<int, shared_ptr<Menu>>(), nullptr)

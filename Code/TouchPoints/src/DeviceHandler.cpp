@@ -28,7 +28,7 @@ namespace touchpoints { namespace devices
 		updateDefaultFlag = false;
 	}
 
-	bool DeviceHandler::leapDraw()
+	bool DeviceHandler::leapDrawStatus()
 	{
 		if (leapConnected)
 		{
@@ -40,7 +40,7 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	bool DeviceHandler::leapGesture()
+	bool DeviceHandler::leapGestureStatus()
 	{
 		if (leapConnected)
 		{
@@ -52,7 +52,7 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	bool DeviceHandler::realSenseExpressions()
+	bool DeviceHandler::realSenseExpressionsStatus()
 	{
 		if (realSenseConnected)
 		{
@@ -64,7 +64,7 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	bool DeviceHandler::realSenseDraw()
+	bool DeviceHandler::realSenseDrawStatus()
 	{
 		if (realSenseConnected)
 		{
@@ -290,22 +290,22 @@ namespace touchpoints { namespace devices
 		}
 	}
 
-	int DeviceHandler::leapStatus()
+	bool DeviceHandler::leapStatus()
 	{
 		return leapConnected;
 	}
 
-	int DeviceHandler::multiTouchStatus()
+	bool DeviceHandler::multiTouchStatus()
 	{
 		return multiTouchConnected;
 	}
 
-	int DeviceHandler::eyeXStatus()
+	bool DeviceHandler::eyeXStatus()
 	{
 		return eyeXConnected;
 	}
 
-	int DeviceHandler::realSenseStatus()
+	bool DeviceHandler::realSenseStatus()
 	{
 		return realSenseConnected;
 	}

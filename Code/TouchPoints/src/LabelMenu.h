@@ -7,7 +7,7 @@ namespace touchpoints { namespace ui
 	{
 	public:
 		LabelMenu(vec2 startPoint, int width, int height, bool visible, std::string text,
-			std::string font = "Arial", ColorA textColor = Menu::white, int fontSize = 200,
+			int fontSize = 200, std::string font = "Arial", ColorA textColor = Menu::white,
 			ColorA backgroundColor = Menu::black);
 	};
 }}

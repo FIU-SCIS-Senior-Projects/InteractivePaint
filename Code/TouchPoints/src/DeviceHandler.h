@@ -9,10 +9,10 @@ namespace touchpoints { namespace devices
 		DeviceHandler();
 		int deviceConnection();
 		Mode::DefaultModes getDefaultMode();
-		int leapStatus();
-		int multiTouchStatus();
-		int eyeXStatus();
-		int realSenseStatus();
+		bool leapStatus();
+		bool multiTouchStatus();
+		bool eyeXStatus();
+		bool realSenseStatus();
 
 		void toggleMultiTouch();
 		void toggleEyeX();
@@ -21,15 +21,15 @@ namespace touchpoints { namespace devices
 		void toggleRealSenseExpressions();
 		void toggleRealSenseDraw();
 
-		bool realSenseExpressions();
-		bool realSenseDraw();
+		bool realSenseExpressionsStatus();
+		bool realSenseDrawStatus();
 		//Leap Device and Functionality
 		void toggleLeap();
 		void toggleLeapDraw();
 		void toggleLeapGesture();
 
-		bool leapDraw();
-		bool leapGesture();
+		bool leapDrawStatus();
+		bool leapGestureStatus();
 
 		Mode::DefaultModes set_MLER_Mode();
 		Mode::DefaultModes set_MLE_Mode();

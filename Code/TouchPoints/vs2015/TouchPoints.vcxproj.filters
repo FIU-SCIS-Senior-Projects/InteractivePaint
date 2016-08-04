@@ -195,6 +195,12 @@
     <ClCompile Include="..\src\IllustratorModeSelectorMenu.cpp">
       <Filter>ui\menus</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\DeviceHandlerModeSelectorMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DeviceHandlerSwitchMenu.cpp">
+      <Filter>ui\menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Brush.h">
@@ -352,6 +358,15 @@
     </ClInclude>
     <ClInclude Include="..\src\IllustratorModeSelectorMenu.h">
       <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DeviceHandlerModeSelectorMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\DeviceHandlerSwitchMenu.h">
+      <Filter>ui\menus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Devices.h">
+      <Filter>devices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

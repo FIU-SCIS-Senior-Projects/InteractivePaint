@@ -1,6 +1,7 @@
 #pragma once
 #include "AlphaChangerMenu.h"
 #include "BrushModeSelectorMenu.h"
+#include "DeviceHandlerModeSelectorMenu.h"
 #include "IllustratorModeSelectorMenu.h"
 #include "LabelMenu.h"
 #include "LayerModeSelectorMenu.h"

@@ -10,9 +10,9 @@ namespace touchpoints { namespace ui
 		SwitchMenu();
 		SwitchMenu(vec2 startPoint, int width = 60, int height = 60, bool visible = false,
 			bool on = false, ColorA onColor = Menu::green, ColorA offColor = Menu::black);
-		void OnTouch(vec2 point) override;
+		virtual void OnTouch(vec2 point) override;
 		void Draw() override;
-	private:
+	protected:
 		bool on;
 		drawing::TouchRectangle rect;
 		drawing::TouchRectangle greyBorder;

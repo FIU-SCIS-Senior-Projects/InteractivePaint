@@ -66,6 +66,7 @@ namespace touchpoints { namespace ui
 		shared_ptr<Menu> createSettingsButtonMenu() const;
 		shared_ptr<Menu> createShapeDisplayMenu() const;
 		multimap<int, shared_ptr<Menu>> UserInterface::createSettingsButtonComposingMenus() const;
+		multimap<int, shared_ptr<Menu>> UserInterface::createDevicesModeButtonComposingMenus() const;
 		//multimap<int, shared_ptr<Menu>> create
 		drawing::Brush* mBrush;
 		drawing::Illustrator* illustrator;

@@ -609,7 +609,7 @@ namespace touchpoints { namespace app
 		if (deviceHandler.realSenseStatus())
 		{
 			//Checks if expressions is turned on.
-			if (deviceHandler.realSenseExpressions())
+			if (deviceHandler.realSenseExpressionsStatus())
 			{
 				if (illustrator.getNumberOfActiveDrawings() == 0)
 				{
@@ -642,7 +642,7 @@ namespace touchpoints { namespace app
 			}
 
 			//Real Sense Draw
-			if (deviceHandler.realSenseDraw())
+			if (deviceHandler.realSenseDrawStatus())
 			{
 				//Draw functions for real sense.
 				realSenseHandler.streamCursorData();
@@ -675,14 +675,14 @@ namespace touchpoints { namespace app
 		if (deviceHandler.leapStatus())
 		{
 			leapMotionHandler.SetCurrentFrame();
-			if (deviceHandler.leapDraw())
+			if (deviceHandler.leapDrawStatus())
 			{
 				if (leapDrawFlag)
 				{
 					leapMotionHandler.ProcessDrawInput(lockCurrentFrame);
 				}
 			}
-			if (deviceHandler.leapGesture())
+			if (deviceHandler.leapGestureStatus())
 			{
 				if (!lockCurrentFrame)
 				{
