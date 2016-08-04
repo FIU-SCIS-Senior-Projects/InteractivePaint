@@ -6,12 +6,18 @@ namespace touchpoints { namespace ui
 
 	MenuLayer::MenuLayer(int windowWidth, int windowHeight) : Layer(windowWidth, windowHeight, drawing::ourColors::Transparent) {}
 
-	void MenuLayer::OnTouch(vec2 point) const
+	bool MenuLayer::OnTouch(vec2 point) const
 	{
+		bool wasTouchHandled = false;
 		for(auto menu : drawablesStack)
 		{
-			menu->OnTouch(point);
+			bool menuHandledTouch = menu->OnTouch(point);
+			if(menuHandledTouch)
+			{
+				wasTouchHandled = true;
+			}
 		}
+		return wasTouchHandled;
 	}
 	void MenuLayer::AddMenu(shared_ptr<Menu> menu)
 	{

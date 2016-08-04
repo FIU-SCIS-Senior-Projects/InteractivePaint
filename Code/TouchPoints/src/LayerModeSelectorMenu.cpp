@@ -10,12 +10,15 @@ namespace touchpoints {
 			function<void(vec2 point, LayerModeSelectorMenu* self, drawing::Illustrator* illustrator)> touchEventHandler)
 			: Menu(startPoint, width, height, visible, nullptr), illustrator(illustrator), touchEventHandler(touchEventHandler) { }
 
-		void LayerModeSelectorMenu::OnTouch(vec2 point)
+		bool LayerModeSelectorMenu::OnTouch(vec2 point)
 		{
+			bool touchWasHandled = false;
 			if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
 			{
+				touchWasHandled = true;
 				touchEventHandler(point, this, illustrator);
 			}
+			return touchWasHandled;
 		}
 	}
 }

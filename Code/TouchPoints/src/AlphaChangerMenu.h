@@ -10,7 +10,7 @@ namespace touchpoints { namespace ui
 		AlphaChangerMenu();
 		AlphaChangerMenu(vec2 startPoint, bool visible, int index, drawing::Illustrator* illustrator);
 		void Draw() override;
-		void OnTouch(vec2 point) override;
+		bool OnTouch(vec2 point) override;
 	private:
 		static const int defaultWidth;
 		static const int numberOfRectangles;

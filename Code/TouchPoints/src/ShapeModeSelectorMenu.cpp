@@ -30,12 +30,15 @@ namespace touchpoints { namespace ui {
 		shape->Draw();
 	}
 	
-	void ShapeModeSelectorMenu::OnTouch(vec2 point)
+	bool ShapeModeSelectorMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if(visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			brush->changeShape(shape);
 		}
+		return touchWasHandled;
 	}
 
 	void ShapeModeSelectorMenu::setupShapes(Shape::Shape shape)

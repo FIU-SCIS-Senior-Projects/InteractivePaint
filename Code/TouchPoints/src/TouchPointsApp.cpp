@@ -392,7 +392,6 @@ namespace touchpoints { namespace app
 				gui.inInteractiveUi(touch.getX(), touch.getY(), touch.getId());
 				return;
 			}
-
 			if (radialActive)
 			{
 				float x = touch.getX();
@@ -440,7 +439,17 @@ namespace touchpoints { namespace app
 			{
 				list<TouchEvent::Touch> tempList;
 				tempList.push_back(touch);
-				bufferTouches.emplace(touch.getId(), tempList);
+
+				auto touchId = touch.getId();
+				bufferTouches.emplace(touchId, tempList);
+
+				auto guid = getGuid(touchId);
+				auto startPoint = touch.getPos();
+				auto finalizableDrawEvent = drawing::DrawEvent(startPoint, guid, true, 0);
+				auto tempDrawEvent = drawing::DrawEvent(startPoint, startPoint, guid, false, 0);
+				finalizeableDrawEvents.insert_or_assign(guid, finalizableDrawEvent);
+				temporaryDrawEvents.insert_or_assign(guid, tempDrawEvent);
+				createTouchIdToGuidMapping(touchId, guid);
 
 				if (!findMultiTouchGestures(previousTouch, touch))
 				{
@@ -459,6 +468,8 @@ namespace touchpoints { namespace app
 	void TouchPointsApp::touchesMoved(TouchEvent event)
 	{
 		if (!deviceHandler.multiTouchStatus()) return;
+
+		auto drawEventsToSendToIllustrator = vector<drawing::DrawEvent>();
 
 		for (const auto& touch : event.getTouches())
 		{
@@ -496,18 +507,66 @@ namespace touchpoints { namespace app
 					bufferTouches[touch.getId()].emplace_back(touch);
 				}
 			}
+
+
+			auto currentId = touch.getId();
+			auto guid = getGuid(currentId);
+			auto currentPoint = touch.getPos();
+			auto finalizableDrawEventIterator = finalizeableDrawEvents.find(guid);
+			bool finalizableDrawEventWasFound = finalizableDrawEventIterator != finalizeableDrawEvents.end();
+
+			if (finalizableDrawEventWasFound) //continuation of series of Draw events
+			{
+				auto finalizableEvent = finalizableDrawEventIterator->second;
+
+				auto tempDrawEventIterator = temporaryDrawEvents.find(guid);
+				bool tempDrawEventWasFound = tempDrawEventIterator != temporaryDrawEvents.end();
+
+				if (tempDrawEventWasFound) //continuation of previous temp Draw event
+				{
+					auto tempDrawEvent = tempDrawEventIterator->second;
+					//finish temp Draw event
+					tempDrawEvent.SetEndPoint(currentPoint);
+					//send it off
+					drawEventsToSendToIllustrator.push_back(tempDrawEvent);
+					//remove from temporaryDrawEvents
+					temporaryDrawEvents.erase(tempDrawEventIterator);
+				}
+			}
 		}
+		illustrator.addDrawEventsToQueue(drawEventsToSendToIllustrator);
 	}
 
 	void TouchPointsApp::touchesEnded(TouchEvent event)
 	{
 		if (!deviceHandler.multiTouchStatus()) return;
+
+		auto drawEventsToSendToIllustrator = vector<drawing::DrawEvent>();
+
 		for (const auto& touch : event.getTouches())
 		{
 			bufferTouches.erase(touch.getId());
 			illustrator.endTouchShapes(touch.getId());
 			gui.endButtonPress(touch);
+
+			auto touchId = touch.getId();
+			auto guid = getGuid(touchId);
+			auto currentPoint = touch.getPos();
+			auto finalizableDrawEventIterator = finalizeableDrawEvents.find(guid);
+			bool finilizableDrawEventWasFound = finalizableDrawEventIterator != finalizeableDrawEvents.end();
+			if (finilizableDrawEventWasFound)
+			{
+				auto finalizableEvent = finalizableDrawEventIterator->second;
+				//finalize that sumbitch send it to the illustrator
+				finalizableEvent.SetEndPoint(currentPoint);
+				drawEventsToSendToIllustrator.push_back(finalizableEvent);
+				//delete it from finalizeableDrawEvents
+				finalizeableDrawEvents.erase(finalizableDrawEventIterator);
+				//remove guid associated with this event
+				touchIdToGuidMap.erase(touchId);
+			}
 		}
+		illustrator.addDrawEventsToQueue(drawEventsToSendToIllustrator);
 	}
 
 	void TouchPointsApp::setDefaultMode(Mode::DefaultModes mode)
@@ -919,5 +978,18 @@ namespace touchpoints { namespace app
 			leapMotionHandler.setLeapMotionResize(windowWidth, windowHeight);
 		}
 		resizeCount++;
+	}
+
+	Guid TouchPointsApp::getGuid(int pointId)
+	{
+		auto guidIterator = touchIdToGuidMap.find(pointId);
+		bool guidWasFound = guidIterator != touchIdToGuidMap.end();
+
+		return guidWasFound ? guidIterator->second : guidGenerator.newGuid();
+	}
+
+	void TouchPointsApp::createTouchIdToGuidMapping(int pointId, Guid guid)
+	{
+		touchIdToGuidMap.insert_or_assign(pointId, guid);
 	}
 }}

@@ -13,11 +13,14 @@ namespace touchpoints { namespace ui
 		: Menu(startPoint, height, width, visible, composingShapes, composingMenus, nullptr),
 		illustrator(illustrator), touchEventHandler(touchEventHandler) { }
 
-	void IllustratorModeSelectorMenu::OnTouch(vec2 point)
+	bool IllustratorModeSelectorMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			touchEventHandler(point, this, illustrator);
 		}
+		return touchWasHandled;
 	}
 }}

@@ -13,51 +13,61 @@ namespace touchpoints { namespace ui
 		: SwitchMenu(startPoint, width, height, visible, false, onColor, offColor),
 		device(device), deviceHandler(deviceHandler) { }
 
-	void DeviceHandlerSwitchMenu::OnTouch(vec2 point)
+	bool DeviceHandlerSwitchMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		switch(device)
 		{
 			case devices::MultiTouch :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleMultiTouch();
 				break;
 			}
 			case devices::EyeX :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleEyeX();
 				break;
 			}
 			case devices::LeapMotion :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleLeap();
 				break;
 			}
 			case devices::LeapDraw :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleLeapDraw();
 				break;
 			}
 			case devices::LeapGesture :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleLeapGesture();
 				break;
 			}
 			case devices::RealSense :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleRealSense();
 				break;
 			}
 			case devices::RealSenseDraw :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleRealSenseDraw();
 				break;
 			}
 			case devices::RealSenseExpressions :
 			{
+				touchWasHandled = true;
 				deviceHandler->toggleRealSenseExpressions();
 				break;
 			}
 		}
+		return touchWasHandled;
 	}
 
 	void DeviceHandlerSwitchMenu::Draw()

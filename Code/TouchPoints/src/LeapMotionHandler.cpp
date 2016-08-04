@@ -152,7 +152,7 @@ namespace touchpoints { namespace devices
 		{
 			//Normalize points from iBox
 			Leap::Vector normalizedPosition = iBox.normalizePoint(point.stabilizedTipPosition());
-			//Get x and y coordinate value form normalized value within given window
+			//Get x and y coordinate value from normalized value within given window
 			float leapXCoordinate = normalizedPosition.x * windowWidth;
 			float leapYCoordinate = windowHeight - normalizedPosition.y * windowHeight;
 

@@ -31,14 +31,17 @@ namespace touchpoints { namespace ui
 		}
 	}
 
-	void AlphaChangerMenu::OnTouch(vec2 point)
+	bool AlphaChangerMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			auto newAlpha = (point.y - startPoint.y) / height;
 
 			illustrator->SetAlpha(index, newAlpha);
 		}
+		return touchWasHandled;
 	}
 
 	void AlphaChangerMenu::setupShapes()

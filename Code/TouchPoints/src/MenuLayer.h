@@ -9,7 +9,7 @@ namespace touchpoints { namespace ui
 	public:
 		MenuLayer();
 		MenuLayer(int windowWidth, int windowHeight);
-		void OnTouch(vec2 point) const;
+		bool OnTouch(vec2 point) const;
 		void AddMenu(shared_ptr<Menu> menu);
 		void SetWindowWidth(int width);
 		void SetWindowHeight(int height);

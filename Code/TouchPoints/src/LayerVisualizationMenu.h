@@ -10,7 +10,7 @@ namespace touchpoints { namespace ui
 		LayerVisualizationMenu();
 		LayerVisualizationMenu(vec2 startPoint, int width, int height, int layerIndex, bool visible, drawing::Illustrator* illustrator,
 			function<void(vec2 point, LayerModeSelectorMenu* self, drawing::Illustrator* illustrator)> touchEventHandler);
-		void OnTouch(vec2 point) override;
+		bool OnTouch(vec2 point) override;
 		static const int defaultWidth;
 		static const int defaultHeight;
 		float startY1;

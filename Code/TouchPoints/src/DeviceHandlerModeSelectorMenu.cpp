@@ -23,12 +23,15 @@ namespace touchpoints { namespace ui
 		setupMenus();
 	}
 	
-	void DeviceHandlerModeSelectorMenu::OnTouch(vec2 point)
+	bool DeviceHandlerModeSelectorMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			switchMenu->OnTouch(point);
 		}
+		return touchWasHandled;
 	}
 
 	void DeviceHandlerModeSelectorMenu::setupMenus()

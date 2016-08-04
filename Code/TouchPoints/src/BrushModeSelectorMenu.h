@@ -23,7 +23,7 @@ namespace touchpoints { namespace ui {
 		BrushModeSelectorMenu(vec2 startPoint, int width, int height, bool visible, drawing::Brush* brush,
 			function<void(vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)> touchEventHandler,
 			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes);
-		virtual void OnTouch(vec2 point) override;
+		virtual bool OnTouch(vec2 point) override;
 	protected:
 		drawing::Brush* brush;
 		function<void(vec2 point, BrushModeSelectorMenu* self, drawing::Brush* brush)> touchEventHandler;

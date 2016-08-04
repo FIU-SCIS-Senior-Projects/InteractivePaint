@@ -10,12 +10,15 @@ namespace touchpoints { namespace ui
 		: SymmetryModeSelectorMenu(startPoint, width, height, visible, symmetryLine),
 		symmetryLineShapes(symmetryLineShapes) { }
 	 
-	void SymmetryToggleMenu::OnTouch(vec2 point)
+	bool SymmetryToggleMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if(boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			symmetryLine->toggleSymmetry();
 		}
+		return touchWasHandled;
 	}
 
 	void SymmetryToggleMenu::Draw()

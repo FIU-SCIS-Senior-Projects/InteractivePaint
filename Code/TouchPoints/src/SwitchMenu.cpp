@@ -20,12 +20,15 @@ namespace touchpoints { namespace ui
 		greyBorder = drawing::TouchRectangle(x1, y1, x2, y2, Menu::grey, Menu::defaultBorderThickness, false);
 	}
 	
-	void SwitchMenu::OnTouch(vec2 point)
+	bool SwitchMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if(visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			on = !on;
 		}
+		return touchWasHandled;
 	}
 
 	void SwitchMenu::Draw()

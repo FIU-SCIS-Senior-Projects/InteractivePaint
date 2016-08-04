@@ -8,7 +8,7 @@ namespace touchpoints { namespace ui
 	public:
 		RemoveLayerMenu();
 		RemoveLayerMenu(vec2 startPoint, bool visible, int index, drawing::Illustrator* illustrator);
-		void OnTouch(vec2 point) override;
+		bool OnTouch(vec2 point) override;
 	private:
 		static const int defaultWidth;
 		static const int defaultHeight;

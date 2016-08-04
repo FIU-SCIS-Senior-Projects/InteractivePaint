@@ -1108,8 +1108,7 @@ namespace touchpoints { namespace ui
 
 	bool UserInterface::inInteractiveUi(float x, float y, uint32_t id)
 	{
-		menuLayer.OnTouch(vec2(x, y));
-		return false;
+		return menuLayer.OnTouch(vec2(x, y));
 
 		//ONLY ON IF MULTITOUCH IS DISABLED!
 		if (deviceHandler->multiTouchStatus() == false)

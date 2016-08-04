@@ -146,5 +146,13 @@ namespace touchpoints { namespace app
 		shared_ptr<gl::Fbo> radialFbo;
 		//Proxy Menu Fbo
 		shared_ptr<gl::Fbo> fingerLocationFbo;
+
+
+		GuidGenerator guidGenerator;
+		unordered_map<int, Guid> touchIdToGuidMap;
+		Guid getGuid(int pointId);
+		void createTouchIdToGuidMapping(int pointId, Guid guid);
+		unordered_map<Guid, drawing::DrawEvent> finalizeableDrawEvents;
+		unordered_map<Guid, drawing::DrawEvent> temporaryDrawEvents;
 	};
 }}

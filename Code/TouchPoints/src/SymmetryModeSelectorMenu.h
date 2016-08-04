@@ -15,7 +15,7 @@ namespace touchpoints { namespace ui
 		    multimap<int, shared_ptr<Menu>> composingMenus = multimap<int, shared_ptr<Menu>>(),
 		    function<void(vec2 point, SymmetryModeSelectorMenu* self,
 		        drawing::SymmetryLine* symmetryLineLambda)> touchEventHandler = nullptr);
-		virtual void OnTouch(vec2 point) override;
+		virtual bool OnTouch(vec2 point) override;
 	protected:
 		drawing::SymmetryLine* symmetryLine;
 		function<void(vec2 point, SymmetryModeSelectorMenu* self, drawing::SymmetryLine* symmetryLineLambda)> touchEventHandler;

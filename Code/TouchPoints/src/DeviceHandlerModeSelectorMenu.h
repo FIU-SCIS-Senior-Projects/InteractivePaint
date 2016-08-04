@@ -20,7 +20,7 @@ namespace touchpoints { namespace ui
 			multimap<int, shared_ptr<drawing::TouchShape>> composingShapes =
 			multimap<int, shared_ptr<drawing::TouchShape>>(),
 			multimap<int, shared_ptr<Menu>> composingMenus = multimap<int, shared_ptr<Menu>>());
-		virtual void OnTouch(vec2 point) override;
+		virtual bool OnTouch(vec2 point) override;
 		static const int defaultHeight;
 	private:
 		static const int defaultWidth;

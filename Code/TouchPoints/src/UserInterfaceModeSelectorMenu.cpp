@@ -10,11 +10,14 @@ namespace touchpoints { namespace ui
 		: Menu(startPoint, width, height, visible, composingShapes, nullptr), ui(ui), 
 		touchEventHandler(touchEventHandler) { }
 	
-	void UserInterfaceModeSelectorMenu::OnTouch(vec2 point)
+	bool UserInterfaceModeSelectorMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (visible && touchEventHandler != nullptr && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			touchEventHandler(point, this, ui);
 		}
+		return touchWasHandled;
 	}
 }}

@@ -10,7 +10,7 @@ namespace touchpoints { namespace ui
 		LayerModeSelectorMenu();
 		LayerModeSelectorMenu(vec2 startPoint, int width, int height, bool visible, drawing::Illustrator* illustrator,
 		    function<void(vec2 point, LayerModeSelectorMenu* self, drawing::Illustrator* illustrator)> touchEventHandler);
-		virtual void OnTouch(vec2 point) override;
+		virtual bool OnTouch(vec2 point) override;
 	protected:
 		drawing::Illustrator* illustrator;
 		function<void(vec2 point, LayerModeSelectorMenu* self, drawing::Illustrator* illustrator)> touchEventHandler;

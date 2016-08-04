@@ -24,30 +24,16 @@ namespace touchpoints { namespace ui
 		}
 	}
 
-	void LayerTextureMenu::OnTouch(vec2 point)
+	bool LayerTextureMenu::OnTouch(vec2 point)
 	{
 		// switches the Active Layer Texture based on which layer was touched
-		//if(point.x >= 192 && point.x <= 637)
+		bool touchWasHandled = false;
 		if (visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			illustrator->MakeLayerActive(index);
 		}
-		/*if (point.x >= 290 && point.x <= 637)
-		{
-			if(point.y >=64 && point.y <= 258)
-			{
-				illustrator->MakeLayerActive(0);
-			}
-			else if(point.y >= 264 && point.y <= 458)
-			{
-				illustrator->MakeLayerActive(1);
-			}
-			else if (point.y >= 464 && point.y <= 658)
-			{
-				illustrator->MakeLayerActive(2);
-			}
-		}*/
-		//illustrator->MakeLayerActive(index);
+		return touchWasHandled;
 	}
 
 	void LayerTextureMenu::setupShapes()

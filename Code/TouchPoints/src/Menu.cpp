@@ -108,17 +108,24 @@ namespace touchpoints { namespace ui
 		}
 	}
 
-	void Menu::OnTouch(vec2 point)
+	bool Menu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			touchEventHandler(point, this);
 		}
 
 		for (auto zIndexMenuPair : composingMenus)
 		{
-			zIndexMenuPair.second->OnTouch(point);
+			bool menuHandledTouch = zIndexMenuPair.second->OnTouch(point);
+			if(menuHandledTouch)
+			{
+				touchWasHandled = true;
+			}
 		}
+		return touchWasHandled;
 	}
 
 	void Menu::AddShape(int zIndex, shared_ptr<drawing::TouchShape> shape)

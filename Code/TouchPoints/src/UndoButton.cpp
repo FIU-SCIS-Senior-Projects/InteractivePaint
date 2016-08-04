@@ -8,11 +8,14 @@ namespace touchpoints { namespace ui
 		drawing::Illustrator* illustrator) : Menu(startPoint, height, width, visible, nullptr),
 		illustrator(illustrator) { }
 
-	void UndoButton::OnTouch(vec2 point)
+	bool UndoButton::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if(boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			illustrator->Undo();
 		}
+		return touchWasHandled;
 	}
 }}

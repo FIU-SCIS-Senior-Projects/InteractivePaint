@@ -11,12 +11,15 @@ namespace touchpoints { namespace ui
 		setupShapes();
 	}
 
-	void RemoveLayerMenu::OnTouch(vec2 point)
+	bool RemoveLayerMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			illustrator->DeleteLayer(index);
 		}
+		return touchWasHandled;
 	}
 
 	void RemoveLayerMenu::setupShapes()

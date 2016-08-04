@@ -36,14 +36,16 @@ namespace touchpoints { namespace ui {
 		: Menu(startPoint, width, height, visible, composingShapes, nullptr), brush(brush),
 		touchEventHandler(touchEventHandler) { }
 
-	void BrushModeSelectorMenu::OnTouch(vec2 point)
+	bool BrushModeSelectorMenu::OnTouch(vec2 point)
 	{
+		bool touchWasHandled = false;
 		if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			touchEventHandler(point, this, brush);
 		}
 
 		Menu::OnTouch(point);
-
+		return touchWasHandled;
 	}
 }}

@@ -35,17 +35,19 @@ namespace touchpoints { namespace ui
 
 	}
 
-	void LayerVisualizationMenu::OnTouch(vec2 point)
+	bool LayerVisualizationMenu::OnTouch(vec2 point)
 	{
 		//make sure that the x menu is the first to respond to the event
 		//we might need to have the on touch return a boolean depending on whether 
 		//it responded to the touch event or not
 		//that way we can terminate the on touch for the whole menu if the x is touched
-
+		bool touchWasHandled = false;
 		if (touchEventHandler != nullptr && visible && boundingRect.Contains(point))
 		{
+			touchWasHandled = true;
 			touchEventHandler(point, this, illustrator);
 		}
+		return touchWasHandled;
 	}
 
 	void LayerVisualizationMenu::setupShapes()

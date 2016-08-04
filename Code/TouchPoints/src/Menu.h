@@ -54,7 +54,7 @@ namespace touchpoints { namespace ui
 		void ToggleContainingMenusVisibility();
 		void ToggleContainingMenusVisibilityRecursively();
 		virtual void Update() {};
-		virtual void OnTouch(vec2 point);
+		virtual bool OnTouch(vec2 point);
 		static const ColorA grey;
 		static const ColorA purple;
 		static const ColorA white;
