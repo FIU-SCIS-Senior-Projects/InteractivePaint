@@ -1,5 +1,12 @@
 Directory Structure
 
+InteractivePaint-AR/Assets
+	Contains all C# scripts, scenes, shaders, and materials for unity project
+	
+InteractivePaint-AR/ProjectSettings
+	Unity Project settings	
+
+
 TouchPoints/assets 
 	Contains any icons you may want to load inside the application.
 
@@ -15,3 +22,4 @@ TouchPoints/vs2015
 TouchPoints/vs2015/Debug
 	Contains various dll's we use for our applicaton (such as Leap.dll)
 	In addition it is where the application is compiled into an EXE, called TouchPoints.exe
+
